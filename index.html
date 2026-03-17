@@ -890,58 +890,6 @@
         min-height: 44px;
       }
 
-      /* ── Bottom nav mobile ── */
-      .btn-carte-view { display: none !important; }
-
-      .mobile-bottom-nav {
-        display: flex;
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        z-index: 300;
-        background: rgba(253,251,247,0.96);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-top: 1px solid var(--gris);
-        padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
-        gap: 4px;
-      }
-
-      .mob-nav-btn {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        background: transparent;
-        border: none;
-        border-radius: var(--rayon);
-        padding: 8px 4px;
-        cursor: pointer;
-        font-family: 'Jost', sans-serif;
-        color: rgba(26,23,20,0.45);
-        transition: var(--transition);
-        min-height: 52px;
-      }
-
-      .mob-nav-btn.actif {
-        color: var(--or);
-        background: rgba(201,169,110,0.08);
-      }
-
-      .mob-nav-icon { font-size: 1.1rem; line-height: 1; }
-
-      .mob-nav-label {
-        font-size: 0.58rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      /* Espace pour la bottom nav */
-      .grille, #vue-carte, #vue-presentation, #vue-restaurants {
-        padding-bottom: calc(80px + env(safe-area-inset-bottom));
-      }
-
       /* ── Modale ── */
       .modale-corps { padding: 20px 18px 28px; }
       .modale-corps h2 { font-size: 1.75rem; }
@@ -956,10 +904,7 @@
       .recherche-wrapper { margin-top: 28px; }
     }
 
-    /* ─── Bottom nav mobile (cachée sur desktop) ─── */
-    @media (min-width: 701px) { .mobile-bottom-nav { display: none; } }
-
-    /* ─── Barre de filtres : layout flex pour bouton carte ─── */
+/* ─── Barre de filtres : layout flex pour bouton carte ─── */
     .filtres-wrapper {
       display: flex;
       align-items: center;
@@ -1649,21 +1594,6 @@
   <button class="btn-carte-view" id="btn-carte-view">🗺 Carte</button>
 </div>
 
-<!-- ══════════════ BOTTOM NAV MOBILE ══════════════ -->
-<nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Navigation principale">
-  <button class="mob-nav-btn" data-target="btn-presentation-view" aria-label="À propos">
-    <span class="mob-nav-icon">✦</span>
-    <span class="mob-nav-label">À propos</span>
-  </button>
-  <button class="mob-nav-btn" data-target="btn-resto-view" aria-label="Restaurants">
-    <span class="mob-nav-icon">🍽</span>
-    <span class="mob-nav-label">Restaurants</span>
-  </button>
-  <button class="mob-nav-btn" data-target="btn-carte-view" aria-label="Carte">
-    <span class="mob-nav-icon">🗺</span>
-    <span class="mob-nav-label">Carte</span>
-  </button>
-</nav>
 
 <!-- ══════════════ RECHERCHE ══════════════ -->
 <div class="recherche-wrapper">
@@ -2671,27 +2601,6 @@ btnRestoView.addEventListener('click', () => {
 
 appliquerFiltres();
 
-// ─── Bottom nav mobile : délégation + sync ───
-const mobileBottomNav = document.getElementById('mobile-bottom-nav');
-if (mobileBottomNav) {
-  mobileBottomNav.querySelectorAll('.mob-nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.getElementById(btn.dataset.target).click();
-    });
-  });
-
-  // Sync l'état actif de la bottom nav avec les boutons desktop
-  function syncMobileNav() {
-    mobileBottomNav.querySelectorAll('.mob-nav-btn').forEach(btn => {
-      const target = document.getElementById(btn.dataset.target);
-      btn.classList.toggle('actif', target?.classList.contains('actif') ?? false);
-    });
-  }
-  // Observer les changements de classe sur les boutons desktop
-  [btnCarteView, btnPresView, btnRestoView].forEach(btn => {
-    new MutationObserver(syncMobileNav).observe(btn, { attributes: true, attributeFilter: ['class'] });
-  });
-}
 
 // ─── Auto-center du filtre cliqué dans la barre scrollable ───
 document.getElementById('filtres').addEventListener('click', e => {
