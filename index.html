@@ -815,6 +815,9 @@
     .bg-spectacle{ background: #d6e4f0; }
     .bg-jardin   { background: #d6ead8; }
 
+    /* Caché par défaut — affiché uniquement sur mobile par le media query ci-dessous */
+    .mobile-bottom-nav { display: none; }
+
     @media (max-width: 700px) {
       /* ── Header ── */
       header { padding: 48px 20px 40px; }
@@ -822,7 +825,7 @@
       /* ── Grille ── */
       .grille { grid-template-columns: 1fr; }
       .lieux-count { font-size: 0.7rem; }
-      header { min-height: 100svh; }
+      header { min-height: auto; padding: 36px 20px 28px; }
 
       /* ── Barre de filtres : 2 lignes ── */
       .filtres-wrapper {
@@ -934,8 +937,6 @@
       /* ── Recherche ── */
       .recherche-wrapper { margin-top: 28px; }
     }
-
-    .mobile-bottom-nav { display: none; }
 
 /* ─── Barre de filtres : layout flex pour bouton carte ─── */
     .filtres-wrapper {
