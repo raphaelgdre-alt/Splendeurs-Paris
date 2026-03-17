@@ -197,6 +197,7 @@
       gap: 0;
       max-width: 1100px;
       margin: 0 auto;
+      position: relative;
     }
 
     .filtre-btn {
@@ -226,6 +227,19 @@
       background: var(--or);
       border-color: var(--or);
       color: #fff;
+    }
+
+    .filtre-indicator {
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      background: var(--or);
+      border-radius: 2px;
+      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.2s ease;
+      pointer-events: none;
+      opacity: 0;
     }
 
     /* ─── Recherche ─── */
@@ -329,6 +343,11 @@
       display: none;
     }
 
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position:  600px 0; }
+    }
+
     .carte-image {
       height: 260px;
       display: flex;
@@ -338,6 +357,16 @@
       position: relative;
       overflow: hidden;
       background: var(--gris);
+    }
+
+    .carte-image.skeleton {
+      background: linear-gradient(90deg,
+        #E8E0D4 25%,
+        #F5F0E8 50%,
+        #E8E0D4 75%
+      );
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
     }
 
     .carte-photo {
@@ -360,6 +389,26 @@
       z-index: 1;
       transition: opacity 0.4s;
       color: var(--gris-sombre);
+    }
+
+    .carte-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255,255,255,0.14) 50%,
+        transparent 70%
+      );
+      transform: translateX(-150%);
+      transition: transform 0.65s ease;
+      pointer-events: none;
+    }
+
+    .carte:hover .carte-image::before {
+      transform: translateX(150%);
     }
 
     .carte-image-overlay {
@@ -1495,6 +1544,7 @@
     <button class="filtre-btn" data-filtre="monument" aria-expanded="false" aria-label="Filtrer : Monuments">Monuments</button>
     <button class="filtre-btn" data-filtre="eglise" aria-expanded="false" aria-label="Filtrer : Édifices religieux">Édifices religieux</button>
     <button class="filtre-btn" data-filtre="jardin" aria-expanded="false" aria-label="Filtrer : Jardins">Jardins</button>
+    <span class="filtre-indicator" id="filtre-indicator"></span>
   </div>
   <button class="btn-carte-view" id="btn-presentation-view" style="margin-right:6px; order:-1;">✦ À propos</button>
   <button class="btn-carte-view" id="btn-resto-view" style="margin-right:6px;">🍽 Restaurants</button>
@@ -2084,7 +2134,7 @@ function creerCarte(lieu) {
   carte.dataset.tags = lieu.tags.join(' ').toLowerCase();
 
   carte.innerHTML = `
-    <div class="carte-image ${lieu.bgClass}">
+    <div class="carte-image ${lieu.bgClass} skeleton">
       <img class="carte-photo" alt="${lieu.nom}">
       <div class="carte-image-overlay"></div>
       <span class="carte-emoji-fb">${lieu.emoji}</span>
@@ -2145,12 +2195,14 @@ const _FALLBACK_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 function _appliquerSrc(src, imgElem, overlayElem, fbElem) {
   imgElem.onload = () => {
     imgElem.classList.add('chargee');
+    imgElem.parentElement.classList.remove('skeleton');
     if (overlayElem) overlayElem.classList.add('visible');
     if (fbElem) fbElem.style.display = 'none';
   };
   imgElem.onerror = () => {
     imgElem.src = _FALLBACK_SVG;
     imgElem.classList.add('chargee');
+    imgElem.parentElement.classList.remove('skeleton');
   };
   imgElem.src = src;
 }
