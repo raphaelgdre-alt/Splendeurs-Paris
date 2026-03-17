@@ -747,6 +747,30 @@
       flex-shrink: 0;
     }
 
+    .modale-maps-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 48px;
+      margin-top: 24px;
+      background: var(--or);
+      color: #fff;
+      border-radius: var(--rayon);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .modale-maps-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
     /* ─── Aucun résultat ─── */
     .aucun {
       text-align: center;
@@ -1058,6 +1082,24 @@
     }
 
     .popup-btn:hover { background: #1e3356; }
+
+    .popup-maps-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--or, #C9A96E);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 2px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-family: 'Jost', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .popup-maps-btn:hover { opacity: 0.85; }
 
     /* ─── Vue Présentation ─── */
     #vue-presentation {
@@ -2439,6 +2481,13 @@ function ouvrirModale(lieu) {
     <div class="carte-tags" style="margin-top:20px">
       ${lieu.tags.map(t => `<span class="tag">${t}</span>`).join('')}
     </div>
+    <a
+      class="modale-maps-btn"
+      href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lieu.nom + ' Paris')}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Ouvrir ${lieu.nom} dans Google Maps"
+    >📍 Y aller</a>
   `;
 
   document.getElementById('btn-fermer').addEventListener('click', fermerModale);
@@ -2528,7 +2577,10 @@ function initCarte() {
           <div class="popup-nom">${lieu.nom}</div>
           <div class="popup-cat">${categorieLabel(lieu.categorie)}</div>
           <div class="popup-arr">📍 ${lieu.arrondissement}</div>
-          <button class="popup-btn" onclick="ouvrirModaleId(${lieu.id})">Voir le détail</button>
+          <div style="display:flex;gap:6px;align-items:center;margin-top:4px">
+            <button class="popup-btn" onclick="ouvrirModaleId(${lieu.id})">Voir le détail</button>
+            <a class="popup-maps-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lieu.nom + ' Paris')}" target="_blank" rel="noopener noreferrer">📍 Y&nbsp;aller</a>
+          </div>
         </div>
       `, { maxWidth: 230, minWidth: 180 })
       .addTo(carteLeaflet);
