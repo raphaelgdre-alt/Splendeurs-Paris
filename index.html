@@ -167,6 +167,17 @@
       50% { transform: translateX(-50%) translateY(6px); }
     }
 
+    @keyframes heroFadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-eyebrow  { opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0s; }
+    header h1        { opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0.15s; }
+    .header-separator{ opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0.3s; }
+    header p.sous-titre { opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0.45s; }
+    .lieux-count     { opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0.6s; }
+
     /* ─── Navigation catégories ─── */
     .filtres-wrapper {
       position: sticky;
@@ -229,10 +240,10 @@
       padding: 14px 22px 14px 48px;
       border-radius: 40px;
       border: 1px solid var(--gris);
-      border-radius: 2px;
       font-size: 0.9rem;
       font-family: 'Jost', sans-serif;
-      background: var(--blanc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23aaa' stroke-width='2' viewBox='0 0 24 24' width='18' height='18'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 15px center;
+      background: rgba(255,255,255,0.8) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23aaa' stroke-width='2' viewBox='0 0 24 24' width='18' height='18'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 15px center;
+      backdrop-filter: blur(12px);
       outline: none;
       transition: border-color var(--transition), box-shadow var(--transition);
       color: var(--texte);
@@ -242,7 +253,7 @@
 
     .recherche-input:focus {
       border-color: var(--or);
-      box-shadow: 0 0 0 3px rgba(184,150,46,0.1);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.15), 0 4px 16px rgba(26,23,20,0.08);
     }
 
     /* ─── Grille de cartes ─── */
@@ -471,9 +482,9 @@
     }
 
     .tag {
-      background: var(--fond);
-      border: 1px solid var(--gris);
-      color: var(--texte-sec);
+      background: rgba(201,169,110,0.10);
+      border: 1px solid rgba(201,169,110,0.25);
+      color: var(--or);
       font-family: 'Jost', sans-serif;
       font-size: 0.64rem;
       font-weight: 500;
@@ -632,7 +643,15 @@
     }
 
     .modale-section {
-      margin-bottom: 24px;
+      margin-bottom: 36px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--gris);
+    }
+
+    .modale-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
     }
 
     .modale-section h3 {
@@ -695,15 +714,49 @@
     /* ─── Footer ─── */
     footer {
       background: var(--marine);
+      border-top: 1px solid rgba(201,169,110,0.2);
       color: rgba(255,255,255,0.35);
       text-align: center;
-      padding: 40px 20px;
+      padding: 48px 20px 36px;
       font-family: 'Jost', sans-serif;
       font-size: 0.75rem;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--or-clair);
+      letter-spacing: 0.04em;
+      margin-bottom: 20px;
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .footer-nav a {
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color var(--transition);
+    }
+
+    .footer-nav a:hover { color: var(--or-clair); }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.2);
       letter-spacing: 0.05em;
     }
 
-    footer strong { color: var(--or-clair); }
+    .footer-copy strong { color: var(--or-clair); }
 
     /* ─── Couleurs par catégorie (fallback si pas de photo) ─── */
     .bg-musee    { background: #d6e4f0; }
@@ -787,9 +840,9 @@
     .btn-carte-view {
       flex-shrink: 0;
       background: transparent;
-      border: 1px solid rgba(212,175,90,0.35);
-      border-radius: 3px;
-      color: rgba(255,255,255,0.55);
+      border: 1px solid rgba(26,23,20,0.2);
+      border-radius: 24px;
+      color: rgba(26,23,20,0.55);
       padding: 8px 14px;
       font-size: 0.72rem;
       font-weight: 500;
@@ -804,9 +857,9 @@
 
     .btn-carte-view:hover,
     .btn-carte-view.actif {
-      color: var(--or-clair);
-      border-color: var(--or-clair);
-      background: rgba(212,175,90,0.1);
+      color: var(--texte);
+      border-color: var(--or);
+      background: rgba(201,169,110,0.1);
     }
 
     /* ─── Vue Carte ─── */
@@ -1618,8 +1671,14 @@
 
 <!-- ══════════════ FOOTER ══════════════ -->
 <footer>
-  <p>🗼 <strong>Splendeurs de Paris</strong> — Votre guide des lieux incontournables de la Ville Lumière</p>
-  <p style="margin-top:10px; font-size:0.8rem; color:rgba(255,255,255,0.4);">Réalisé par <strong style="color:var(--or-clair)">Raphaël GARDERE</strong></p>
+  <div class="footer-logo">Splendeurs de Paris</div>
+  <nav class="footer-nav">
+    <a href="#" onclick="return false;">Lieux</a>
+    <a href="#" onclick="return false;">Restaurants</a>
+    <a href="#" onclick="return false;">Carte</a>
+    <a href="presentation.html">À propos</a>
+  </nav>
+  <p class="footer-copy">© 2025 — Réalisé par <strong>Raphaël Gardere</strong></p>
 </footer>
 
 <script>
