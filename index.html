@@ -6,27 +6,27 @@
   <title>Splendeurs de Paris</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     /* ─── Variables & Reset ─── */
     :root {
-      --or: #b8962e;
-      --or-clair: #d4af5a;
-      --or-pale: #f5ead4;
-      --marine: #0f1c2e;
-      --marine-mid: #1e3356;
-      --bleu-clair: #4a6fa5;
+      --or: #C9A96E;
+      --or-clair: #C9A96E;
+      --or-pale: #F5F0E8;
+      --marine: #1A1714;
+      --marine-mid: #2d2620;
+      --bleu-clair: #8B7355;
       --blanc: #ffffff;
-      --fond: #f6f5f2;
-      --gris: #edeae4;
-      --gris-sombre: #c8c3b8;
-      --texte: #1a1a1a;
-      --texte-sec: #6b6860;
-      --ombre: 0 4px 24px rgba(0,0,0,0.07);
-      --ombre-survol: 0 16px 48px rgba(0,0,0,0.14);
-      --rayon: 12px;
+      --fond: #FDFBF7;
+      --gris: #E8E0D4;
+      --gris-sombre: #A89B8C;
+      --texte: #1A1714;
+      --texte-sec: #6B6259;
+      --ombre: 0 2px 8px rgba(26,23,20,0.06);
+      --ombre-survol: 0 6px 24px rgba(26,23,20,0.10);
+      --rayon: 14px;
       --rayon-lg: 20px;
       --transition: 0.3s ease;
     }
@@ -36,7 +36,7 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       background: var(--fond);
       color: var(--texte);
       line-height: 1.7;
@@ -74,7 +74,7 @@
     }
 
     .header-eyebrow {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.72rem;
       font-weight: 600;
       letter-spacing: 0.35em;
@@ -98,7 +98,7 @@
     }
 
     header h1 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: clamp(3.5rem, 9vw, 7rem);
       font-weight: 600;
       letter-spacing: 0.02em;
@@ -120,7 +120,7 @@
     }
 
     header p.sous-titre {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: clamp(1.1rem, 2.5vw, 1.4rem);
       font-style: italic;
       color: rgba(255,255,255,0.85);
@@ -129,7 +129,7 @@
 
     .lieux-count {
       margin-top: 36px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.72rem;
       font-weight: 500;
       letter-spacing: 0.3em;
@@ -150,7 +150,7 @@
       font-size: 0.65rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       animation: bounce 2s infinite;
     }
 
@@ -200,7 +200,7 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       cursor: pointer;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       transition: var(--transition);
       white-space: nowrap;
     }
@@ -231,7 +231,7 @@
       border: 1px solid var(--gris);
       border-radius: 2px;
       font-size: 0.9rem;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       background: var(--blanc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23aaa' stroke-width='2' viewBox='0 0 24 24' width='18' height='18'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 15px center;
       outline: none;
       transition: border-color var(--transition), box-shadow var(--transition);
@@ -251,7 +251,7 @@
       margin: 28px 0 12px;
       color: var(--texte-sec);
       font-size: 0.7rem;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.2em;
     }
@@ -262,7 +262,7 @@
       display: table;
       color: var(--or);
       font-size: 0.72rem;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-weight: 500;
       background: rgba(184,150,46,0.08);
       border: 1px solid rgba(184,150,46,0.22);
@@ -365,7 +365,7 @@
       z-index: 3;
       background: var(--or);
       color: var(--blanc);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.68rem;
       font-weight: 600;
       letter-spacing: 0.14em;
@@ -387,7 +387,7 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       color: rgba(255,255,255,0.95);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.62rem;
       font-weight: 600;
       padding: 5px 12px;
@@ -406,7 +406,7 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       color: var(--or-clair);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.62rem;
       font-weight: 600;
       padding: 5px 12px;
@@ -423,7 +423,7 @@
     }
 
     .carte-nom {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1.45rem;
       font-weight: 600;
       color: var(--texte);
@@ -434,7 +434,7 @@
     .carte-infos {
       display: flex;
       gap: 16px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.75rem;
       color: var(--texte-sec);
       margin-bottom: 14px;
@@ -467,7 +467,7 @@
       background: var(--fond);
       border: 1px solid var(--gris);
       color: var(--texte-sec);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.64rem;
       font-weight: 500;
       padding: 4px 10px;
@@ -584,7 +584,7 @@
     }
 
     .modale-corps h2 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 2.4rem;
       font-weight: 600;
       color: var(--texte);
@@ -598,7 +598,7 @@
       gap: 16px;
       margin-bottom: 28px;
       margin-top: 14px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.8rem;
       color: var(--texte-sec);
       padding-bottom: 24px;
@@ -616,7 +616,7 @@
     }
 
     .modale-section h3 {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.65rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -674,7 +674,7 @@
       color: var(--texte-sec);
       display: none;
       grid-column: 1/-1;
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-style: italic;
       font-size: 1.3rem;
       background: var(--blanc);
@@ -686,7 +686,7 @@
       color: rgba(255,255,255,0.35);
       text-align: center;
       padding: 40px 20px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.75rem;
       letter-spacing: 0.05em;
     }
@@ -784,7 +784,7 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       transition: var(--transition);
       margin-right: 4px;
       white-space: nowrap;
@@ -833,7 +833,7 @@
     /* ─── Popup Leaflet ─── */
     .leaflet-popup-content-wrapper {
       border-radius: 4px !important;
-      font-family: 'Inter', sans-serif !important;
+      font-family: 'Jost', sans-serif !important;
       box-shadow: 0 4px 20px rgba(0,0,0,0.18) !important;
       border: 1px solid rgba(184,150,46,0.3) !important;
       padding: 0 !important;
@@ -880,7 +880,7 @@
       text-transform: uppercase;
       cursor: pointer;
       border: 1px solid rgba(212,175,90,0.4);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       transition: background 0.2s;
     }
 
@@ -939,7 +939,7 @@
 
     .resto-eyebrow {
       font-size: 0.65rem;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--or);
@@ -947,7 +947,7 @@
     }
 
     .resto-title {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 2.6rem;
       font-weight: 600;
       color: var(--marine);
@@ -957,7 +957,7 @@
     .resto-title em { color: var(--or); font-style: italic; }
 
     .resto-subtitle {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.9rem;
       color: var(--texte-sec);
       line-height: 1.6;
@@ -1003,7 +1003,7 @@
       right: 14px;
       background: var(--marine);
       color: var(--or-clair);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.82rem;
       font-weight: 600;
       padding: 5px 14px;
@@ -1015,7 +1015,7 @@
     .resto-corps { padding: 22px 24px 24px; }
 
     .resto-nom {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1.55rem;
       font-weight: 600;
       color: var(--marine);
@@ -1027,7 +1027,7 @@
       font-size: 0.75rem;
       color: var(--texte-sec);
       margin-bottom: 14px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
     }
 
     .resto-desc {
@@ -1040,7 +1040,7 @@
     .resto-infos {
       font-size: 0.75rem;
       color: var(--texte-sec);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       border-top: 1px solid var(--gris);
       padding-top: 14px;
     }
@@ -1072,7 +1072,7 @@
     }
 
     .pres-titre {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: clamp(2.5rem, 6vw, 4.5rem);
       font-weight: 600;
       line-height: 1.1;
@@ -1082,7 +1082,7 @@
     .pres-titre em { font-style: italic; color: var(--or-clair); }
 
     .pres-sous-titre {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1.2rem;
       font-style: italic;
       color: rgba(255,255,255,0.75);
@@ -1106,7 +1106,7 @@
     .pres-label-or { color: var(--or); }
 
     .pres-section h3 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: clamp(1.8rem, 4vw, 2.8rem);
       font-weight: 600;
       color: var(--marine);
@@ -1146,7 +1146,7 @@
     }
 
     .pres-feature strong {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1.1rem;
       font-weight: 600;
       color: var(--marine);
@@ -1189,7 +1189,7 @@
     }
 
     .pres-num {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 2.5rem;
       font-weight: 400;
       color: rgba(212,175,90,0.2);
@@ -1197,7 +1197,7 @@
     }
 
     .pres-jour-titre {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1.2rem;
       font-weight: 600;
       color: #fff;
@@ -1236,7 +1236,7 @@
     }
 
     .pres-prog li strong {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1rem;
       font-weight: 600;
       color: rgba(255,255,255,0.9);
@@ -1276,7 +1276,7 @@
     }
 
     .pres-cat strong {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1.2rem;
       font-weight: 600;
       color: var(--marine);
@@ -1297,7 +1297,7 @@
     }
 
     .pres-guillemet {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 5rem;
       line-height: 0.5;
       color: var(--or);
@@ -1307,7 +1307,7 @@
     }
 
     .pres-citation blockquote {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: clamp(1.6rem, 3.5vw, 2.4rem);
       font-style: italic;
       font-weight: 400;
@@ -1355,7 +1355,7 @@
     }
 
     .pres-signature {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1.8rem;
       font-weight: 600;
       font-style: italic;
@@ -1377,7 +1377,7 @@
       border-radius: 4px !important;
       padding: 10px 14px !important;
       color: #fff !important;
-      font-family: 'Inter', sans-serif !important;
+      font-family: 'Jost', sans-serif !important;
       font-size: 0.72rem !important;
     }
 
