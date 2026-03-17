@@ -482,9 +482,9 @@
     .modale-fond {
       position: fixed;
       inset: 0;
-      background: rgba(10,18,40,0.75);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      background: rgba(26,23,20,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -492,7 +492,7 @@
       padding: 20px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.35s;
+      transition: opacity 0.3s;
     }
 
     .modale-fond.visible {
@@ -501,28 +501,32 @@
     }
 
     .modale {
-      background: var(--blanc);
-      max-width: 660px;
+      background: var(--fond);
+      max-width: 680px;
       width: 100%;
       max-height: 92vh;
       overflow-y: auto;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-      transform: translateY(24px);
-      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+      border-radius: 20px;
+      box-shadow: 0 40px 100px rgba(26,23,20,0.35);
+      transform: translateY(32px) scale(0.98);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+      scrollbar-width: none;
     }
 
+    .modale::-webkit-scrollbar { display: none; }
+
     .modale-fond.visible .modale {
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
 
     .modale-entete {
-      height: 300px;
+      height: 360px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 90px;
+      align-items: flex-end;
+      font-size: 80px;
       position: relative;
       overflow: hidden;
+      border-radius: 20px 20px 0 0;
     }
 
     .modale-photo {
@@ -532,30 +536,28 @@
       height: 100%;
       object-fit: cover;
       opacity: 0;
-      transition: opacity 0.6s ease;
+      transition: opacity 0.7s ease;
     }
 
-    .modale-photo.chargee {
-      opacity: 1;
-    }
+    .modale-photo.chargee { opacity: 1; }
 
     .modale-photo-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.0) 30%, rgba(26,23,20,0.75) 100%);
       opacity: 0;
-      transition: opacity 0.6s;
+      transition: opacity 0.7s;
       z-index: 1;
     }
 
-    .modale-photo-overlay.visible {
-      opacity: 1;
-    }
+    .modale-photo-overlay.visible { opacity: 1; }
 
     .modale-emoji-fb {
       position: relative;
       z-index: 2;
-      transition: opacity 0.4s;
+      width: 100%;
+      text-align: center;
+      padding-bottom: 24px;
       color: var(--gris-sombre);
     }
 
@@ -563,108 +565,111 @@
       position: absolute;
       top: 16px;
       right: 16px;
-      background: rgba(0,0,0,0.5);
+      background: rgba(253,251,247,0.15);
+      backdrop-filter: blur(12px);
       color: #fff;
-      border: none;
-      width: 38px;
-      height: 38px;
+      border: 1px solid rgba(255,255,255,0.25);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       font-size: 1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background var(--transition);
+      transition: background var(--transition), transform var(--transition);
       z-index: 10;
     }
 
-    .modale-fermer:hover { background: rgba(0,0,0,0.8); }
+    .modale-fermer:hover {
+      background: rgba(253,251,247,0.3);
+      transform: scale(1.08);
+    }
 
     .modale-corps {
-      padding: 36px 40px 44px;
+      padding: 32px 36px 44px;
+      background: var(--blanc);
+      border-radius: 0 0 20px 20px;
     }
 
     .modale-corps h2 {
       font-family: 'Playfair Display', serif;
-      font-size: 2.4rem;
-      font-weight: 600;
+      font-size: 2.2rem;
+      font-weight: 700;
       color: var(--texte);
-      margin-bottom: 6px;
+      margin-bottom: 16px;
       line-height: 1.1;
     }
 
     .modale-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 8px;
       margin-bottom: 28px;
-      margin-top: 14px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.8rem;
-      color: var(--texte-sec);
       padding-bottom: 24px;
       border-bottom: 1px solid var(--gris);
     }
 
     .modale-meta span {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--texte-sec);
+      background: var(--fond);
+      border: 1px solid var(--gris);
+      padding: 5px 12px;
+      border-radius: 20px;
     }
 
     .modale-section {
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .modale-section h3 {
       font-family: 'Jost', sans-serif;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
       color: var(--or);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .modale-section h3::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--gris);
+      margin-bottom: 10px;
     }
 
     .modale-section p {
-      font-size: 0.95rem;
-      color: var(--texte);
-      line-height: 1.8;
+      font-size: 0.93rem;
+      color: var(--texte-sec);
+      line-height: 1.85;
     }
 
     .modale-section ul {
       list-style: none;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .modale-section ul li {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: var(--texte);
-      padding: 6px 0 6px 20px;
-      position: relative;
-      border-bottom: 1px solid var(--gris);
+      padding: 10px 14px;
+      background: var(--fond);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-
-    .modale-section ul li:last-child { border-bottom: none; }
 
     .modale-section ul li::before {
       content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
       width: 6px;
       height: 6px;
+      border-radius: 50%;
       background: var(--or);
+      flex-shrink: 0;
     }
 
     /* ─── Aucun résultat ─── */
