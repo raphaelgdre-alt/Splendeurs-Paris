@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Splendeurs de Paris</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    /* ─── Variables & Reset ─── */
+    :root {
+      --or: #b8962e;
+      --or-clair: #d4af5a;
+      --or-pale: #f5ead4;
+      --marine: #0f1c2e;
+      --marine-mid: #1e3356;
+      --bleu-clair: #4a6fa5;
+      --blanc: #ffffff;
+      --fond: #f6f5f2;
+      --gris: #edeae4;
+      --gris-sombre: #c8c3b8;
+      --texte: #1a1a1a;
+      --texte-sec: #6b6860;
+      --ombre: 0 4px 24px rgba(0,0,0,0.07);
+      --ombre-survol: 0 16px 48px rgba(0,0,0,0.14);
+      --rayon: 12px;
+      --rayon-lg: 20px;
+      --transition: 0.3s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--fond);
+      color: var(--texte);
+      line-height: 1.7;
+    }
+
+    /* ─── Header ─── */
+    header {
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=85') center 40%/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      min-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px 80px;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.3) 0%,
+        rgba(10,18,40,0.72) 70%,
+        rgba(10,18,40,0.92) 100%);
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .header-eyebrow::before,
+    .header-eyebrow::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--or-clair);
+      opacity: 0.6;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+    }
+
+    header h1 span {
+      color: var(--or-clair);
+      font-style: italic;
+    }
+
+    .header-separator {
+      width: 60px;
+      height: 1px;
+      background: rgba(255,255,255,0.4);
+      margin: 24px auto;
+    }
+
+    header p.sous-titre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-style: italic;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.03em;
+    }
+
+    .lieux-count {
+      margin-top: 36px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .header-scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
+      animation: bounce 2s infinite;
+    }
+
+    .header-scroll::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ─── Navigation catégories ─── */
+    .filtres-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,28,46,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(212,175,90,0.25);
+    }
+
+    .filtres {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .filtre-btn {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      color: rgba(255,255,255,0.6);
+      padding: 7px 16px;
+      margin: 10px 4px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .filtre-btn:hover {
+      background: rgba(255,255,255,0.13);
+      color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .filtre-btn.actif {
+      background: var(--or);
+      border-color: var(--or);
+      color: var(--marine);
+    }
+
+    /* ─── Recherche ─── */
+    .recherche-wrapper {
+      max-width: 520px;
+      margin: 48px auto 0;
+      padding: 0 20px;
+    }
+
+    .recherche-input {
+      width: 100%;
+      padding: 14px 22px 14px 48px;
+      border-radius: 40px;
+      border: 1px solid var(--gris);
+      border-radius: 2px;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      background: var(--blanc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23aaa' stroke-width='2' viewBox='0 0 24 24' width='18' height='18'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 15px center;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      color: var(--texte);
+    }
+
+    .recherche-input::placeholder { color: var(--gris-sombre); }
+
+    .recherche-input:focus {
+      border-color: var(--or);
+      box-shadow: 0 0 0 3px rgba(184,150,46,0.1);
+    }
+
+    /* ─── Grille de cartes ─── */
+    .section-titre {
+      text-align: center;
+      margin: 28px 0 12px;
+      color: var(--texte-sec);
+      font-size: 0.7rem;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .section-gratuit {
+      text-align: center;
+      margin: 0 auto 32px;
+      display: table;
+      color: var(--or);
+      font-size: 0.72rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      background: rgba(184,150,46,0.08);
+      border: 1px solid rgba(184,150,46,0.22);
+      border-radius: 24px;
+      padding: 8px 20px;
+    }
+
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 8px 24px 80px;
+      background: transparent;
+    }
+
+    /* ─── Carte ─── */
+    .carte {
+      background: var(--blanc);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      border-radius: var(--rayon-lg);
+      box-shadow: var(--ombre);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .carte:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--ombre-survol);
+    }
+
+    .carte:hover .carte-decouvrir {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .carte:hover .carte-photo {
+      transform: scale(1.04);
+    }
+
+    .carte.masquee {
+      display: none;
+    }
+
+    .carte-image {
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 70px;
+      position: relative;
+      overflow: hidden;
+      background: var(--gris);
+    }
+
+    .carte-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.5s ease;
+      z-index: 0;
+    }
+
+    .carte-photo.chargee {
+      opacity: 1;
+    }
+
+    .carte-emoji-fb {
+      position: relative;
+      z-index: 1;
+      transition: opacity 0.4s;
+      color: var(--gris-sombre);
+    }
+
+    .carte-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55) 100%);
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .carte-image-overlay.visible {
+      opacity: 1;
+    }
+
+    .carte-decouvrir {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      z-index: 3;
+      background: var(--or);
+      color: var(--blanc);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 9px 24px;
+      border-radius: 24px;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(184,150,46,0.4);
+    }
+
+    .carte-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: rgba(255,255,255,0.95);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .carte-arrondissement {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      z-index: 2;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--or-clair);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      letter-spacing: 0.08em;
+      border-radius: 20px;
+      border: 1px solid rgba(212,175,90,0.3);
+    }
+
+    .carte-corps {
+      padding: 24px 26px 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .carte-nom {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--texte);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .carte-infos {
+      display: flex;
+      gap: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      color: var(--texte-sec);
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .carte-infos span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .carte-desc {
+      font-size: 0.88rem;
+      color: var(--texte-sec);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .carte-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--gris);
+    }
+
+    .tag {
+      background: var(--fond);
+      border: 1px solid var(--gris);
+      color: var(--texte-sec);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.64rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 20px;
+    }
+
+    .tag::after { display: none; }
+
+    /* ─── Modale ─── */
+    .modale-fond {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,18,40,0.75);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s;
+    }
+
+    .modale-fond.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modale {
+      background: var(--blanc);
+      max-width: 660px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+      transform: translateY(24px);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .modale-fond.visible .modale {
+      transform: translateY(0);
+    }
+
+    .modale-entete {
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 90px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modale-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .modale-photo.chargee {
+      opacity: 1;
+    }
+
+    .modale-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
+      opacity: 0;
+      transition: opacity 0.6s;
+      z-index: 1;
+    }
+
+    .modale-photo-overlay.visible {
+      opacity: 1;
+    }
+
+    .modale-emoji-fb {
+      position: relative;
+      z-index: 2;
+      transition: opacity 0.4s;
+      color: var(--gris-sombre);
+    }
+
+    .modale-fermer {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      border: none;
+      width: 38px;
+      height: 38px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+      z-index: 10;
+    }
+
+    .modale-fermer:hover { background: rgba(0,0,0,0.8); }
+
+    .modale-corps {
+      padding: 36px 40px 44px;
+    }
+
+    .modale-corps h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: var(--texte);
+      margin-bottom: 6px;
+      line-height: 1.1;
+    }
+
+    .modale-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+      margin-top: 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: var(--texte-sec);
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--gris);
+    }
+
+    .modale-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .modale-section {
+      margin-bottom: 28px;
+    }
+
+    .modale-section h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--or);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modale-section h3::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gris);
+    }
+
+    .modale-section p {
+      font-size: 0.95rem;
+      color: var(--texte);
+      line-height: 1.8;
+    }
+
+    .modale-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .modale-section ul li {
+      font-size: 0.92rem;
+      color: var(--texte);
+      padding: 6px 0 6px 20px;
+      position: relative;
+      border-bottom: 1px solid var(--gris);
+    }
+
+    .modale-section ul li:last-child { border-bottom: none; }
+
+    .modale-section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      background: var(--or);
+    }
+
+    /* ─── Aucun résultat ─── */
+    .aucun {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--texte-sec);
+      display: none;
+      grid-column: 1/-1;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.3rem;
+      background: var(--blanc);
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      background: var(--marine);
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      padding: 40px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    footer strong { color: var(--or-clair); }
+
+    /* ─── Couleurs par catégorie (fallback si pas de photo) ─── */
+    .bg-musee    { background: #d6e4f0; }
+    .bg-monument { background: #e8ddd0; }
+    .bg-eglise   { background: #e8d6f0; }
+    .bg-art      { background: #d6f0e4; }
+    .bg-histoire { background: #f0d6d6; }
+    .bg-spectacle{ background: #d6e4f0; }
+    .bg-jardin   { background: #d6ead8; }
+
+    @media (max-width: 700px) {
+      /* ── Grille ── */
+      .grille { grid-template-columns: 1fr; }
+      .lieux-count { font-size: 0.7rem; }
+      header { min-height: 100svh; }
+
+      /* ── Barre de filtres : 2 lignes ── */
+      .filtres-wrapper {
+        flex-wrap: wrap;
+        padding: 8px 10px 0;
+        gap: 0;
+      }
+
+      /* Boutons d'action sur la ligne du haut — 3 colonnes égales */
+      .btn-carte-view {
+        flex: 0 0 calc(33.33% - 5px);
+        text-align: center;
+        padding: 8px 2px;
+        font-size: 0.58rem;
+        margin: 0 2px 8px !important;
+        letter-spacing: 0.04em;
+        order: 1 !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Filtres catégories sur la ligne du bas, scrollables */
+      .filtres {
+        order: 2;
+        width: 100%;
+        flex: none !important;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        border-top: 1px solid rgba(212,175,90,0.12);
+        padding-bottom: 0;
+      }
+      .filtres::-webkit-scrollbar { display: none; }
+
+      .filtre-btn {
+        font-size: 0.68rem;
+        padding: 11px 13px;
+      }
+
+      /* ── Modale ── */
+      .modale-corps { padding: 20px 18px 28px; }
+      .modale-corps h2 { font-size: 1.75rem; }
+      .modale-meta { gap: 8px; }
+      .modale-meta span { font-size: 0.75rem; }
+
+      /* ── Cartes ── */
+      .carte-nom { font-size: 1.3rem; }
+      .carte-infos { font-size: 0.72rem; }
+
+      /* ── Recherche ── */
+      .recherche-wrapper { margin-top: 28px; }
+    }
+
+    /* ─── Barre de filtres : layout flex pour bouton carte ─── */
+    .filtres-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .filtres {
+      flex: 1;
+    }
+
+    .btn-carte-view {
+      flex-shrink: 0;
+      background: transparent;
+      border: 1px solid rgba(212,175,90,0.35);
+      border-radius: 3px;
+      color: rgba(255,255,255,0.55);
+      padding: 8px 14px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+      margin-right: 4px;
+      white-space: nowrap;
+    }
+
+    .btn-carte-view:hover,
+    .btn-carte-view.actif {
+      color: var(--or-clair);
+      border-color: var(--or-clair);
+      background: rgba(212,175,90,0.1);
+    }
+
+    /* ─── Vue Carte ─── */
+    #vue-carte {
+      display: none;
+      height: calc(100vh - 57px);
+      width: 100%;
+    }
+
+    body.mode-carte .recherche-wrapper,
+    body.mode-carte .section-titre,
+    body.mode-carte .section-gratuit,
+    body.mode-carte .grille {
+      display: none;
+    }
+
+    body.mode-carte #vue-carte {
+      display: block;
+    }
+
+    /* ─── Marqueurs personnalisés ─── */
+    .marqueur-pin {
+      width: 28px;
+      height: 28px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      border: 2px solid rgba(255,255,255,0.9);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    .marqueur-musee    { background: #b8962e; }
+    .marqueur-monument { background: #1e3356; }
+    .marqueur-eglise   { background: #7b5ea7; }
+    .marqueur-jardin   { background: #4a7c59; }
+
+    /* ─── Popup Leaflet ─── */
+    .leaflet-popup-content-wrapper {
+      border-radius: 4px !important;
+      font-family: 'Inter', sans-serif !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18) !important;
+      border: 1px solid rgba(184,150,46,0.3) !important;
+      padding: 0 !important;
+    }
+
+    .leaflet-popup-content {
+      margin: 0 !important;
+    }
+
+    .popup-inner {
+      padding: 14px 16px;
+    }
+
+    .popup-nom {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 3px;
+      color: #1a1a1a;
+    }
+
+    .popup-cat {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #b8962e;
+      margin-bottom: 6px;
+    }
+
+    .popup-arr {
+      font-size: 0.78rem;
+      color: #6b6860;
+      margin-bottom: 10px;
+    }
+
+    .popup-btn {
+      display: inline-block;
+      background: var(--marine, #0f1c2e);
+      color: #d4af5a;
+      padding: 6px 12px;
+      border-radius: 2px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid rgba(212,175,90,0.4);
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .popup-btn:hover { background: #1e3356; }
+
+    /* ─── Vue Présentation ─── */
+    #vue-presentation {
+      display: none;
+      background: var(--fond);
+    }
+
+    body.mode-presentation .recherche-wrapper,
+    body.mode-presentation .section-titre,
+    body.mode-presentation .section-gratuit,
+    body.mode-presentation .grille,
+    body.mode-presentation #vue-carte {
+      display: none;
+    }
+
+    body.mode-presentation #vue-presentation {
+      display: block;
+    }
+
+    body.mode-presentation header {
+      display: none;
+    }
+
+    /* ─── Vue Restaurants ─── */
+    #vue-restaurants {
+      display: none;
+      background: var(--fond);
+    }
+
+    body.mode-restaurants .recherche-wrapper,
+    body.mode-restaurants .section-titre,
+    body.mode-restaurants .section-gratuit,
+    body.mode-restaurants .grille,
+    body.mode-restaurants #vue-carte {
+      display: none;
+    }
+
+    body.mode-restaurants header {
+      display: none;
+    }
+
+    body.mode-restaurants #vue-restaurants {
+      display: block;
+    }
+
+    .resto-header {
+      text-align: center;
+      padding: 48px 24px 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .resto-eyebrow {
+      font-size: 0.65rem;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: 16px;
+    }
+
+    .resto-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.6rem;
+      font-weight: 600;
+      color: var(--marine);
+      margin-bottom: 12px;
+    }
+
+    .resto-title em { color: var(--or); font-style: italic; }
+
+    .resto-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--texte-sec);
+      line-height: 1.6;
+    }
+
+    .resto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+      gap: 28px;
+      max-width: 1100px;
+      margin: 40px auto 80px;
+      padding: 0 24px;
+    }
+
+    @media (max-width: 700px) {
+      .resto-grid { grid-template-columns: 1fr; padding: 0 16px; }
+      .resto-title { font-size: 2rem; }
+    }
+
+    .resto-card {
+      background: #fff;
+      border-radius: var(--rayon-lg);
+      overflow: hidden;
+      box-shadow: var(--ombre);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .resto-card:hover {
+      box-shadow: var(--ombre-survol);
+      transform: translateY(-2px);
+    }
+
+    .resto-photo {
+      height: 210px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .resto-fourchette {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      background: var(--marine);
+      color: var(--or-clair);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+      border: 1.5px solid var(--or);
+    }
+
+    .resto-corps { padding: 22px 24px 24px; }
+
+    .resto-nom {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--marine);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .resto-adresse {
+      font-size: 0.75rem;
+      color: var(--texte-sec);
+      margin-bottom: 14px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .resto-desc {
+      font-size: 0.88rem;
+      color: var(--texte);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .resto-infos {
+      font-size: 0.75rem;
+      color: var(--texte-sec);
+      font-family: 'Inter', sans-serif;
+      border-top: 1px solid var(--gris);
+      padding-top: 14px;
+    }
+
+    .pres-hero {
+      background: url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&q=85') center 40%/cover no-repeat;
+      position: relative;
+      text-align: center;
+      padding: 100px 24px;
+      color: #fff;
+    }
+
+    .pres-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(10,18,40,0.6), rgba(10,18,40,0.9));
+    }
+
+    .pres-hero > * { position: relative; z-index: 1; }
+
+    .pres-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      margin-bottom: 20px;
+    }
+
+    .pres-titre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .pres-titre em { font-style: italic; color: var(--or-clair); }
+
+    .pres-sous-titre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .pres-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 72px 32px;
+    }
+
+    .pres-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--texte-sec);
+      margin-bottom: 16px;
+    }
+
+    .pres-label-or { color: var(--or); }
+
+    .pres-section h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 600;
+      color: var(--marine);
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .pres-section h3 em { font-style: italic; color: var(--or); }
+
+    .pres-mission p {
+      font-size: 1rem;
+      color: var(--texte-sec);
+      line-height: 1.85;
+      max-width: 720px;
+      margin-bottom: 40px;
+    }
+
+    .pres-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .pres-feature {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: var(--blanc);
+      padding: 24px;
+      border: 1px solid var(--gris);
+    }
+
+    .pres-feature > span {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .pres-feature strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--marine);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .pres-feature p { font-size: 0.83rem; color: var(--texte-sec); line-height: 1.6; margin: 0; }
+
+    /* Week-end */
+    .pres-weekend { background: var(--marine); max-width: 100%; padding: 72px 0; }
+    .pres-weekend > * { max-width: 1100px; margin-left: auto; margin-right: auto; padding-left: 32px; padding-right: 32px; }
+    .pres-weekend h3 { color: #fff; }
+    .pres-weekend .pres-label { color: rgba(212,175,90,0.8); }
+
+    .pres-jours {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 40px;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 32px;
+    }
+
+    .pres-jour {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(212,175,90,0.12);
+      padding: 36px;
+    }
+
+    .pres-jour-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(212,175,90,0.2);
+    }
+
+    .pres-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 400;
+      color: rgba(212,175,90,0.2);
+      line-height: 1;
+    }
+
+    .pres-jour-titre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .pres-jour-sub {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      margin-top: 2px;
+    }
+
+    .pres-prog {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pres-prog li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .pres-prog li > span {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      width: 60px;
+      flex-shrink: 0;
+      padding-top: 3px;
+    }
+
+    .pres-prog li strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .pres-prog li p { font-size: 0.78rem; color: rgba(255,255,255,0.42); line-height: 1.5; margin: 0; }
+
+    /* Catégories */
+    .pres-cats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      margin-top: 36px;
+      background: var(--gris);
+    }
+
+    .pres-cat {
+      background: var(--blanc);
+      padding: 32px 24px;
+      text-align: center;
+      transition: background var(--transition);
+    }
+
+    .pres-cat:hover { background: var(--marine); }
+    .pres-cat:hover strong { color: var(--or-clair); }
+    .pres-cat:hover p { color: rgba(255,255,255,0.5); }
+    .pres-cat:hover span { color: rgba(212,175,90,0.5); }
+
+    .pres-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+
+    .pres-cat strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--marine);
+      display: block;
+      margin-bottom: 8px;
+      transition: color var(--transition);
+    }
+
+    .pres-cat p { font-size: 0.8rem; color: var(--texte-sec); line-height: 1.6; margin-bottom: 12px; transition: color var(--transition); }
+    .pres-cat span { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--or); transition: color var(--transition); }
+
+    /* Citation */
+    .pres-citation {
+      background: var(--marine-mid);
+      text-align: center;
+      padding: 100px 24px;
+      color: #fff;
+    }
+
+    .pres-guillemet {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      line-height: 0.5;
+      color: var(--or);
+      opacity: 0.35;
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .pres-citation blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.9);
+      max-width: 680px;
+      margin: 0 auto 28px;
+    }
+
+    .pres-auteur {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .pres-auteur::before,
+    .pres-auteur::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--or-clair);
+      opacity: 0.45;
+    }
+
+    .pres-sep {
+      width: 1px;
+      height: 40px;
+      background: rgba(212,175,90,0.25);
+      margin: 44px auto;
+    }
+
+    .pres-sign-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 10px;
+    }
+
+    .pres-signature {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--or-clair);
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 800px) {
+      .pres-features { grid-template-columns: 1fr; }
+      .pres-jours { grid-template-columns: 1fr; }
+      .pres-cats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ─── Légende carte ─── */
+    .carte-legende {
+      background: rgba(15,28,46,0.92) !important;
+      backdrop-filter: blur(8px) !important;
+      border: 1px solid rgba(212,175,90,0.25) !important;
+      border-radius: 4px !important;
+      padding: 10px 14px !important;
+      color: #fff !important;
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.72rem !important;
+    }
+
+    .legende-titre {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(212,175,90,0.7);
+      margin-bottom: 8px;
+    }
+
+    .legende-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 0;
+    }
+
+    .legende-point {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-eyebrow">Guide culturel</div>
+    <h1>Splendeurs <span>de Paris</span></h1>
+    <div class="header-separator"></div>
+    <p class="sous-titre">Les incontournables lieux culturels de la Capitale</p>
+    <p class="lieux-count">22 lieux à découvrir</p>
+  </div>
+  <div class="header-scroll">Découvrir</div>
+</header>
+
+<!-- ══════════════ FILTRES ══════════════ -->
+<div class="filtres-wrapper">
+  <div class="filtres" id="filtres">
+    <button class="filtre-btn actif" data-filtre="tous">Tous</button>
+    <button class="filtre-btn" data-filtre="musee">Musées</button>
+    <button class="filtre-btn" data-filtre="monument">Monuments</button>
+    <button class="filtre-btn" data-filtre="eglise">Édifices religieux</button>
+    <button class="filtre-btn" data-filtre="jardin">Jardins</button>
+  </div>
+  <button class="btn-carte-view" id="btn-presentation-view" style="margin-right:6px; order:-1;">✦ À propos</button>
+  <button class="btn-carte-view" id="btn-resto-view" style="margin-right:6px;">🍽 Restaurants</button>
+  <button class="btn-carte-view" id="btn-carte-view">🗺 Carte</button>
+</div>
+
+<!-- ══════════════ RECHERCHE ══════════════ -->
+<div class="recherche-wrapper">
+  <input
+    class="recherche-input"
+    type="text"
+    id="recherche"
+    placeholder="Rechercher un lieu..."
+    aria-label="Rechercher un lieu culturel"
+  />
+</div>
+
+<p class="section-titre" id="compteur">22 lieux affichés</p>
+<p class="section-gratuit">🎓 Entrée gratuite pour les moins de 25 ans dans la majorité des lieux</p>
+
+<!-- ══════════════ GRILLE ══════════════ -->
+<div class="grille" id="grille">
+  <p class="aucun" id="aucun">Aucun lieu ne correspond à votre recherche.</p>
+</div>
+
+<!-- ══════════════ VUE CARTE ══════════════ -->
+<div id="vue-carte"></div>
+
+<!-- ══════════════ VUE PRÉSENTATION ══════════════ -->
+<div id="vue-presentation">
+
+  <div class="pres-hero">
+    <div class="pres-eyebrow">Guide culturel</div>
+    <h2 class="pres-titre">Splendeurs <em>de Paris</em></h2>
+    <p class="pres-sous-titre">Tout ce qu'il faut voir lors d'un week-end à Paris</p>
+  </div>
+
+  <div class="pres-section pres-mission">
+    <div class="pres-label">Notre mission</div>
+    <h3>Paris en un regard, <em>l'essentiel à portée de main</em></h3>
+    <p>Paris regorge de chefs-d'œuvre, de monuments millénaires et de jardins secrets. Face à l'immensité de la capitale, même le voyageur averti peut se sentir dépassé. <strong>Splendeurs de Paris</strong> a été conçu pour répondre à une question simple : que faut-il absolument voir lors d'un séjour à Paris ?</p>
+    <div class="pres-features">
+      <div class="pres-feature"><span>🗺</span><div><strong>Carte interactive</strong><p>Visualisez tous les lieux sur un plan. Zoomez, cliquez, explorez.</p></div></div>
+      <div class="pres-feature"><span>🏛</span><div><strong>22 lieux sélectionnés</strong><p>Musées, monuments, édifices religieux et jardins — le meilleur de la capitale.</p></div></div>
+      <div class="pres-feature"><span>⏱</span><div><strong>Conçu pour un week-end</strong><p>Horaires, accès et conseils de visite pour chaque lieu. Gratuit pour les moins de 25 ans.</p></div></div>
+    </div>
+  </div>
+
+  <div class="pres-section pres-weekend">
+    <div class="pres-label pres-label-or">Programme suggéré</div>
+    <h3>Un week-end à Paris, <em>deux jours d'exception</em></h3>
+    <div class="pres-jours">
+      <div class="pres-jour">
+        <div class="pres-jour-header"><div><div class="pres-jour-titre">Cœur historique & Rive gauche</div><div class="pres-jour-sub">Samedi</div></div></div>
+        <ul class="pres-prog">
+          <li><span>Matin</span><div><strong>Le Louvre</strong><p>Démarrez tôt. La Joconde, la Vénus de Milo — 2 à 3 heures d'émerveillement.</p></div></li>
+          <li><span>Déjeuner</span><div><strong>Jardins du Palais-Royal</strong><p>Pause dans ce jardin secret, ses arcades et les colonnes de Buren.</p></div></li>
+          <li><span>Après-midi</span><div><strong>Île de la Cité</strong><p>Notre-Dame de Paris et la Sainte-Chapelle avec ses vitraux saisissants.</p></div></li>
+          <li><span>Soir</span><div><strong>Musée d'Orsay</strong><p>Les impressionnistes au coucher du soleil — un moment rare.</p></div></li>
+        </ul>
+      </div>
+      <div class="pres-jour">
+        <div class="pres-jour-header"><div><div class="pres-jour-titre">Monuments & Montmartre</div><div class="pres-jour-sub">Dimanche</div></div></div>
+        <ul class="pres-prog">
+          <li><span>Matin</span><div><strong>Les Invalides & Musée de l'Armée</strong><p>Le dôme doré, le tombeau de Napoléon et les collections militaires exceptionnelles.</p></div></li>
+          <li><span>Déjeuner</span><div><strong>Rue du Bac</strong><p>Quartier authentique et chapelle de la Médaille Miraculeuse.</p></div></li>
+          <li><span>Après-midi</span><div><strong>Opéra & Grands Boulevards</strong><p>Palais Garnier et Hôtel de la Marine, place de la Concorde.</p></div></li>
+          <li><span>Soir</span><div><strong>Sacré-Cœur, Montmartre</strong><p>Terminez en apothéose face au panorama de Paris illuminé.</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="pres-section pres-categories">
+    <div class="pres-label">Explorer par thème</div>
+    <h3>Quatre univers, <em>une seule ville</em></h3>
+    <div class="pres-cats">
+      <div class="pres-cat"><div class="pres-dot" style="background:#b8962e"></div><strong>Musées</strong><p>Des collections universelles aux trésors impressionnistes.</p><span>9 lieux</span></div>
+      <div class="pres-cat"><div class="pres-dot" style="background:#1e3356"></div><strong>Monuments</strong><p>Palais, arcs, opéras — deux mille ans d'histoire.</p><span>7 lieux</span></div>
+      <div class="pres-cat"><div class="pres-dot" style="background:#7b5ea7"></div><strong>Édifices religieux</strong><p>Cathédrales et chapelles qui élèvent l'âme.</p><span>3 lieux</span></div>
+      <div class="pres-cat"><div class="pres-dot" style="background:#4a7c59"></div><strong>Jardins</strong><p>Des havres de paix au cœur de la capitale.</p><span>3 lieux</span></div>
+    </div>
+  </div>
+
+  <div class="pres-citation">
+    <div class="pres-guillemet">"</div>
+    <blockquote>Respirer Paris, cela conserve l'âme.</blockquote>
+    <div class="pres-auteur">Victor Hugo</div>
+    <div class="pres-sep"></div>
+    <div class="pres-sign-label">Un guide conçu avec passion par</div>
+    <div class="pres-signature">Gardere Raphaël</div>
+  </div>
+
+</div>
+
+<!-- ══════════════ VUE RESTAURANTS ══════════════ -->
+<div id="vue-restaurants">
+
+  <div class="resto-header">
+    <div class="resto-eyebrow">Sélection</div>
+    <h2 class="resto-title">Les Bouillons <em>de Paris</em></h2>
+    <p class="resto-subtitle">La cuisine française traditionnelle à prix accessibles — les adresses incontournables.</p>
+  </div>
+
+  <div class="resto-grid">
+
+    <!-- Bouillon Chartier Montparnasse -->
+    <div class="resto-card">
+      <div class="resto-photo" style="background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80') center/cover no-repeat;">
+        <div class="resto-fourchette">moins de 20 € / pers.</div>
+      </div>
+      <div class="resto-corps">
+        <h3 class="resto-nom">Bouillon Chartier Montparnasse</h3>
+        <div class="resto-adresse">📍 59 Bd du Montparnasse · 6e arr.</div>
+        <p class="resto-desc">Institution parisienne depuis 1903, ce bouillon a conservé son décor Belle Époque authentique — boiseries, miroirs et banquettes en moleskine rouge. Une cuisine française généreuse et sans chichis à prix imbattables : soupe à l'oignon, œufs mayo, jarret de veau braisé…</p>
+        <div class="resto-infos">
+          <span>🕐 Lun–ven 12h–0h · Sam–dim 11h30–0h</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bouillon Chartier Grand Boulevard -->
+    <div class="resto-card">
+      <div class="resto-photo" style="background:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80') center/cover no-repeat;">
+        <div class="resto-fourchette">10 – 20 € / pers.</div>
+      </div>
+      <div class="resto-corps">
+        <h3 class="resto-nom">Bouillon Chartier Grand Boulevard</h3>
+        <div class="resto-adresse">📍 7 rue du Faubourg Montmartre · 9e arr.</div>
+        <p class="resto-desc">Le Chartier original, ouvert en 1896 et classé monument historique. Sous ses hauts plafonds ornementés, les garçons virevoltent entre tables serrées pour servir des milliers de couverts par jour. Ambiance populaire et joyeuse, additions écrites à la main sur la nappe en papier.</p>
+        <div class="resto-infos">
+          <span>🕐 Tous les jours 11h30–0h (service continu)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Le Petit Bouillon Pharamond -->
+    <div class="resto-card">
+      <div class="resto-photo" style="background:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80') center/cover no-repeat;">
+        <div class="resto-fourchette">25 – 30 € / pers.</div>
+      </div>
+      <div class="resto-corps">
+        <h3 class="resto-nom">Le Petit Bouillon Pharamond</h3>
+        <div class="resto-adresse">📍 24 rue de la Grande Truanderie · 1er arr.</div>
+        <p class="resto-desc">Fondé en 1879, le Pharamond est l'un des plus anciens restaurants de Paris. Son décor Art Nouveau classé aux monuments historiques — céramiques, vitraux et boiseries sculptées — est à couper le souffle. Spécialité normande : tripes à la mode de Caen et calvados maison.</p>
+        <div class="resto-infos">
+          <span>🕐 Mar–sam 12h–14h30 &amp; 19h–23h</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comme un Bouillon -->
+    <div class="resto-card">
+      <div class="resto-photo" style="background:url('https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80') center/cover no-repeat;">
+        <div class="resto-fourchette">~17 € / pers.</div>
+      </div>
+      <div class="resto-corps">
+        <h3 class="resto-nom">Comme un Bouillon</h3>
+        <div class="resto-adresse">📍 17 rue de Choiseul · 2e arr.</div>
+        <p class="resto-desc">Le plus contemporain des bouillons parisiens, ancré dans le quartier animé de Montparnasse. Une carte courte et soignée qui revisite les classiques avec des produits de saison. Cadre chaleureux, service attentionné, et tartare de bœuf taillé au couteau à ne pas manquer.</p>
+        <div class="resto-infos">
+          <span>🕐 Mar–dim 12h–14h30 &amp; 19h–22h30</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ MODALE ══════════════ -->
+<div class="modale-fond" id="modale-fond" role="dialog" aria-modal="true">
+  <div class="modale" id="modale">
+    <div class="modale-entete" id="modale-emoji"></div>
+    <div class="modale-corps" id="modale-corps"></div>
+  </div>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <p>🗼 <strong>Splendeurs de Paris</strong> — Votre guide des lieux incontournables de la Ville Lumière</p>
+  <p style="margin-top:10px; font-size:0.8rem; color:rgba(255,255,255,0.4);">Réalisé par <strong style="color:var(--or-clair)">Raphaël GARDERE</strong></p>
+</footer>
+
+<script>
+// ═══════════════════════════════════
+//  DONNÉES
+// ═══════════════════════════════════
+const lieux = [
+  {
+    id: 1,
+    nom: "Le Louvre",
+    wikiTitle: "Musée_du_Louvre",
+    categorie: "musee",
+    emoji: "🏛",
+    bgClass: "bg-musee",
+    arrondissement: "1er arr.",
+    horaires: "9h–18h (mer. & ven. jusqu'à 21h45) — Fermé le mardi",
+    tarif: "22 € (gratuit –18 ans)",
+    acces: "M° Palais-Royal – Musée du Louvre",
+    description: "Le plus grand musée du monde avec plus de 35 000 œuvres exposées sur 72 735 m². Ancien palais royal, il abrite la Joconde, la Vénus de Milo et la Victoire de Samothrace.",
+    histoire: "Ancienne forteresse médiévale du XIIe siècle, le Louvre devient résidence royale sous François Ier, puis musée national à la Révolution française en 1793. La pyramide de verre d'I.M. Pei, inaugurée en 1989, en est le symbole moderne.",
+    aVoir: ["La Joconde (salle 711)", "La Vénus de Milo", "La Victoire de Samothrace", "Le Code d'Hammurabi", "Les appartements Napoléon III"],
+    conseil: "Réservez vos billets en ligne pour éviter les files. Prévoyez au moins une demi-journée.",
+    tags: ["Peinture", "Sculpture", "Antiquités", "Art islamique"]
+  },
+  {
+    id: 2,
+    nom: "Musée d'Orsay",
+    wikiTitle: "Gare_d'Orsay",
+    categorie: "musee",
+    emoji: "🎨",
+    bgClass: "bg-musee",
+    arrondissement: "7e arr.",
+    horaires: "9h30–18h (jeu. jusqu'à 21h45) — Fermé le lundi",
+    tarif: "16 € (gratuit –18 ans)",
+    acces: "M° Solférino / RER C Musée d'Orsay",
+    description: "Installé dans une ancienne gare ferroviaire du XIXe siècle, le musée d'Orsay est le temple de l'impressionnisme. Il réunit la plus grande collection mondiale d'art impressionniste et post-impressionniste.",
+    histoire: "La gare d'Orsay, construite pour l'Exposition universelle de 1900, est transformée en musée en 1986 sous l'impulsion de Valéry Giscard d'Estaing. Le bâtiment lui-même est une œuvre d'art, avec son spectaculaire hall et ses grandes horloges.",
+    aVoir: ["La Chambre à Arles — Van Gogh", "Bal au Moulin de la Galette — Renoir", "L'Angélus — Millet", "L'Origine du monde — Courbet", "Les Nymphéas — Monet"],
+    conseil: "Le jeudi soir, l'affluence est moindre. La vue sur la Seine depuis les grandes horloges est exceptionnelle.",
+    tags: ["Impressionnisme", "Post-impressionnisme", "Sculpture", "Art décoratif"]
+  },
+  {
+    id: 4,
+    nom: "Notre-Dame de Paris",
+    wikiTitle: "Cathédrale_Notre-Dame_de_Paris",
+    categorie: "eglise",
+    emoji: "⛪",
+    bgClass: "bg-eglise",
+    arrondissement: "4e arr.",
+    horaires: "Réouverture partielle — Vérifier site officiel",
+    tarif: "Accès extérieur gratuit",
+    acces: "M° Cité / Saint-Michel",
+    description: "Joyau gothique du XIIe siècle, Notre-Dame est le monument le plus visité d'Europe. Partiellement détruite par l'incendie d'avril 2019, elle a rouvert en décembre 2024 après une restauration exceptionnelle.",
+    histoire: "Sa construction débute en 1163 sous l'évêque Maurice de Sully et dure près de 200 ans. Victor Hugo lui redonne sa gloire avec son roman de 1831. L'incendie du 15 avril 2019 détruit la flèche et une grande partie de la toiture, provoquant une mobilisation mondiale pour sa restauration.",
+    aVoir: ["La façade occidentale et ses portails sculptés", "La galerie des Rois", "La rosace nord (XIIIe s.)", "Les gargouilles et chimères", "La nouvelle flèche restaurée"],
+    conseil: "Profitez de la vue depuis le parvis et les quais de Seine. La cathédrale est magnifique illuminée le soir.",
+    tags: ["Gothique", "Architecture médiévale", "Religion", "Patrimoine UNESCO"]
+  },
+  {
+    id: 5,
+    nom: "Sainte-Chapelle",
+    wikiTitle: "Sainte-Chapelle",
+    categorie: "eglise",
+    emoji: "💎",
+    bgClass: "bg-eglise",
+    arrondissement: "1er arr.",
+    horaires: "9h–17h (avr.–sept. jusqu'à 19h)",
+    tarif: "13 € (gratuit –18 ans)",
+    acces: "M° Cité / Saint-Michel",
+    description: "Un écrin de lumière unique au monde. La Sainte-Chapelle possède les plus belles verrières médiévales du monde : 1 113 scènes bibliques sur 600 m² de vitraux, couvrant 75 % des murs de la chapelle haute.",
+    histoire: "Commandée par Louis IX (Saint Louis) pour abriter la Couronne d'épines et un fragment de la Croix du Christ, la chapelle est consacrée en 1248. Chef-d'œuvre du gothique rayonnant, elle représente un tour de force architectural : les murs porteurs sont réduits à leur minimum pour laisser place au verre.",
+    aVoir: ["Les 15 verrières de la chapelle haute", "La rosace du Jugement dernier", "La chapelle basse", "Les reliques royales (reproduction)", "L'architecture gothique rayonnant"],
+    conseil: "Venez le matin pour profiter de la lumière naturelle traversant les vitraux. Des concerts de musique classique y sont régulièrement organisés.",
+    tags: ["Gothique", "Vitraux", "Moyen Âge", "Architecture"]
+  },
+  {
+    id: 6,
+    nom: "Le Panthéon",
+    wikiTitle: "Panthéon_(Paris)",
+    categorie: "monument",
+    emoji: "🏟",
+    bgClass: "bg-monument",
+    arrondissement: "5e arr.",
+    horaires: "10h–18h30 (avr.–sept. jusqu'à 18h30)",
+    tarif: "13 € (gratuit –26 ans résidents EU)",
+    acces: "M° Cardinal Lemoine / RER B Luxembourg",
+    description: "Temple néoclassique dédié aux grands hommes de la nation française. Son immense coupole domine la rive gauche. Il abrite les cendres de Voltaire, Rousseau, Victor Hugo, Marie Curie et bien d'autres.",
+    histoire: "Conçu par l'architecte Soufflot et achevé en 1790, il est d'abord une église avant de devenir un mausolée laïc sous la Révolution. La crypte accueille 80 personnalités. En 1851, le physicien Léon Foucault y démontre la rotation de la Terre grâce à son célèbre pendule.",
+    aVoir: ["La crypte et les tombeaux", "Le pendule de Foucault (reconstitution)", "Les fresques de Puvis de Chavannes", "La coupole et son panorama", "La façade néoclassique"],
+    conseil: "En été, l'accès au sommet de la coupole est possible : vue imprenable sur Paris. La crypte, toujours fraîche, est idéale les jours de chaleur.",
+    tags: ["Néoclassicisme", "Mausolée", "Histoire de France", "Architecture"]
+  },
+  {
+    id: 7,
+    nom: "Musée Rodin",
+    wikiTitle: "Musée_Rodin",
+    categorie: "musee",
+    emoji: "🗿",
+    bgClass: "bg-musee",
+    arrondissement: "7e arr.",
+    horaires: "10h–18h30 — Fermé le lundi",
+    tarif: "14 € (jardin seul : 4 €)",
+    acces: "M° Varenne",
+    description: "Dans l'Hôtel Biron et son magnifique jardin de sculptures, le musée Rodin réunit l'essentiel de l'œuvre d'Auguste Rodin, considéré comme le père de la sculpture moderne.",
+    histoire: "Rodin s'installe à l'Hôtel Biron en 1908 et y réside jusqu'à sa mort en 1917. Il lègue l'ensemble de ses œuvres à l'État à condition que la maison devienne son musée. Inauguré en 1919, il réunit 6 600 sculptures, 8 000 dessins et sa collection personnelle.",
+    aVoir: ["Le Penseur (jardin)", "Le Baiser", "Les Bourgeois de Calais (jardin)", "La Porte de l'Enfer", "Le Musée Camille Claudel (section dédiée)"],
+    conseil: "Le jardin seul vaut le déplacement : Le Penseur y trône magnifiquement. Idéal pour un pique-nique culturel.",
+    tags: ["Sculpture", "XIXe siècle", "Art moderne", "Jardin"]
+  },
+  {
+    id: 8,
+    nom: "Musée de Cluny",
+    wikiTitle: "Musée_de_Cluny",
+    categorie: "musee",
+    emoji: "🏰",
+    bgClass: "bg-musee",
+    arrondissement: "5e arr.",
+    horaires: "9h30–18h15 — Fermé le mardi",
+    tarif: "12 € (gratuit –18 ans)",
+    acces: "M° Cluny-La Sorbonne",
+    description: "Musée national du Moyen Âge, installé dans un hôtel particulier gothique du XVe siècle, lui-même bâti sur des thermes gallo-romains du IIe siècle. Un voyage à travers deux millénaires d'histoire.",
+    histoire: "Les thermes de Cluny sont l'un des vestiges romains les mieux conservés de Paris. L'hôtel des abbés de Cluny, construit au XVe siècle, abrite depuis 1843 une collection unique d'art médiéval rassemblée par Alexandre Du Sommerard.",
+    aVoir: ["La Dame à la licorne (6 tapisseries)", "Les thermes gallo-romains", "Les têtes des rois de Notre-Dame", "La chapelle gothique flamboyant", "Les vitraux de la Sainte-Chapelle (fragments)"],
+    conseil: "La série de tapisseries 'La Dame à la licorne' (vers 1500) est l'une des œuvres médiévales les plus fascinantes au monde. Incontournable.",
+    tags: ["Moyen Âge", "Art roman", "Gallo-romain", "Tapisseries"]
+  },
+  {
+    id: 9,
+    nom: "Opéra Garnier",
+    wikiTitle: "Palais_Garnier",
+    categorie: "monument",
+    emoji: "🎭",
+    bgClass: "bg-monument",
+    arrondissement: "9e arr.",
+    horaires: "10h–17h (visites) / Soirées selon programme",
+    tarif: "Visite : 14 € / Spectacles : dès 10 €",
+    payant: true,
+    acces: "M° Opéra",
+    description: "Temple de l'opéra et du ballet, ce palais du Second Empire est l'un des plus beaux édifices du monde. Son grand escalier en marbre, son foyer doré et son plafond peint par Chagall sont à couper le souffle.",
+    histoire: "Commandé par Napoléon III et conçu par Charles Garnier, il est inauguré en 1875. Le bâtiment cache sous sa salle un lac artificiel (inspiration du Fantôme de l'Opéra de Gaston Leroux). Son décor fastueux symbolise l'opulence du Second Empire.",
+    aVoir: ["Le grand escalier en onyx et marbre", "Le foyer de la danse", "La salle de spectacle et son lustre", "Le plafond de Chagall (1964)", "La bibliothèque-musée de l'Opéra"],
+    conseil: "Même sans assister à un spectacle, la visite libre du palais est une expérience inoubliable. Optez pour une matinée d'opéra ou de ballet pour l'expérience complète.",
+    tags: ["Second Empire", "Opéra", "Ballet", "Architecture"]
+  },
+  {
+    id: 10,
+    nom: "Musée Picasso",
+    wikiTitle: "Hôtel_Salé",
+    categorie: "musee",
+    emoji: "🖼",
+    bgClass: "bg-musee",
+    arrondissement: "3e arr.",
+    horaires: "10h30–18h (sam. & dim. 9h30–18h) — Fermé le lundi",
+    tarif: "14 € (gratuit –18 ans)",
+    acces: "M° Saint-Sébastien – Froissart / Saint-Paul",
+    description: "Dans le splendide Hôtel Salé du Marais, le musée Picasso réunit la plus grande collection publique d'œuvres de Pablo Picasso : 5 000 pièces couvrant toute sa carrière, de ses débuts à Barcelone jusqu'à ses dernières années à Mougins.",
+    histoire: "À la mort de Picasso en 1973, ses héritiers cèdent à l'État une partie des œuvres en paiement des droits de succession — une dation exceptionnelle. Le musée ouvre en 1985 dans l'Hôtel Salé, bel hôtel particulier du XVIIe siècle du quartier du Marais.",
+    aVoir: ["Les Demoiselles d'Avignon (reproduction)", "L'Autoportrait de 1901", "La période bleue et rose", "Les sculptures en métal découpé", "Les céramiques de Vallauris"],
+    conseil: "Le Marais est l'un des quartiers les plus vivants de Paris — combinez la visite avec une promenade dans les rues environnantes.",
+    tags: ["Cubisme", "Art moderne", "XXe siècle", "Peinture"]
+  },
+  {
+    id: 11,
+    nom: "Musée de l'Orangerie",
+    wikiTitle: "Musée_de_l'Orangerie",
+    categorie: "musee",
+    emoji: "🌸",
+    bgClass: "bg-musee",
+    arrondissement: "1er arr.",
+    horaires: "9h–18h — Fermé le mardi",
+    tarif: "12,50 € (gratuit –18 ans)",
+    acces: "M° Concorde",
+    description: "Niché dans le jardin des Tuileries, le musée de l'Orangerie est le sanctuaire des Nymphéas de Monet. Ses deux salles ovales abritent les panneaux monumentaux, véritables immersions dans la nature impressionniste.",
+    histoire: "La serre du XIXe siècle est transformée en espace muséal pour accueillir les Nymphéas que Monet offre à l'État en 1922, peu avant sa mort. En sous-sol, la collection Walter-Guillaume rassemble des chefs-d'œuvre de Cézanne, Renoir, Rousseau et Matisse.",
+    aVoir: ["Les Nymphéas (8 panneaux monumentaux)", "La collection Walter-Guillaume", "Les Cézanne et Renoir du sous-sol", "La Noce de Henri Rousseau", "Les Matisse et Picasso"],
+    conseil: "Venez tôt le matin pour vivre l'expérience des Nymphéas dans le calme. La lumière naturelle zénithale crée une atmosphère unique selon l'heure.",
+    tags: ["Impressionnisme", "Monet", "Nymphéas", "Collection privée"]
+  },
+  {
+    id: 14,
+    nom: "Sacré-Cœur",
+    wikiTitle: "Basilique_du_Sacré-Cœur_de_Montmartre",
+    categorie: "eglise",
+    emoji: "🕍",
+    bgClass: "bg-eglise",
+    arrondissement: "18e arr.",
+    horaires: "6h–22h30 (basilique) / Dôme : 9h–20h",
+    tarif: "Basilique gratuite / Dôme : 8 €",
+    acces: "M° Abbesses / Anvers + funiculaire",
+    description: "Dominant Paris depuis la butte Montmartre, la basilique du Sacré-Cœur est l'un des monuments les plus reconnaissables de Paris. Construite en travertin, sa blancheur éclatante résiste au temps grâce à la pierre qui se consolide au contact de l'eau.",
+    histoire: "Érigée après la défaite de 1870-71 et la Commune de Paris en symbole d'expiation nationale, sa construction s'étale de 1875 à 1914. Le financement est assuré par souscription populaire. Elle est consacrée en 1919. Sa mosaïque intérieure du Christ en gloire est l'une des plus grandes du monde.",
+    aVoir: ["La mosaïque du Christ en majesté (intérieur)", "Le dôme et son panorama à 360°", "La cloche 'La Savoyarde' (19 tonnes)", "Le quartier Montmartre alentour", "Les vignes de Montmartre (vendanges en oct.)"],
+    conseil: "L'escalier pour accéder à Montmartre est long mais gratuit. Le funiculaire est inclus dans le ticket de métro. La vue depuis le parvis est époustouflante.",
+    tags: ["Romano-byzantin", "Montmartre", "Panorama", "Religion"]
+  },
+  {
+    id: 16,
+    nom: "Musée Carnavalet",
+    wikiTitle: "Musée_Carnavalet",
+    categorie: "musee",
+    emoji: "🏙",
+    bgClass: "bg-musee",
+    arrondissement: "3e arr.",
+    horaires: "10h–18h — Fermé le lundi",
+    tarif: "Gratuit (expositions temporaires payantes)",
+    acces: "M° Saint-Paul / Chemin Vert",
+    description: "Le musée de l'histoire de Paris. Dans deux hôtels particuliers du Marais reliés entre eux, il retrace l'histoire de Paris de la préhistoire à nos jours à travers 625 000 objets répartis sur 100 salles.",
+    histoire: "L'Hôtel Carnavalet, où vécut Madame de Sévigné au XVIIe siècle, abrite le musée depuis 1880. Entièrement rénové en 2021, il présente un parcours chronologique fascinant. Sont notamment présentés le bureau de Proust, la chambre reconstituée de Napoléon et des décors Art nouveau.",
+    aVoir: ["Le bureau de Marcel Proust", "Les salles de la Révolution française", "Les décors Art nouveau de Fouquet (bijoutier)", "La barque préhistorique de Bercy", "Les maquettes de Paris à différentes époques"],
+    conseil: "L'entrée permanente est gratuite — l'un des rares grands musées parisiens à l'être. Idéal pour comprendre l'évolution de Paris à travers les siècles.",
+    tags: ["Histoire de Paris", "Révolution", "Art nouveau", "Ethnographie"]
+  },
+  {
+    id: 17,
+    nom: "Musée des Arts et Métiers",
+    wikiTitle: "Musée_des_arts_et_métiers",
+    categorie: "musee",
+    emoji: "⚙️",
+    bgClass: "bg-musee",
+    arrondissement: "3e arr.",
+    horaires: "10h–18h (jeu. jusqu'à 21h30) — Fermé le lundi",
+    tarif: "12 € (gratuit –26 ans résidents EU)",
+    acces: "M° Arts et Métiers",
+    description: "Fondé en 1794, ce musée unique en Europe est un conservatoire des inventions et techniques humaines. Il réunit 80 000 objets et 15 000 dessins dans la chapelle médiévale de Saint-Martin-des-Champs.",
+    histoire: "Créé sous la Convention pour 'déposer les machines, modèles, outils, dessins et descriptions utiles', il est l'un des plus anciens musées scientifiques du monde. La nave de son église abrite des pendules, automates et machines hors du temps. L'ambiance steampunk est unique.",
+    aVoir: ["L'avion de Clément Ader (Avion III, 1897)", "Le pendule de Foucault (l'original !)", "Les automates de Vaucanson", "Le Microscope solaire de Dellebarre", "La collection de machines à vapeur"],
+    conseil: "Un musée surprenant et peu bondé. Le jeudi soir, la nocturne dans l'église médiévale est une expérience unique.",
+    tags: ["Sciences", "Techniques", "Inventions", "Histoire industrielle"]
+  },
+  {
+    id: 18,
+    nom: "Grand Palais",
+    wikiTitle: "Grand_Palais",
+    categorie: "monument",
+    emoji: "🏺",
+    bgClass: "bg-monument",
+    arrondissement: "8e arr.",
+    horaires: "Selon expositions (en cours de rénovation partielle)",
+    tarif: "Variable selon exposition",
+    acces: "M° Champs-Élysées – Clemenceau",
+    description: "Monument emblématique des Champs-Élysées construit pour l'Exposition universelle de 1900, le Grand Palais accueille les plus grandes expositions temporaires de Paris sous sa nef de verre et d'acier.",
+    histoire: "Édifié entre 1897 et 1900 pour l'Exposition universelle, le Grand Palais est classé monument historique depuis 2000. Sa nef de verre, vaste de 200 mètres de long, en fait l'un des plus grands espaces couverts de France. Il a accueilli des expositions légendaires (Chanel, Dior, Renoir…).",
+    aVoir: ["La nef de verre monumentale", "Les expositions temporaires de renommée internationale", "La façade côté Champs-Élysées", "Le Petit Palais (face à face)", "Les galeries nationales"],
+    conseil: "Vérifiez le programme des expositions — certaines sont parmi les plus attendues de l'année à Paris. La nef elle-même mérite le détour.",
+    tags: ["Art nouveau", "Expositions", "Architecture", "Belle Époque"]
+  },
+  {
+    id: 19,
+    nom: "Musée Marmottan Monet",
+    wikiTitle: "Musée_Marmottan_Monet",
+    photoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Musee_marmottan_paris_FR_-_panoramio.jpg",
+    categorie: "musee",
+    emoji: "🌅",
+    bgClass: "bg-musee",
+    arrondissement: "16e arr.",
+    horaires: "10h–18h (jeu. jusqu'à 21h) — Fermé le lundi",
+    tarif: "14 € (gratuit –7 ans)",
+    acces: "M° La Muette",
+    description: "Le musée Marmottan est le temple mondial de Claude Monet, avec la plus grande collection de ses œuvres au monde. Son tableau 'Impression, soleil levant' (1872), qui a donné son nom au mouvement impressionniste, y est conservé.",
+    histoire: "Le pavillon de chasse de Jules Marmottan devient villa et collection d'art. En 1971, Michel Monet lègue 65 tableaux de son père au musée, transformant ce charmant musée de quartier en musée incontournable. D'autres dons font de la collection Monet l'une des plus précieuses du monde.",
+    aVoir: ["Impression, soleil levant (1872)", "Les nymphéas de la salle ovale", "Les séries des cathédrales et des meules", "La collection d'enluminures médiévales", "Le jardin du musée"],
+    conseil: "Moins connu que l'Orangerie, le musée Marmottan est souvent moins bondé. Le jardin et l'ambiance de villa bourgeoise en font un musée particulièrement agréable.",
+    tags: ["Monet", "Impressionnisme", "Belle Époque", "Collection privée"]
+  },
+  {
+    id: 20,
+    nom: "Musée de l'Armée",
+    wikiTitle: "Musée_de_l'Armée_(Paris)",
+    categorie: "musee",
+    emoji: "⚔️",
+    bgClass: "bg-musee",
+    arrondissement: "7e arr.",
+    horaires: "10h–18h (avr.–oct. jusqu'à 18h)",
+    tarif: "15 € (gratuit –18 ans)",
+    acces: "M° La Tour-Maubourg / Varenne",
+    description: "L'un des plus importants musées militaires du monde, installé aux Invalides avec le tombeau de Napoléon. Il retrace l'histoire militaire de la France de l'Antiquité au XXe siècle.",
+    histoire: "Fondé en 1905, le musée occupe les bâtiments des Invalides construits par Louis XIV pour accueillir ses soldats invalides. Le dôme des Invalides, chef-d'œuvre de Mansart, abrite le tombeau monumental de Napoléon Ier dans un sarcophage de quartzite rouge de Finlande.",
+    aVoir: ["Le tombeau de Napoléon (dôme des Invalides)", "L'armure de François Ier", "Les salles de la Seconde Guerre mondiale", "Le musée des Plans-Reliefs (maquettes de villes fortifiées)", "Les collections d'armes et armures médiévales"],
+    conseil: "Le musée est vaste — prévoyez 3h minimum. Le tombeau de Napoléon à lui seul justifie la visite. Combiné avec le musée Rodin tout proche, c'est une journée riche.",
+    tags: ["Militaire", "Napoléon", "Moyen Âge", "Seconde Guerre mondiale"]
+  },
+  {
+    id: 21,
+    nom: "Hôtel des Invalides",
+    wikiTitle: "Hôtel_national_des_Invalides",
+    categorie: "monument",
+    emoji: "🏛",
+    bgClass: "bg-monument",
+    arrondissement: "7e arr.",
+    horaires: "10h–18h (avr.–oct. jusqu'à 19h) — Ouvert tous les jours",
+    tarif: "15 € (inclus Musée de l'Armée et Dôme) — Gratuit –18 ans",
+    acces: "M° La Tour-Maubourg / Varenne / Invalides",
+    description: "Commandé par Louis XIV en 1670 pour loger ses soldats blessés, l'Hôtel des Invalides est l'un des plus beaux ensembles architecturaux de Paris. Son dôme doré, chef-d'œuvre de Jules Hardouin-Mansart, domine le 7e arrondissement.",
+    histoire: "Construit entre 1671 et 1676 par Libéral Bruant, puis agrandi par Hardouin-Mansart qui élève le célèbre Dôme entre 1679 et 1708, l'Invalides accueillit jusqu'à 4 000 soldats invalides. En 1840, les cendres de Napoléon y sont transférées solennellement, faisant du monument un lieu de pèlerinage national.",
+    aVoir: ["Le Dôme des Invalides (tombeau de Napoléon)", "La Cour d'Honneur et ses canons", "L'Église Saint-Louis-des-Invalides", "Le Musée de l'Armée", "La perspective depuis le Pont Alexandre III"],
+    conseil: "Traversez la Cour d'Honneur à l'aube — les canons alignés et la façade majestueuse sont saisissants. Le billet donne accès au Dôme et au Musée de l'Armée : prévoyez une demi-journée.",
+    tags: ["Napoléon", "Louis XIV", "Architecture classique", "Patrimoine"]
+  },
+  {
+    id: 24,
+    nom: "Jardin des Tuileries",
+    wikiTitle: "Jardin_des_Tuileries",
+    categorie: "jardin",
+    emoji: "🌿",
+    bgClass: "bg-jardin",
+    arrondissement: "1er arr.",
+    horaires: "7h–21h (été jusqu'à 23h) — Ouvert tous les jours",
+    tarif: "Entrée gratuite",
+    acces: "M° Tuileries / Concorde",
+    description: "Premier jardin public de Paris, les Tuileries s'étendent entre le Louvre et la place de la Concorde sur 28 hectares. Ce jardin à la française, dessiné par Le Nôtre en 1664, est l'écrin de sculptures, de bassins et d'allées ombragées en plein cœur de Paris.",
+    histoire: "Créé en 1564 pour Catherine de Médicis en bordure du palais des Tuileries (détruit en 1871), le jardin est restructuré par André Le Nôtre sous Louis XIV qui lui donne son plan géométrique actuel. Ouvert au public sous la Révolution, il accueille aujourd'hui le musée de l'Orangerie et le musée du Jeu de Paume.",
+    aVoir: ["Les grandes allées et leurs statues (Maillol, Rodin)", "Les bassins ronds et leurs voiliers miniatures", "Le musée de l'Orangerie (Monet)", "Le musée du Jeu de Paume", "La vue vers la Concorde et les Champs-Élysées"],
+    conseil: "Idéal le matin de bonne heure ou en fin d'après-midi. En été, des chaises longues sont disponibles au bord des bassins. Le jardin accueille une foire d'estivale en juillet-août.",
+    tags: ["Le Nôtre", "Jardin à la française", "Sculptures", "Promenade"]
+  },
+  {
+    id: 25,
+    nom: "Jardin du Luxembourg",
+    wikiTitle: "Jardin_du_Luxembourg",
+    categorie: "jardin",
+    emoji: "🌳",
+    bgClass: "bg-jardin",
+    arrondissement: "6e arr.",
+    horaires: "7h30–21h30 (selon saison) — Ouvert tous les jours",
+    tarif: "Entrée gratuite",
+    acces: "RER B Luxembourg / M° Odéon",
+    description: "Poumon vert de la rive gauche et jardin préféré des Parisiens, le Luxembourg déploie ses 23 hectares autour du Palais du Sénat. Jardins à la française et à l'anglaise, grand bassin, orangerie, rucher et tennis en font un espace de vie exceptionnel.",
+    histoire: "Créé en 1612 par Marie de Médicis qui fit bâtir le palais dans le style florentin, le jardin est remanié sous Napoléon. Il abrite la pépinière du Sénat, un verger conservatoire de 350 variétés de fruits, et le premier rucher d'enseignement de France, fondé en 1856.",
+    aVoir: ["Le grand bassin et ses voiliers en bois", "Le Palais du Luxembourg (Sénat)", "L'orangerie et ses palmiers centenaires", "Les statues des Reines de France", "Le verger et le rucher de l'École d'apiculture"],
+    conseil: "Le jardin est particulièrement animé le week-end. Louez un voilier miniature pour le bassin — une tradition parisienne. Le verger est ouvert lors des Journées du Patrimoine.",
+    tags: ["Marie de Médicis", "Sénat", "Jardin à la française", "Promenade"]
+  },
+  {
+    id: 26,
+    nom: "Jardin du Palais-Royal",
+    wikiTitle: "Jardin_du_Palais-Royal",
+    categorie: "jardin",
+    emoji: "🌹",
+    bgClass: "bg-jardin",
+    arrondissement: "1er arr.",
+    horaires: "8h–20h30 (selon saison) — Ouvert tous les jours",
+    tarif: "Entrée gratuite",
+    acces: "M° Palais-Royal – Musée du Louvre",
+    description: "Jardin secret au cœur de Paris, le Palais-Royal est un havre de paix encadré de galeries à arcades. Ses allées de tilleuls taillés, ses fontaines et les fameuses colonnes rayées de Daniel Buren en font l'un des lieux les plus singuliers de la capitale.",
+    histoire: "Construit pour le Cardinal de Richelieu en 1628, le Palais-Royal devient propriété royale puis est aménagé avec ses galeries marchandes au XVIIIe siècle. Lieu de débauche et d'effervescence politique avant la Révolution, il se transforme peu à peu en écrin culturel apaisé. Les colonnes de Buren y sont installées en 1986 au milieu d'une grande polémique.",
+    aVoir: ["Les colonnes de Buren (Les Deux Plateaux)", "Les galeries à arcades et leurs boutiques de luxe", "Les fontaines et les tilleuls taillés", "Le Conseil d'État et le ministère de la Culture", "La Comédie-Française toute proche"],
+    conseil: "Un lieu méconnu des touristes, très apprécié des Parisiens. Idéal pour une pause lecture au calme. Les galeries abritent des galeries d'art et antiquaires.",
+    tags: ["Richelieu", "Colonnes de Buren", "Arcades", "Jardin secret"]
+  },
+  {
+    id: 22,
+    nom: "Chapelle de la Médaille Miraculeuse",
+    wikiTitle: "Chapelle_Notre-Dame_de_la_Médaille_Miraculeuse",
+    photoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Paris_-_Chapelle_Notre-Dame_de_la_M%C3%A9daille_Miraculeuse_-_10.jpg",
+    categorie: "eglise",
+    emoji: "📿",
+    bgClass: "bg-eglise",
+    arrondissement: "7e arr.",
+    horaires: "7h45–13h & 14h30–19h — Ouvert tous les jours",
+    tarif: "Entrée gratuite",
+    acces: "M° Rue du Bac",
+    description: "Au 140 rue du Bac, cette chapelle discrète est l'un des lieux de pèlerinage catholique les plus fréquentés du monde. C'est ici qu'en 1830 la Vierge Marie apparut à Catherine Labouré et lui demanda de faire frapper la Médaille Miraculeuse, distribuée à des centaines de millions d'exemplaires.",
+    histoire: "Le 27 novembre 1830, Catherine Labouré, novice lazariste, reçoit une vision de la Vierge lui remettant une médaille ovale à faire frapper. La médaille se répand à une vitesse extraordinaire à travers le monde. Catherine, canonisée en 1947, repose sous l'autel de la chapelle. Le corps de saint Vincent de Paul y est également vénéré.",
+    aVoir: ["Le corps incorruptible de sainte Catherine Labouré", "La statue de la Vierge à l'emplacement des apparitions", "Les reliques de saint Vincent de Paul", "La châsse dorée sous l'autel principal", "La crypte et la salle des apparitions"],
+    conseil: "Un lieu de recueillement et de paix au cœur de Paris. Des messes sont célébrées chaque jour. La boutique du sanctuaire propose des médailles bénites, réputées miraculeuses par des millions de fidèles.",
+    tags: ["Pèlerinage", "Apparitions", "Médaille Miraculeuse", "Catherine Labouré"]
+  },
+  {
+    id: 23,
+    nom: "Hôtel de la Marine",
+    wikiTitle: "Hôtel_de_la_Marine_(Paris)",
+    photoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/H%C3%B4tel_de_la_Marine.jpg",
+    categorie: "monument",
+    emoji: "⚓",
+    bgClass: "bg-monument",
+    arrondissement: "8e arr.",
+    horaires: "10h30–19h (ven. jusqu'à 21h30) — Ouvert tous les jours",
+    tarif: "17 € (gratuit –18 ans)",
+    acces: "M° Concorde",
+    description: "Joyau du XVIIIe siècle rouverts au public en 2021 après une restauration grandiose, l'Hôtel de la Marine dévoile ses fastueux appartements Place de la Concorde. Ministère de la Marine pendant deux siècles, il abrite aujourd'hui une exposition permanente sur son histoire et des collections exceptionnelles.",
+    histoire: "Construit entre 1757 et 1774 par Ange-Jacques Gabriel — l'architecte du roi Louis XV — l'édifice est l'un des chefs-d'œuvre du néoclassicisme français. Il abrita le Garde-Meuble de la Couronne, puis le Ministère de la Marine de 1789 à 2015. Après six ans de restauration, il ouvre au public en 2021 avec des salles d'apparat restituées à leur splendeur d'origine.",
+    aVoir: ["Les appartements de l'Intendant (décors XVIIIe restaurés)", "Le salon de la collection Al Thani", "Les terrasses avec vue sur la Concorde et les Tuileries", "La salle à manger des officiers", "L'exposition permanente sur l'histoire du bâtiment"],
+    conseil: "La visite avec audioguide est particulièrement enrichissante. Les terrasses offrent un point de vue unique sur la Place de la Concorde et les Champs-Élysées. Le vendredi soir, nocturne jusqu'à 21h30.",
+    tags: ["XVIIIe siècle", "Néoclassicisme", "Louis XV", "Place de la Concorde"]
+  }
+];
+
+// ═══════════════════════════════════
+//  RENDU DES CARTES
+// ═══════════════════════════════════
+const grille = document.getElementById('grille');
+const aucunElem = document.getElementById('aucun');
+const compteurElem = document.getElementById('compteur');
+
+function creerCarte(lieu) {
+  const carte = document.createElement('article');
+  carte.className = 'carte';
+  carte.dataset.categorie = lieu.categorie;
+  carte.dataset.nom = lieu.nom.toLowerCase();
+  carte.dataset.tags = lieu.tags.join(' ').toLowerCase();
+
+  carte.innerHTML = `
+    <div class="carte-image ${lieu.bgClass}">
+      <img class="carte-photo" alt="${lieu.nom}">
+      <div class="carte-image-overlay"></div>
+      <span class="carte-emoji-fb">${lieu.emoji}</span>
+      <span class="carte-badge">${categorieLabel(lieu.categorie)}</span>
+      <span class="carte-arrondissement">${lieu.arrondissement}</span>
+      <span class="carte-decouvrir">Découvrir</span>
+    </div>
+    <div class="carte-corps">
+      <h2 class="carte-nom">${lieu.nom}</h2>
+      <div class="carte-infos">
+        <span>🕐 ${lieu.horaires.split(' — ')[0]}</span>
+      </div>
+      <p class="carte-desc">${lieu.description}</p>
+      <div class="carte-tags">
+        ${lieu.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+
+  const imgElem = carte.querySelector('.carte-photo');
+  const overlayElem = carte.querySelector('.carte-image-overlay');
+  const fbElem = carte.querySelector('.carte-emoji-fb');
+  chargerImage(lieu, imgElem, overlayElem, fbElem);
+
+  carte.addEventListener('click', () => ouvrirModale(lieu));
+  return carte;
+}
+
+// ═══════════════════════════════════
+//  CHARGEMENT PHOTO WIKIPEDIA
+// ═══════════════════════════════════
+// ─── Cache partagé pour éviter les requêtes doublées (carte + modale)
+const _wikiCache = {};
+
+function _estLogo(src) {
+  const s = decodeURIComponent(src).toLowerCase();
+  return s.includes('logo') || s.includes('.svg') || src.includes('langfr-');
+}
+
+async function _fetchWikiSrc(lang, titre) {
+  const res = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(titre)}`);
+  if (!res.ok) return null;
+  const d = await res.json();
+  return (d.originalimage && d.originalimage.source) || (d.thumbnail && d.thumbnail.source) || null;
+}
+
+async function getWikiImageSrc(titre) {
+  if (titre in _wikiCache) return _wikiCache[titre];
+  let src = await _fetchWikiSrc('fr', titre);
+  if (!src || _estLogo(src)) src = await _fetchWikiSrc('en', titre);
+  const result = (src && !_estLogo(src)) ? src : null;
+  _wikiCache[titre] = result;
+  return result;
+}
+
+function _appliquerSrc(src, imgElem, overlayElem, fbElem) {
+  imgElem.onload = () => {
+    imgElem.classList.add('chargee');
+    if (overlayElem) overlayElem.classList.add('visible');
+    if (fbElem) fbElem.style.display = 'none';
+  };
+  imgElem.onerror = () => {};
+  imgElem.src = src;
+}
+
+async function chargerImage(lieu, imgElem, overlayElem, fbElem) {
+  // 1. photoUrl hardcodée en priorité
+  if (lieu.photoUrl) {
+    _appliquerSrc(lieu.photoUrl, imgElem, overlayElem, fbElem);
+    return;
+  }
+  // 2. Sinon Wikipedia
+  if (!lieu.wikiTitle) return;
+  try {
+    const src = await getWikiImageSrc(lieu.wikiTitle);
+    if (src) _appliquerSrc(src, imgElem, overlayElem, fbElem);
+  } catch (e) {}
+}
+
+function categorieLabel(cat) {
+  const labels = {
+    musee: 'Musée',
+    monument: 'Monument',
+    eglise: 'Édifice religieux',
+    jardin: 'Jardin'
+  };
+  return labels[cat] || cat;
+}
+
+// Insérer les cartes
+lieux.forEach(lieu => {
+  grille.appendChild(creerCarte(lieu));
+});
+grille.appendChild(aucunElem);
+
+// ═══════════════════════════════════
+//  FILTRAGE & RECHERCHE
+// ═══════════════════════════════════
+let filtreActif = 'tous';
+let recherche = '';
+
+function appliquerFiltres() {
+  const cartes = grille.querySelectorAll('.carte');
+  let visible = 0;
+
+  cartes.forEach(carte => {
+    const cat = carte.dataset.categorie;
+    const nom = carte.dataset.nom;
+    const tags = carte.dataset.tags;
+
+    const matchCat = filtreActif === 'tous' || cat === filtreActif;
+    const matchRecherche = !recherche || nom.includes(recherche) || tags.includes(recherche);
+
+    if (matchCat && matchRecherche) {
+      carte.classList.remove('masquee');
+      visible++;
+    } else {
+      carte.classList.add('masquee');
+    }
+  });
+
+  aucunElem.style.display = visible === 0 ? 'block' : 'none';
+  compteurElem.textContent = `${visible} lieu${visible > 1 ? 'x' : ''} affiché${visible > 1 ? 's' : ''}`;
+  filtrerMarqueurs();
+}
+
+// Filtres catégorie
+document.getElementById('filtres').addEventListener('click', e => {
+  const btn = e.target.closest('.filtre-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filtre-btn').forEach(b => b.classList.remove('actif'));
+  btn.classList.add('actif');
+  filtreActif = btn.dataset.filtre;
+  appliquerFiltres();
+});
+
+// Recherche
+document.getElementById('recherche').addEventListener('input', e => {
+  recherche = e.target.value.toLowerCase().trim();
+  appliquerFiltres();
+});
+
+// ═══════════════════════════════════
+//  MODALE
+// ═══════════════════════════════════
+const modaleFond = document.getElementById('modale-fond');
+const modaleEmoji = document.getElementById('modale-emoji');
+const modaleCorps = document.getElementById('modale-corps');
+
+function ouvrirModale(lieu) {
+  modaleEmoji.className = `modale-entete ${lieu.bgClass}`;
+  modaleEmoji.innerHTML = `
+    <img class="modale-photo" alt="${lieu.nom}">
+    <div class="modale-photo-overlay"></div>
+    <span class="modale-emoji-fb">${lieu.emoji}</span>
+    <button class="modale-fermer" id="btn-fermer" aria-label="Fermer">✕</button>
+  `;
+
+  const modaleImg = modaleEmoji.querySelector('.modale-photo');
+  const modaleOverlay = modaleEmoji.querySelector('.modale-photo-overlay');
+  const modaleFb = modaleEmoji.querySelector('.modale-emoji-fb');
+  modaleImg.onload = () => {
+    modaleImg.classList.add('chargee');
+    modaleOverlay.classList.add('visible');
+    modaleFb.style.display = 'none';
+  };
+  if (lieu.photoUrl) {
+    modaleImg.src = lieu.photoUrl;
+  } else if (lieu.wikiTitle) {
+    getWikiImageSrc(lieu.wikiTitle).then(src => {
+      if (src) modaleImg.src = src;
+    }).catch(() => {});
+  }
+
+  modaleCorps.innerHTML = `
+    <h2>${lieu.nom}</h2>
+    <div class="modale-meta">
+      <span>📍 ${lieu.arrondissement}</span>
+      <span>🕐 ${lieu.horaires}</span>
+      <span>${lieu.payant ? '🎫 ' + lieu.tarif : '🎓 Gratuit pour les moins de 25 ans'}</span>
+      <span>🚇 ${lieu.acces}</span>
+    </div>
+    <div class="modale-section">
+      <h3>Présentation</h3>
+      <p>${lieu.description}</p>
+    </div>
+    <div class="modale-section">
+      <h3>Histoire</h3>
+      <p>${lieu.histoire}</p>
+    </div>
+    <div class="modale-section">
+      <h3>À ne pas manquer</h3>
+      <ul>${lieu.aVoir.map(a => `<li>${a}</li>`).join('')}</ul>
+    </div>
+    <div class="modale-section">
+      <h3>Conseil de visite</h3>
+      <p>${lieu.conseil}</p>
+    </div>
+    <div class="carte-tags" style="margin-top:20px">
+      ${lieu.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+    </div>
+  `;
+
+  document.getElementById('btn-fermer').addEventListener('click', fermerModale);
+  modaleFond.classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function fermerModale() {
+  modaleFond.classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+modaleFond.addEventListener('click', e => {
+  if (e.target === modaleFond) fermerModale();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') fermerModale();
+});
+
+// ═══════════════════════════════════
+//  CARTE LEAFLET
+// ═══════════════════════════════════
+const coordonnees = {
+  1:  [48.8606, 2.3376],   // Le Louvre
+  2:  [48.8600, 2.3266],   // Musée d'Orsay
+  4:  [48.8530, 2.3499],   // Notre-Dame de Paris
+  5:  [48.8554, 2.3449],   // Sainte-Chapelle
+  6:  [48.8462, 2.3464],   // Le Panthéon
+  7:  [48.8554, 2.3155],   // Musée Rodin
+  8:  [48.8506, 2.3442],   // Musée de Cluny
+  9:  [48.8720, 2.3316],   // Opéra Garnier
+  10: [48.8593, 2.3626],   // Musée Picasso
+  11: [48.8638, 2.3223],   // Musée de l'Orangerie
+  14: [48.8867, 2.3431],   // Sacré-Cœur
+  16: [48.8573, 2.3621],   // Musée Carnavalet
+  17: [48.8657, 2.3556],   // Musée des Arts et Métiers
+  18: [48.8661, 2.3128],   // Grand Palais
+  19: [48.8514, 2.2747],   // Musée Marmottan Monet
+  20: [48.8535, 2.3123],   // Musée de l'Armée
+  21: [48.8537, 2.3122],   // Hôtel des Invalides
+  22: [48.8522, 2.3228],   // Chapelle de la Médaille Miraculeuse
+  23: [48.8661, 2.3218],   // Hôtel de la Marine
+  24: [48.8634, 2.3274],   // Jardin des Tuileries
+  25: [48.8462, 2.3371],   // Jardin du Luxembourg
+  26: [48.8638, 2.3370]    // Jardin du Palais-Royal
+};
+
+let carteLeaflet = null;
+let marqueurs = [];
+
+function ouvrirModaleId(id) {
+  const lieu = lieux.find(l => l.id === id);
+  if (lieu) {
+    carteLeaflet.closePopup();
+    ouvrirModale(lieu);
+  }
+}
+
+function initCarte() {
+  if (carteLeaflet) return;
+
+  carteLeaflet = L.map('vue-carte').setView([48.8566, 2.3322], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(carteLeaflet);
+
+  lieux.forEach(lieu => {
+    const coords = coordonnees[lieu.id];
+    if (!coords) return;
+
+    const couleurs = { musee: '#b8962e', monument: '#1e3356', eglise: '#7b5ea7', jardin: '#4a7c59' };
+    const c = couleurs[lieu.categorie] || '#888';
+    const icone = L.divIcon({
+      className: '',
+      html: `<div style="width:16px;height:16px;border-radius:50%;background:${c};border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>`,
+      iconSize: [16, 16],
+      iconAnchor: [8, 8],
+      popupAnchor: [0, -12]
+    });
+
+    const marker = L.marker(coords, { icon: icone })
+      .bindPopup(`
+        <div class="popup-inner">
+          <div class="popup-nom">${lieu.nom}</div>
+          <div class="popup-cat">${categorieLabel(lieu.categorie)}</div>
+          <div class="popup-arr">📍 ${lieu.arrondissement}</div>
+          <button class="popup-btn" onclick="ouvrirModaleId(${lieu.id})">Voir le détail</button>
+        </div>
+      `, { maxWidth: 230, minWidth: 180 })
+      .addTo(carteLeaflet);
+
+    marker._lieuCat = lieu.categorie;
+    marqueurs.push(marker);
+  });
+
+  // Légende
+  const legende = L.control({ position: 'bottomleft' });
+  legende.onAdd = function() {
+    const div = L.DomUtil.create('div', 'carte-legende');
+    div.innerHTML = `
+      <div class="legende-titre">Catégories</div>
+      <div class="legende-item"><div class="legende-point" style="background:#b8962e"></div>Musées</div>
+      <div class="legende-item"><div class="legende-point" style="background:#1e3356"></div>Monuments</div>
+      <div class="legende-item"><div class="legende-point" style="background:#7b5ea7"></div>Édifices religieux</div>
+      <div class="legende-item"><div class="legende-point" style="background:#4a7c59"></div>Jardins</div>
+    `;
+    return div;
+  };
+  legende.addTo(carteLeaflet);
+}
+
+function filtrerMarqueurs() {
+  if (!carteLeaflet) return;
+  marqueurs.forEach(m => {
+    const visible = filtreActif === 'tous' || m._lieuCat === filtreActif;
+    if (visible) {
+      if (!carteLeaflet.hasLayer(m)) m.addTo(carteLeaflet);
+    } else {
+      if (carteLeaflet.hasLayer(m)) carteLeaflet.removeLayer(m);
+    }
+  });
+}
+
+const btnCarteView   = document.getElementById('btn-carte-view');
+const btnPresView    = document.getElementById('btn-presentation-view');
+const btnRestoView   = document.getElementById('btn-resto-view');
+let modeCarteActif  = false;
+let modePresActif   = false;
+let modeRestoActif  = false;
+
+function fermerTousLesOnglets() {
+  if (modeCarteActif)  { modeCarteActif = false;  document.body.classList.remove('mode-carte');         btnCarteView.textContent = '🗺 Carte';        btnCarteView.classList.remove('actif'); }
+  if (modePresActif)   { modePresActif  = false;  document.body.classList.remove('mode-presentation');  btnPresView.textContent  = '✦ À propos';     btnPresView.classList.remove('actif');  }
+  if (modeRestoActif)  { modeRestoActif = false;  document.body.classList.remove('mode-restaurants');   btnRestoView.textContent = '🍽 Restaurants';  btnRestoView.classList.remove('actif'); }
+}
+
+btnCarteView.addEventListener('click', () => {
+  const wasActif = modeCarteActif;
+  fermerTousLesOnglets();
+  if (!wasActif) {
+    modeCarteActif = true;
+    document.body.classList.add('mode-carte');
+    btnCarteView.textContent = '☰ Liste';
+    btnCarteView.classList.add('actif');
+    initCarte();
+    filtrerMarqueurs();
+    setTimeout(() => carteLeaflet.invalidateSize(), 150);
+  }
+});
+
+btnPresView.addEventListener('click', () => {
+  const wasActif = modePresActif;
+  fermerTousLesOnglets();
+  if (!wasActif) {
+    modePresActif = true;
+    document.body.classList.add('mode-presentation');
+    btnPresView.textContent = '✕ Fermer';
+    btnPresView.classList.add('actif');
+    window.scrollTo(0, 0);
+  }
+});
+
+// ─── Onglet Restaurants ───
+btnRestoView.addEventListener('click', () => {
+  const wasActif = modeRestoActif;
+  fermerTousLesOnglets();
+  if (!wasActif) {
+    modeRestoActif = true;
+    document.body.classList.add('mode-restaurants');
+    btnRestoView.textContent = '✕ Fermer';
+    btnRestoView.classList.add('actif');
+    window.scrollTo(0, 0);
+  }
+});
+
+appliquerFiltres();
+</script>
+</body>
+</html>
