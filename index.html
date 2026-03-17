@@ -2270,6 +2270,23 @@ function appliquerFiltres() {
   filtrerMarqueurs();
 }
 
+// Indicateur glissant des filtres
+const filtreIndicator = document.getElementById('filtre-indicator');
+function moveIndicator(btn) {
+  if (!btn || !filtreIndicator) return;
+  const container = btn.closest('.filtres');
+  const btnRect = btn.getBoundingClientRect();
+  const contRect = container.getBoundingClientRect();
+  filtreIndicator.style.left  = (btnRect.left - contRect.left + (container.scrollLeft || 0)) + 'px';
+  filtreIndicator.style.width = btnRect.width + 'px';
+  filtreIndicator.style.top   = (btnRect.bottom - contRect.top - 2) + 'px';
+  filtreIndicator.style.opacity = '1';
+}
+// Positionner au chargement sur le bouton actif
+window.addEventListener('load', () => {
+  moveIndicator(document.querySelector('.filtre-btn.actif'));
+});
+
 // Filtres catégorie
 document.getElementById('filtres').addEventListener('click', e => {
   const btn = e.target.closest('.filtre-btn');
@@ -2280,6 +2297,7 @@ document.getElementById('filtres').addEventListener('click', e => {
   });
   btn.classList.add('actif');
   btn.setAttribute('aria-expanded', 'true');
+  moveIndicator(btn);
   filtreActif = btn.dataset.filtre;
   appliquerFiltres();
 });
