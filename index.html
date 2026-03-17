@@ -44,43 +44,29 @@
 
     /* ─── Header ─── */
     header {
-      position: relative;
-      background: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=85') center 40%/cover no-repeat;
-      color: #fff;
+      background: var(--fond);
+      color: var(--texte);
       text-align: center;
-      min-height: 88vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 60px 20px 80px;
-      overflow: hidden;
-    }
-
-    header::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom,
-        rgba(0,0,0,0.3) 0%,
-        rgba(10,18,40,0.72) 70%,
-        rgba(10,18,40,0.92) 100%);
-      pointer-events: none;
+      padding: 64px 24px 56px;
     }
 
     .header-inner {
-      position: relative;
-      z-index: 1;
+      max-width: 640px;
+      width: 100%;
     }
 
     .header-eyebrow {
       font-family: 'Jost', sans-serif;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 600;
-      letter-spacing: 0.35em;
+      letter-spacing: 0.38em;
       text-transform: uppercase;
-      color: var(--or-clair);
-      margin-bottom: 24px;
+      color: var(--or);
+      margin-bottom: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -91,92 +77,81 @@
     .header-eyebrow::after {
       content: '';
       display: block;
-      width: 40px;
+      width: 36px;
       height: 1px;
-      background: var(--or-clair);
-      opacity: 0.6;
+      background: var(--or);
+      opacity: 0.5;
     }
 
     header h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(3.5rem, 9vw, 7rem);
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      line-height: 1;
-      margin-bottom: 20px;
-      text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+      font-size: clamp(3.2rem, 9vw, 6rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      color: var(--marine);
+      margin-bottom: 0;
     }
 
     header h1 span {
-      color: var(--or-clair);
+      display: block;
+      font-weight: 400;
       font-style: italic;
+      color: var(--or);
+      letter-spacing: 0.02em;
     }
 
     .header-separator {
-      width: 60px;
+      width: 44px;
       height: 1px;
-      background: rgba(255,255,255,0.4);
-      margin: 24px auto;
+      background: var(--or);
+      opacity: 0.35;
+      margin: 28px auto;
     }
 
     header p.sous-titre {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-      font-style: italic;
-      color: rgba(255,255,255,0.85);
-      letter-spacing: 0.03em;
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(0.82rem, 1.8vw, 0.92rem);
+      font-weight: 400;
+      font-style: normal;
+      letter-spacing: 0.06em;
+      color: var(--texte-sec);
+      line-height: 1.75;
+      max-width: 480px;
+      margin: 0 auto;
     }
 
     .lieux-count {
-      margin-top: 36px;
+      margin-top: 20px;
       font-family: 'Jost', sans-serif;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 500;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
+      color: rgba(26,23,20,0.35);
     }
 
-    .header-scroll {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: rgba(255,255,255,0.4);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      font-family: 'Jost', sans-serif;
-      animation: bounce 2s infinite;
-    }
-
-    .header-scroll::after {
-      content: '';
-      display: block;
-      width: 1px;
-      height: 36px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(6px); }
+    /* Séparateur prestige / outil */
+    .header-tool-sep {
+      width: 100%;
+      max-width: 120px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--or), transparent);
+      opacity: 0.45;
+      margin: 48px auto 0;
     }
 
     @keyframes heroFadeDown {
-      from { opacity: 0; transform: translateY(-16px); }
+      from { opacity: 0; transform: translateY(-12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .header-eyebrow  { opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0s; }
-    header h1        { opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0.15s; }
-    .header-separator{ opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0.3s; }
-    header p.sous-titre { opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0.45s; }
-    .lieux-count     { opacity: 0; animation: heroFadeDown 0.6s ease forwards; animation-delay: 0.6s; }
+    .header-eyebrow  { opacity: 0; animation: heroFadeDown 0.5s ease forwards; animation-delay: 0s; }
+    header h1        { opacity: 0; animation: heroFadeDown 0.5s ease forwards; animation-delay: 0.1s; }
+    .header-separator{ opacity: 0; animation: heroFadeDown 0.5s ease forwards; animation-delay: 0.2s; }
+    header p.sous-titre { opacity: 0; animation: heroFadeDown 0.5s ease forwards; animation-delay: 0.3s; }
+    .lieux-count     { opacity: 0; animation: heroFadeDown 0.5s ease forwards; animation-delay: 0.4s; }
+    .header-tool-sep { opacity: 0; animation: heroFadeDown 0.5s ease forwards; animation-delay: 0.5s; }
 
     /* ─── Navigation catégories ─── */
     .filtres-wrapper {
@@ -842,7 +817,7 @@
 
     @media (max-width: 700px) {
       /* ── Header ── */
-      header { min-height: 68vh; }
+      header { padding: 48px 20px 40px; }
 
       /* ── Grille ── */
       .grille { grid-template-columns: 1fr; }
@@ -1571,12 +1546,12 @@
 <header>
   <div class="header-inner">
     <div class="header-eyebrow">Guide culturel</div>
-    <h1>Splendeurs <span>de Paris</span></h1>
+    <h1>Splendeurs<span>de Paris</span></h1>
     <div class="header-separator"></div>
-    <p class="sous-titre">Les incontournables lieux culturels de la Capitale</p>
+    <p class="sous-titre">Une collection exclusive des monuments, musées et jardins les plus emblématiques de Paris. L'essentiel de la Ville Lumière, sélectionné pour votre curiosité.</p>
     <p class="lieux-count">22 lieux à découvrir</p>
+    <div class="header-tool-sep"></div>
   </div>
-  <div class="header-scroll">Découvrir</div>
 </header>
 
 <!-- ══════════════ FILTRES ══════════════ -->
