@@ -740,7 +740,7 @@
     }
 
     .footer-nav a {
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.65);
       text-decoration: none;
       font-size: 0.72rem;
       letter-spacing: 0.1em;
@@ -752,7 +752,7 @@
 
     .footer-copy {
       font-size: 0.7rem;
-      color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.5);
       letter-spacing: 0.05em;
     }
 
@@ -768,6 +768,9 @@
     .bg-jardin   { background: #d6ead8; }
 
     @media (max-width: 700px) {
+      /* ── Header ── */
+      header { min-height: 68vh; }
+
       /* ── Grille ── */
       .grille { grid-template-columns: 1fr; }
       .lieux-count { font-size: 0.7rem; }
@@ -1487,11 +1490,11 @@
 <!-- ══════════════ FILTRES ══════════════ -->
 <div class="filtres-wrapper">
   <div class="filtres" id="filtres">
-    <button class="filtre-btn actif" data-filtre="tous">Tous</button>
-    <button class="filtre-btn" data-filtre="musee">Musées</button>
-    <button class="filtre-btn" data-filtre="monument">Monuments</button>
-    <button class="filtre-btn" data-filtre="eglise">Édifices religieux</button>
-    <button class="filtre-btn" data-filtre="jardin">Jardins</button>
+    <button class="filtre-btn actif" data-filtre="tous" aria-expanded="true" aria-label="Afficher tous les lieux">Tous</button>
+    <button class="filtre-btn" data-filtre="musee" aria-expanded="false" aria-label="Filtrer : Musées">Musées</button>
+    <button class="filtre-btn" data-filtre="monument" aria-expanded="false" aria-label="Filtrer : Monuments">Monuments</button>
+    <button class="filtre-btn" data-filtre="eglise" aria-expanded="false" aria-label="Filtrer : Édifices religieux">Édifices religieux</button>
+    <button class="filtre-btn" data-filtre="jardin" aria-expanded="false" aria-label="Filtrer : Jardins">Jardins</button>
   </div>
   <button class="btn-carte-view" id="btn-presentation-view" style="margin-right:6px; order:-1;">✦ À propos</button>
   <button class="btn-carte-view" id="btn-resto-view" style="margin-right:6px;">🍽 Restaurants</button>
@@ -2137,13 +2140,18 @@ async function getWikiImageSrc(titre) {
   return result;
 }
 
+const _FALLBACK_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='280' viewBox='0 0 400 280'%3E%3Crect width='400' height='280' fill='%23E8E0D4'/%3E%3Cg opacity='.35' fill='%231A1714'%3E%3Crect x='170' y='180' width='60' height='60'/%3E%3Crect x='185' y='155' width='30' height='30'/%3E%3Crect x='195' y='135' width='10' height='25'/%3E%3Crect x='130' y='200' width='40' height='40'/%3E%3Crect x='230' y='200' width='40' height='40'/%3E%3Crect x='100' y='235' width='200' height='5'/%3E%3C/g%3E%3Ctext x='200' y='90' text-anchor='middle' font-family='Georgia%2C serif' font-size='13' fill='%231A1714' opacity='.4' letter-spacing='3'%3EPARIS%3C/text%3E%3C/svg%3E`;
+
 function _appliquerSrc(src, imgElem, overlayElem, fbElem) {
   imgElem.onload = () => {
     imgElem.classList.add('chargee');
     if (overlayElem) overlayElem.classList.add('visible');
     if (fbElem) fbElem.style.display = 'none';
   };
-  imgElem.onerror = () => {};
+  imgElem.onerror = () => {
+    imgElem.src = _FALLBACK_SVG;
+    imgElem.classList.add('chargee');
+  };
   imgElem.src = src;
 }
 
@@ -2214,8 +2222,12 @@ function appliquerFiltres() {
 document.getElementById('filtres').addEventListener('click', e => {
   const btn = e.target.closest('.filtre-btn');
   if (!btn) return;
-  document.querySelectorAll('.filtre-btn').forEach(b => b.classList.remove('actif'));
+  document.querySelectorAll('.filtre-btn').forEach(b => {
+    b.classList.remove('actif');
+    b.setAttribute('aria-expanded', 'false');
+  });
   btn.classList.add('actif');
+  btn.setAttribute('aria-expanded', 'true');
   filtreActif = btn.dataset.filtre;
   appliquerFiltres();
 });
