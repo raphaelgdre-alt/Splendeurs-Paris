@@ -865,6 +865,62 @@
         min-height: 44px;
       }
 
+      /* ── Bottom nav mobile ── */
+      .btn-carte-view { display: none !important; }
+
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 300;
+        background: rgba(253,251,247,0.97);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--gris);
+        padding: 6px 12px calc(6px + env(safe-area-inset-bottom));
+        gap: 4px;
+      }
+
+      .mob-nav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        background: transparent;
+        border: none;
+        border-radius: var(--rayon);
+        padding: 8px 4px;
+        cursor: pointer;
+        font-family: 'Jost', sans-serif;
+        color: rgba(26,23,20,0.4);
+        transition: var(--transition);
+        min-height: 52px;
+      }
+
+      .mob-nav-btn.actif {
+        color: var(--or);
+        background: rgba(201,169,110,0.08);
+      }
+
+      .mob-nav-icon {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+      }
+
+      .mob-nav-label {
+        font-size: 0.58rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* Espace pour la bottom nav */
+      .grille, #vue-carte, #vue-presentation, #vue-restaurants {
+        padding-bottom: calc(80px + env(safe-area-inset-bottom));
+      }
+
       /* ── Modale ── */
       .modale-corps { padding: 20px 18px 28px; }
       .modale-corps h2 { font-size: 1.75rem; }
@@ -878,6 +934,8 @@
       /* ── Recherche ── */
       .recherche-wrapper { margin-top: 28px; }
     }
+
+    .mobile-bottom-nav { display: none; }
 
 /* ─── Barre de filtres : layout flex pour bouton carte ─── */
     .filtres-wrapper {
@@ -1573,6 +1631,22 @@
   <button class="btn-carte-view" id="btn-carte-view"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg> Carte</button>
 </div>
 
+
+<!-- ══════════════ BOTTOM NAV MOBILE ══════════════ -->
+<nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Navigation principale">
+  <button class="mob-nav-btn" data-target="btn-presentation-view" aria-label="À propos">
+    <svg class="mob-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    <span class="mob-nav-label">À propos</span>
+  </button>
+  <button class="mob-nav-btn" data-target="btn-resto-view" aria-label="Restaurants">
+    <svg class="mob-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+    <span class="mob-nav-label">Restaurants</span>
+  </button>
+  <button class="mob-nav-btn" data-target="btn-carte-view" aria-label="Carte">
+    <svg class="mob-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    <span class="mob-nav-label">Carte</span>
+  </button>
+</nav>
 
 <!-- ══════════════ RECHERCHE ══════════════ -->
 <div class="recherche-wrapper">
@@ -2580,6 +2654,25 @@ btnRestoView.addEventListener('click', () => {
 
 appliquerFiltres();
 
+
+// ─── Bottom nav mobile : délégation + sync ───
+const mobileBottomNav = document.getElementById('mobile-bottom-nav');
+if (mobileBottomNav) {
+  mobileBottomNav.querySelectorAll('.mob-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById(btn.dataset.target).click();
+    });
+  });
+  function syncMobileNav() {
+    mobileBottomNav.querySelectorAll('.mob-nav-btn').forEach(btn => {
+      const target = document.getElementById(btn.dataset.target);
+      btn.classList.toggle('actif', target?.classList.contains('actif') ?? false);
+    });
+  }
+  [btnCarteView, btnPresView, btnRestoView].forEach(btn => {
+    new MutationObserver(syncMobileNav).observe(btn, { attributes: true, attributeFilter: ['class'] });
+  });
+}
 
 // ─── Auto-center du filtre cliqué dans la barre scrollable ───
 document.getElementById('filtres').addEventListener('click', e => {
