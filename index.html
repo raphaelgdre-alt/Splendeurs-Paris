@@ -427,6 +427,65 @@
       border: 1px solid rgba(255,255,255,0.25);
     }
 
+    /* ── Bouton favori ── */
+    .btn-favori {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+      padding: 0;
+    }
+    .btn-favori:hover { transform: scale(1.15); background: rgba(255,255,255,0.3); }
+    .btn-favori svg { width: 18px; height: 18px; transition: all 0.25s ease; }
+    .btn-favori .coeur-vide { display: block; stroke: rgba(255,255,255,0.9); fill: none; }
+    .btn-favori .coeur-plein { display: none; stroke: var(--or); fill: var(--or); }
+    .btn-favori.actif .coeur-vide { display: none; }
+    .btn-favori.actif .coeur-plein { display: block; }
+    .btn-favori.actif { background: rgba(201,169,110,0.2); }
+    .btn-favori.pulse { animation: pulse-favori 0.35s ease; }
+    @keyframes pulse-favori {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+
+    /* ── Bouton filtre favoris ── */
+    .filtre-btn[data-filtre="favoris"] .coeur-filtre {
+      display: inline-block;
+      margin-right: 4px;
+      font-style: normal;
+    }
+
+    /* ── Compteur favoris dans la barre ── */
+    .favoris-compteur {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: var(--or);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      margin-left: 5px;
+      vertical-align: middle;
+      transition: opacity 0.2s;
+    }
+    .favoris-compteur[data-count="0"] { opacity: 0; }
+
     .carte-arrondissement {
       position: absolute;
       bottom: 14px;
@@ -710,26 +769,37 @@
       flex-shrink: 0;
     }
 
-    .modale-maps-btn {
+    .modale-btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .modale-maps-btn, .modale-site-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      width: 100%;
+      flex: 1;
       min-height: 48px;
-      margin-top: 24px;
-      background: var(--or);
-      color: #fff;
       border-radius: var(--rayon);
       font-family: 'Jost', sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
       text-decoration: none;
       transition: opacity var(--transition), transform var(--transition);
     }
-    .modale-maps-btn:hover {
+    .modale-maps-btn {
+      background: var(--or);
+      color: #fff;
+    }
+    .modale-site-btn {
+      background: transparent;
+      color: var(--or);
+      border: 1.5px solid var(--or);
+    }
+    .modale-maps-btn:hover, .modale-site-btn:hover {
       opacity: 0.88;
       transform: translateY(-1px);
     }
@@ -1613,6 +1683,7 @@
     <button class="filtre-btn" data-filtre="monument" aria-expanded="false" aria-label="Filtrer : Monuments">Monuments</button>
     <button class="filtre-btn" data-filtre="eglise" aria-expanded="false" aria-label="Filtrer : Édifices religieux">Édifices religieux</button>
     <button class="filtre-btn" data-filtre="jardin" aria-expanded="false" aria-label="Filtrer : Jardins">Jardins</button>
+    <button class="filtre-btn" data-filtre="favoris" aria-expanded="false" aria-label="Mes lieux favoris">♡ Favoris<span class="favoris-compteur" data-count="0" id="favoris-compteur"></span></button>
   </div>
   <button class="btn-carte-view" id="btn-presentation-view" style="margin-right:6px; order:-1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> À propos</button>
   <button class="btn-carte-view" id="btn-resto-view" style="margin-right:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg> Restaurants</button>
@@ -1839,7 +1910,8 @@ const lieux = [
     histoire: "Tout commence en 1190 avec Philippe Auguste qui fait construire une tour défensive sur la rive droite de la Seine pour protéger Paris contre les raids normands. En 1358, Charles V transforme cette forteresse austère en résidence royale confortable, y installant sa bibliothèque de 900 volumes — l'une des plus riches d'Europe. C'est François Ier, fasciné par la Renaissance italienne, qui commande en 1546 la reconstruction du palais dans un style architectural nouveau, faisant venir Léonard de Vinci à sa cour. Ses successeurs, de Catherine de Médicis à Louis XIV, l'agrandissent et l'embellissent sans relâche pendant deux siècles. Louis XIV préfère finalement Versailles, et le Louvre est progressivement abandonné comme résidence royale avant d'être transformé en musée national le 10 août 1793 par la Convention révolutionnaire. Napoléon Bonaparte en fait le plus grand musée du monde, y déposant les butins de ses campagnes en Italie et en Égypte. En 1989, la pyramide de verre de l'architecte sino-américain I.M. Pei — commandée par François Mitterrand — révolutionne l'entrée du musée et provoque une polémique qui s'est depuis transformée en admiration unanime.",
     aVoir: ["La Joconde (salle 711)", "La Vénus de Milo et la Victoire de Samothrace", "Les appartements Napoléon III"],
     conseil: "Réservez vos billets en ligne pour éviter les files. Prévoyez au moins une demi-journée.",
-    tags: ["Peinture", "Sculpture", "Antiquités", "Art islamique"]
+    tags: ["Peinture", "Sculpture", "Antiquités", "Art islamique"],
+    siteWeb: "https://www.louvre.fr"
   },
   {
     id: 2,
@@ -1856,7 +1928,8 @@ const lieux = [
     histoire: "En 1897, la Compagnie des chemins de fer d'Orléans obtient l'autorisation de construire une gare terminus en plein cœur de Paris, à deux pas du Louvre. L'architecte Victor Laloux conçoit un édifice monumental dont la façade en pierre masque habilement une structure d'acier et de verre. Inaugurée pour l'Exposition universelle de 1900, la gare accueille les trains du centre de la France, mais ses quais trop courts la rendent rapidement obsolète pour les trains modernes — ils l'abandonnent dès 1939. Elle est reconvertie en hôtel, salle de vente, puis plateau de tournage — Orson Welles y filme 'Le Procès' en 1962. C'est Valéry Giscard d'Estaing qui décide en 1977 de la transformer en musée consacré à la seconde moitié du XIXe siècle. L'architecte italienne Gae Aulenti métamorphose l'intérieur tout en préservant la majesté de la nef. Le musée ouvre ses portes le 1er décembre 1986, révélant pour la première fois au grand public l'extraordinaire collection impressionniste qui était disséminée dans plusieurs institutions parisiennes.",
     aVoir: ["Bal au Moulin de la Galette — Renoir", "La Chambre à Arles — Van Gogh", "L'Origine du monde — Courbet"],
     conseil: "Le jeudi soir, l'affluence est moindre. La vue sur la Seine depuis les grandes horloges est exceptionnelle.",
-    tags: ["Impressionnisme", "Post-impressionnisme", "Sculpture", "Art décoratif"]
+    tags: ["Impressionnisme", "Post-impressionnisme", "Sculpture", "Art décoratif"],
+    siteWeb: "https://www.musee-orsay.fr"
   },
   {
     id: 4,
@@ -1873,7 +1946,8 @@ const lieux = [
     histoire: "Lorsque l'évêque Maurice de Sully pose la première pierre en 1163, l'Île de la Cité est déjà le berceau de Paris depuis plus d'un millénaire — la cathédrale prend la place d'une basilique mérovingienne elle-même bâtie sur un temple gallo-romain dédié à Jupiter. La construction mobilise des générations d'artisans sur près de 180 ans, jusqu'en 1345. Chaque siècle y laisse son empreinte : portails sculptés du XIIIe siècle, arcs-boutants ajoutés au XIVe, flèches remplacées à plusieurs reprises. La Révolution lui inflige de graves dommages — statues décapitées, cloches fondues, trésor pillé. Victor Hugo, horrifié par son état délabré, publie 'Notre-Dame de Paris' en 1831 pour alerter l'opinion, déclenchant un mouvement de restauration confié à Viollet-le-Duc entre 1844 et 1864. Il reconstruit la flèche et restitue l'édifice dans sa majesté médiévale. Le 15 avril 2019, un incendie dévastateur détruit la charpente — la 'forêt' de chênes vieille de 800 ans — et abat la flèche. Plus d'un milliard d'euros sont collectés dans le monde entier. Après cinq ans de restauration, la cathédrale rouvre ses portes en décembre 2024, plus belle que jamais.",
     aVoir: ["La façade occidentale et ses trois portails sculptés", "Les rosaces et vitraux médiévaux", "La nouvelle flèche et la charpente restaurée"],
     conseil: "Profitez de la vue depuis le parvis et les quais de Seine. La cathédrale est magnifique illuminée le soir.",
-    tags: ["Gothique", "Architecture médiévale", "Religion", "Patrimoine UNESCO"]
+    tags: ["Gothique", "Architecture médiévale", "Religion", "Patrimoine UNESCO"],
+    siteWeb: "https://www.notredamedeparis.fr"
   },
   {
     id: 5,
@@ -1890,7 +1964,8 @@ const lieux = [
     histoire: "La Sainte-Chapelle naît de l'ambition spirituelle et politique de Louis IX, roi que l'histoire retiendra comme Saint Louis. En 1239, il acquiert à prix d'or — deux fois le coût de la future chapelle — la Couronne d'épines du Christ auprès de l'Empereur latin de Constantinople, Baudouin II, qui l'avait mise en gage auprès de marchands vénitiens pour financer ses guerres. Il fait venir peu après un fragment de la Vraie Croix. L'architecte — probablement Pierre de Montreuil — réalise un prodige architectural : en éliminant presque entièrement les murs porteurs et en les remplaçant par des parois de verre de 15 mètres de haut, il crée un espace baigné de lumière colorée sans équivalent dans l'art gothique mondial. La chapelle est consacrée le 26 avril 1248, seulement cinq ans après le début des travaux — une rapidité stupéfiante. La chapelle haute, réservée à la famille royale et aux grands de la cour, était reliée directement au palais par une passerelle. La chapelle basse, plus sombre, était destinée aux serviteurs. Lors de la Révolution, la chapelle échappe à la démolition et est transformée en grenier à archives, avant d'être restaurée à partir de 1840 dans l'esprit du gothique rayonnant originel.",
     aVoir: ["Les 15 verrières de la chapelle haute (600 m²)", "La rosace du Jugement dernier", "La chapelle basse et ses voûtes polychromées"],
     conseil: "Venez le matin pour profiter de la lumière naturelle traversant les vitraux. Des concerts de musique classique y sont régulièrement organisés.",
-    tags: ["Gothique", "Vitraux", "Moyen Âge", "Architecture"]
+    tags: ["Gothique", "Vitraux", "Moyen Âge", "Architecture"],
+    siteWeb: "https://www.sainte-chapelle.fr"
   },
   {
     id: 6,
@@ -1907,7 +1982,8 @@ const lieux = [
     histoire: "En 1744, Louis XV tombe gravement malade à Metz et fait le vœu, s'il guérit, de reconstruire l'église Saint-Geneviève, patronne de Paris, tombée en ruines. Guéri, il tient sa promesse et confie le chantier à Jacques-Germain Soufflot, qui dessine un édifice néoclassique inspiré du Panthéon de Rome et de Saint-Paul de Londres. Soufflot rêve d'un temple de lumière aux colonnes élancées. Sa construction commence en 1758 et s'achève en 1790, deux ans après la mort de son architecte. À peine terminée, la Révolution s'en empare et décide d'en faire la nécropole des grands hommes de la Nation. Le premier à y être inhumé est Mirabeau, suivi de Voltaire et Rousseau. L'édifice oscille ensuite entre usage religieux et laïc selon les régimes successifs, avant que la IIIe République ne le sécularise définitivement lors des funérailles de Victor Hugo en 1885, qui attire deux millions de personnes dans les rues de Paris. En 1851, Léon Foucault y accroche sous la coupole un pendule de 67 mètres qui, en oscillant toujours dans la même direction tandis que Paris tourne sous lui, démontre de façon spectaculaire la rotation de la Terre. Parmi les 80 personnalités inhumées dans la crypte figurent Marie Curie — première femme à y entrer pour ses mérites propres —, Jean Moulin, et plus récemment Simone Veil et Joséphine Baker.",
     aVoir: ["La crypte et ses 80 tombeaux illustres", "Le pendule de Foucault (reconstitution)", "La coupole et les fresques de Puvis de Chavannes"],
     conseil: "En été, l'accès au sommet de la coupole est possible : vue imprenable sur Paris. La crypte, toujours fraîche, est idéale les jours de chaleur.",
-    tags: ["Néoclassicisme", "Mausolée", "Histoire de France", "Architecture"]
+    tags: ["Néoclassicisme", "Mausolée", "Histoire de France", "Architecture"],
+    siteWeb: "https://www.paris-pantheon.fr"
   },
   {
     id: 7,
@@ -1924,7 +2000,8 @@ const lieux = [
     histoire: "Deux fois refusé à l'École des Beaux-Arts, Auguste Rodin dut travailler comme ornemaniste pour gagner sa vie avant de s'imposer comme le plus grand sculpteur de son époque. En 1908, il s'installe à l'Hôtel Biron, un magnifique hôtel particulier du XVIIIe siècle entouré d'un jardin romantique dans le 7e arrondissement. Il y partage les lieux avec Matisse, Jean Cocteau, Isadora Duncan et le poète Rainer Maria Rilke, son secrétaire. Pour obtenir le droit de rester dans cet hôtel que l'État veut vendre, il propose une transaction extraordinaire : léguer à la France l'intégralité de son œuvre en échange de la création d'un musée. L'accord est signé en 1916, un an avant sa mort. Le musée ouvre en 1919. Aujourd'hui, il conserve 6 600 sculptures, 8 000 dessins, 7 000 photos et la collection personnelle de Rodin — dont des Van Gogh et des Monet. Dans le jardin se dressent quelques-unes des sculptures les plus célèbres au monde : Le Penseur, Les Bourgeois de Calais, La Porte de l'Enfer d'après Dante. Une section entière est consacrée à Camille Claudel, collaboratrice et compagne de Rodin, sculptrice de génie dont l'œuvre fut longtemps éclipsée par celle de son amant.",
     aVoir: ["Le Penseur et Les Bourgeois de Calais dans le jardin", "La Porte de l'Enfer (d'après Dante)", "La section Camille Claudel"],
     conseil: "Le jardin seul vaut le déplacement : Le Penseur y trône magnifiquement. Idéal pour un pique-nique culturel.",
-    tags: ["Sculpture", "XIXe siècle", "Art moderne", "Jardin"]
+    tags: ["Sculpture", "XIXe siècle", "Art moderne", "Jardin"],
+    siteWeb: "https://www.musee-rodin.fr"
   },
   {
     id: 8,
@@ -1941,7 +2018,8 @@ const lieux = [
     histoire: "L'histoire du site de Cluny est une histoire de superpositions, chaque siècle recouvrant le précédent comme des strates géologiques. À l'époque gallo-romaine, vers 200 apr. J.-C., de grands thermes publics sont construits sur la rive gauche de la Seine pour les habitants de Lutèce. Ces thermes comptent parmi les plus importants de Gaule : leur 'frigidarium' — la salle froide — s'élève encore à 15 mètres de hauteur, ses voûtes romaines intactes, un prodige de conservation unique à Paris. Au Moyen Âge, les abbés de Cluny, la puissante abbaye bourguignonne, y font construire à la fin du XVe siècle un hôtel particulier gothique flamboyant pour leurs séjours à Paris — c'est la partie la mieux conservée d'un hôtel médiéval parisien. C'est dans cet hôtel que Marie Tudor, sœur d'Henri VIII et reine douairière de France, se retire en 1515 après la mort de Louis XII. En 1833, Alexandre Du Sommerard, collectionneur passionné d'art médiéval, s'y installe avec ses trésors. À sa mort en 1842, l'État rachète la collection et crée le musée national du Moyen Âge. Sa pièce maîtresse : la série de six tapisseries 'La Dame à la licorne', tissées vers 1500 en Flandres et considerées comme l'un des sommets de l'art médiéval occidental.",
     aVoir: ["La Dame à la licorne (6 tapisseries, vers 1500)", "Le frigidarium des thermes gallo-romains (IIe s.)", "Les têtes des rois de Notre-Dame"],
     conseil: "La série de tapisseries 'La Dame à la licorne' (vers 1500) est l'une des œuvres médiévales les plus fascinantes au monde. Incontournable.",
-    tags: ["Moyen Âge", "Art roman", "Gallo-romain", "Tapisseries"]
+    tags: ["Moyen Âge", "Art roman", "Gallo-romain", "Tapisseries"],
+    siteWeb: "https://www.musee-moyenage.fr"
   },
   {
     id: 9,
@@ -1959,7 +2037,8 @@ const lieux = [
     histoire: "Lorsque Napoléon III commande un nouvel opéra pour Paris en 1861, le jeune architecte Charles Garnier — âgé de 35 ans, pratiquement inconnu — remporte le concours contre 170 candidats. Sa proposition est audacieuse : un palais fastueux qui surpasse tout ce que l'Europe a connu, reflet de la puissance du Second Empire. La construction commence mais est interrompue par la guerre franco-prussienne de 1870-71 et la Commune de Paris. Les sous-sols creusés pour les fondations se remplissent d'eau — donnant naissance au lac artificiel souterrain qui inspirera Gaston Leroux pour son 'Fantôme de l'Opéra' publié en 1910. L'opéra est inauguré le 5 janvier 1875 sous la IIIe République, après quinze ans de travaux. Charles Garnier, qui a inventé pour l'occasion le style 'Napoléon III' — éclectique, opulent, mêlant tous les ordres classiques — y assiste en simple invité, la République n'ayant pas jugé utile de lui offrir une loge. En 1964, André Malraux commande à Marc Chagall un nouveau plafond pour la salle de spectacle : une composition onirique aux couleurs vives qui provoque une polémique retentissante avant d'être unanimement adorée.",
     aVoir: ["Le grand escalier en onyx et marbre", "La salle de spectacle et le plafond de Chagall", "Le foyer de la danse et ses galeries dorées"],
     conseil: "Même sans assister à un spectacle, la visite libre du palais est une expérience inoubliable. Optez pour une matinée d'opéra ou de ballet pour l'expérience complète.",
-    tags: ["Second Empire", "Opéra", "Ballet", "Architecture"]
+    tags: ["Second Empire", "Opéra", "Ballet", "Architecture"],
+    siteWeb: "https://www.operadeparis.fr"
   },
   {
     id: 10,
@@ -1976,7 +2055,8 @@ const lieux = [
     histoire: "Pablo Picasso arrive à Paris pour la première fois en 1900, à 19 ans. Il s'y installe définitivement en 1904, dans le célèbre Bateau-Lavoir à Montmartre. C'est à Paris qu'il peint 'Les Demoiselles d'Avignon' en 1907, tableau fondateur du cubisme qu'il développe avec Georges Braque. Son œuvre, protéiforme et révolutionnaire, traverse tout le XXe siècle — cubisme, surréalisme, néo-classicisme — jusqu'à sa mort à Mougins en 1973. À sa mort, la France institue le droit de payer les droits de succession en œuvres d'art — la 'dation Picasso'. Ses héritiers cèdent à l'État 203 tableaux, 158 sculptures, 29 bas-reliefs, 88 céramiques et des milliers de dessins et gravures — ainsi que la collection personnelle de Picasso, qui comprend des œuvres de Cézanne, Matisse et Rousseau. Le musée ouvre en 1985 dans l'Hôtel Salé, magnifique hôtel particulier du XVIIe siècle du Marais, dont la construction fut financée par un fermier général chargé de collecter l'impôt sur le sel — d'où son surnom. Rénové et élargi entre 2009 et 2014, il présente aujourd'hui 5 000 pièces couvrant l'ensemble de la carrière de l'artiste le plus influent du XXe siècle.",
     aVoir: ["L'Autoportrait de 1901 et la période bleue", "Les sculptures en métal découpé", "La collection personnelle de Picasso (Cézanne, Matisse)"],
     conseil: "Le Marais est l'un des quartiers les plus vivants de Paris — combinez la visite avec une promenade dans les rues environnantes.",
-    tags: ["Cubisme", "Art moderne", "XXe siècle", "Peinture"]
+    tags: ["Cubisme", "Art moderne", "XXe siècle", "Peinture"],
+    siteWeb: "https://www.museepicassoparis.fr"
   },
   {
     id: 11,
@@ -1993,7 +2073,8 @@ const lieux = [
     histoire: "Construit en 1852 sous Napoléon III pour protéger les orangers du jardin des Tuileries durant l'hiver, ce bâtiment purement utilitaire est transformé par la vision de Claude Monet. Vers la fin de sa vie, installé à Giverny depuis 1883, le peintre travaille obsessionnellement sur de grands panneaux représentant son jardin d'eau. En 1918, au lendemain de l'Armistice, Monet offre à l'État deux séries de grands panneaux décoratifs en hommage à la paix retrouvée, à condition qu'ils soient présentés dans un espace spécialement conçu. Georges Clemenceau, ami intime du peintre depuis quarante ans, orchestre l'accord et choisit l'Orangerie. Monet supervise personnellement la conception des deux salles ovales à éclairage zénithal, mais meurt en décembre 1926, quelques mois avant l'inauguration en mai 1927. En sous-sol, la collection Walter-Guillaume — chef-d'œuvre de la peinture française du début du XXe siècle réunie par le galeriste Paul Guillaume et sa femme Juliette — rassemble 144 œuvres de Cézanne, Renoir, Picasso, Matisse et Modigliani dans l'un des ensembles les plus précieux de Paris.",
     aVoir: ["Les huit panneaux des Nymphéas dans les salles ovales", "La collection Walter-Guillaume (Cézanne, Renoir, Matisse)", "L'architecture de lumière zénithale des deux salles"],
     conseil: "Venez tôt le matin pour vivre l'expérience des Nymphéas dans le calme. La lumière naturelle zénithale crée une atmosphère unique selon l'heure.",
-    tags: ["Impressionnisme", "Monet", "Nymphéas", "Collection privée"]
+    tags: ["Impressionnisme", "Monet", "Nymphéas", "Collection privée"],
+    siteWeb: "https://www.musee-orangerie.fr"
   },
   {
     id: 14,
@@ -2010,7 +2091,8 @@ const lieux = [
     histoire: "La basilique du Sacré-Cœur naît dans le traumatisme national de la défaite de 1870-71 contre la Prusse et de la terrible répression de la Commune de Paris. En 1872, l'Assemblée nationale vote sa construction en signe d'expiation nationale. L'emplacement choisi est symbolique : la butte Montmartre, théâtre des premiers combats de la Commune, dominant toute la ville. L'architecte Paul Abadie dessine une basilique de style romano-byzantin inspiré des cathédrales périgordines, inhabituel pour Paris. La première pierre est posée en 1875, mais la construction avance lentement : le sol de Montmartre, troué de carrières, exige que 83 puits de fondation soient creusés jusqu'au rocher, certains descendant à 33 mètres. La pierre de travertin calcaire a la particularité de libérer de la calcite au contact de l'eau de pluie, rendant la surface encore plus blanche avec le temps. Les polémiques politiques retardent aussi le chantier — la gauche républicaine voit dans la basilique un symbole de la réaction cléricale. L'achèvement est proclamé en 1914, mais la consécration n'intervient qu'en 1919, après l'Armistice. La mosaïque intérieure du Christ en majesté, l'une des plus grandes du monde avec ses 480 m², est signée Luc-Olivier Merson.",
     aVoir: ["La mosaïque du Christ en majesté (480 m²)", "Le dôme et son panorama à 360° sur Paris", "La cloche 'La Savoyarde' (19 tonnes, la plus lourde de France)"],
     conseil: "L'escalier pour accéder à Montmartre est long mais gratuit. Le funiculaire est inclus dans le ticket de métro. La vue depuis le parvis est époustouflante.",
-    tags: ["Romano-byzantin", "Montmartre", "Panorama", "Religion"]
+    tags: ["Romano-byzantin", "Montmartre", "Panorama", "Religion"],
+    siteWeb: "https://www.sacre-coeur-montmartre.com"
   },
   {
     id: 16,
@@ -2027,7 +2109,8 @@ const lieux = [
     histoire: "L'hôtel particulier qui donne son nom au musée est l'un des plus anciens du Marais : construit en 1548 pour Jacques des Ligneris, il est remanié par François Mansart au XVIIe siècle. Son nom 'Carnavalet' est une déformation phonétique du nom de sa première propriétaire féminine, Françoise de Kernevenoy. En 1677, Marie de Rabutin-Chantal, marquise de Sévigné, s'y installe avec sa fille et y vivra jusqu'à sa mort en 1696, y écrivant une grande partie de ses célèbres lettres — témoignage incomparable sur la vie du Grand Siècle. L'hôtel voisin Saint-Fargeau, acquis par le musée en 1866, abrita quant à lui Michel Le Peletier, dernier aristocrate à voter la mort de Louis XVI, assassiné la veille de l'exécution. Le musée ouvre en 1880 et constitue depuis lors la mémoire matérielle de Paris — mobiliers d'époque sauvés de destructions, devantures de boutiques préservées, intérieurs Art nouveau reconstitués. Rénové de fond en comble entre 2016 et 2021, il propose un nouveau parcours de 100 salles couvrant 3 000 ans d'histoire parisienne, de la pirogue préhistorique retrouvée à Bercy lors de travaux au Paris contemporain.",
     aVoir: ["Les salles de la Révolution française", "Le bureau reconstitué de Marcel Proust", "Les décors Art nouveau de la bijouterie Fouquet"],
     conseil: "L'entrée permanente est gratuite — l'un des rares grands musées parisiens à l'être. Idéal pour comprendre l'évolution de Paris à travers les siècles.",
-    tags: ["Histoire de Paris", "Révolution", "Art nouveau", "Ethnographie"]
+    tags: ["Histoire de Paris", "Révolution", "Art nouveau", "Ethnographie"],
+    siteWeb: "https://www.carnavalet.paris.fr"
   },
   {
     id: 17,
@@ -2044,7 +2127,8 @@ const lieux = [
     histoire: "Le musée des Arts et Métiers est né d'une idée révolutionnaire au sens propre. En 1794, l'abbé Henri Grégoire convainc la Convention de créer un Conservatoire national des arts et métiers chargé de 'déposer les machines, modèles, outils, dessins et descriptions de toutes sortes d'inventions utiles'. L'objectif : constituer une bibliothèque vivante du savoir-faire humain accessible à tous, et favoriser le progrès industriel d'une France en pleine mutation. Le conservatoire est installé dans le prieuré médiéval de Saint-Martin-des-Champs, fondé en 1060 — dont la nef romane du XIIe siècle et le réfectoire gothique du XIIIe subsistent, créant un contraste saisissant entre Moyen Âge et modernité industrielle. Le musée accueille dès le XIXe siècle les plus belles pièces de l'industrie mondiale. Parmi ses trésors : l'Avion III de Clément Ader de 1897 — premier aéroplane à décoller — le Pendule de Foucault original (l'expérience fut d'abord réalisée au Panthéon en 1851), et les automates de Vaucanson dont le légendaire canard digérateur qui stupéfia l'Europe au XVIIIe siècle. La nef de l'église abrite ces machines comme des reliques sacrées, dans un silence de cathédrale.",
     aVoir: ["L'Avion III de Clément Ader (1897)", "Le pendule de Foucault original", "Les automates de Vaucanson dans la nef médiévale"],
     conseil: "Un musée surprenant et peu bondé. Le jeudi soir, la nocturne dans l'église médiévale est une expérience unique.",
-    tags: ["Sciences", "Techniques", "Inventions", "Histoire industrielle"]
+    tags: ["Sciences", "Techniques", "Inventions", "Histoire industrielle"],
+    siteWeb: "https://www.arts-et-metiers.net"
   },
   {
     id: 18,
@@ -2061,7 +2145,8 @@ const lieux = [
     histoire: "Le Grand Palais est le dernier grand monument parisien entièrement conçu pour un seul événement : l'Exposition universelle de 1900. Quatre architectes se partagent le projet — Henri Deglane pour la nef monumentale, Albert Louvet pour les galeries, Albert Thomas pour la façade sud, Charles Girault pour le Petit Palais en vis-à-vis. L'ambition est démesurée : créer sous une seule verrière d'acier l'un des plus grands espaces couverts au monde. La structure métallique est dissimulée derrière une façade néo-baroque en pierre, couverte de sculptures et couronnée par quatre groupes équestres en bronze. La verrière culmine à 45 mètres et couvre 13 500 m². Après l'Exposition, le Grand Palais est utilisé pour toutes sortes de manifestations : Salon d'automne, compétitions équestres aux Jeux Olympiques de 1900 et 1924, garage pour des milliers de taxis durant la Première Guerre mondiale. Il a accueilli des expositions devenues légendaires (Braque, Picasso, Dali, Chanel, Dior) et des défilés de mode spectaculaires. Classé monument historique en 1975, il a rouvert en 2024 après de longs travaux de restauration, pour accueillir les Jeux Olympiques de Paris.",
     aVoir: ["La nef de verre monumentale (13 500 m²)", "Les expositions temporaires de renommée internationale", "La façade sculptée et ses quadriges de bronze"],
     conseil: "Vérifiez le programme des expositions — certaines sont parmi les plus attendues de l'année à Paris. La nef elle-même mérite le détour.",
-    tags: ["Art nouveau", "Expositions", "Architecture", "Belle Époque"]
+    tags: ["Art nouveau", "Expositions", "Architecture", "Belle Époque"],
+    siteWeb: "https://www.grandpalais.fr"
   },
   {
     id: 19,
@@ -2079,7 +2164,8 @@ const lieux = [
     histoire: "L'histoire du musée Marmottan est une histoire de transmissions et de passions héritées. Paul Marmottan, riche bourgeois du XIXe siècle, acquiert en 1882 un pavillon de chasse dans le bois de Boulogne qu'il transforme en villa. Son fils Jules en fait une demeure ornée de mobilier Empire et de peintures flamandes et hollandaises, léguée à l'Institut de France à sa mort en 1932. La collection reste méconnue jusqu'en 1966, puis surtout jusqu'en 1971, quand Michel Monet — fils unique de Claude — lègue à l'Institut 65 toiles de son père restées à Giverny, dont 'Impression, soleil levant' de 1872 — le tableau qui a donné son nom à tout un mouvement artistique. Ce tableau fut volé avec huit autres en 1985, lors du plus grand vol d'œuvres d'art de l'histoire française, avant d'être retrouvé cinq ans plus tard en Corse. D'autres donations exceptionnelles suivent : la collection Dayem en 1987, la collection Denis et Annie Rouart en 2013. Aujourd'hui le Marmottan possède la plus grande collection de Monet au monde — plus de 300 œuvres — dont les extraordinaires séries des cathédrales, des meules, du Parlement de Londres et des jardins de Giverny peints alors que le peintre était presque aveugle.",
     aVoir: ["Impression, soleil levant (1872)", "Les nymphéas de la salle ovale souterraine", "Les séries tardives : cathédrales, meules, Parlement de Londres"],
     conseil: "Moins connu que l'Orangerie, le musée Marmottan est souvent moins bondé. Le jardin et l'ambiance de villa bourgeoise en font un musée particulièrement agréable.",
-    tags: ["Monet", "Impressionnisme", "Belle Époque", "Collection privée"]
+    tags: ["Monet", "Impressionnisme", "Belle Époque", "Collection privée"],
+    siteWeb: "https://www.marmottan.fr"
   },
   {
     id: 20,
@@ -2096,7 +2182,8 @@ const lieux = [
     histoire: "L'hôtel des Invalides, qui abrite le musée de l'Armée, est d'abord une institution de bienfaisance militaire sans précédent. Louis XIV, roi guerrier mobilisant des armées colossales, est confronté au problème de ses soldats vieillissants et blessés, souvent réduits à la mendicité. Il ordonne en 1670 la construction d'un vaste hôtel capable d'accueillir 6 000 invalides de guerre. L'architecte Libéral Bruant dessine les bâtiments entre 1671 et 1676, tandis que Jules Hardouin-Mansart ajoute l'église du Dôme entre 1679 et 1708 — chef-d'œuvre du classicisme français dont la coupole dorée est visible depuis presque partout dans Paris. Le musée de l'Armée proprement dit est fondé en 1905. Il conserve aujourd'hui l'une des plus importantes collections militaires au monde, couvrant toutes les périodes de l'histoire française. Son trésor absolu est le tombeau de Napoléon Ier, installé sous la coupole du Dôme dans un sarcophage de quartzite rouge de Finlande entouré de douze victoires en marbre. Le retour des cendres de l'Empereur depuis Sainte-Hélène en 1840 avait provoqué un enthousiasme populaire extraordinaire — plus d'un million de Parisiens se pressant sur le passage du cortège funèbre.",
     aVoir: ["Le tombeau de Napoléon sous la coupole du Dôme", "L'armure de François Ier (XVIe siècle)", "Les salles de la Seconde Guerre mondiale"],
     conseil: "Le musée est vaste — prévoyez 3h minimum. Le tombeau de Napoléon à lui seul justifie la visite. Combiné avec le musée Rodin tout proche, c'est une journée riche.",
-    tags: ["Militaire", "Napoléon", "Moyen Âge", "Seconde Guerre mondiale"]
+    tags: ["Militaire", "Napoléon", "Moyen Âge", "Seconde Guerre mondiale"],
+    siteWeb: "https://www.musee-armee.fr"
   },
   {
     id: 21,
@@ -2113,7 +2200,8 @@ const lieux = [
     histoire: "L'Hôtel des Invalides incarne à lui seul la vision absolutiste de Louis XIV : un État qui prend soin de ses soldats, un roi qui veut la gloire architecturale de Paris. Commandé en 1670 et conçu par Libéral Bruant pour loger les soldats invalides et mendiants, il est agrandi et couronné par Jules Hardouin-Mansart qui élève l'église du Dôme entre 1679 et 1708 — l'une des plus belles réalisations du classicisme français, avec sa coupole à triple enveloppe couverte de 12,65 kg d'or pur. À son apogée, les Invalides abritent jusqu'à 4 000 pensionnaires et fonctionnent comme une véritable ville autonome avec ses ateliers, infirmerie, jardins et chapelle. En 1840, le retour des cendres de Napoléon depuis Sainte-Hélène consacre définitivement les Invalides comme haut lieu de mémoire nationale. Louis-Philippe organise un retour triomphal qui rassemble un million de Parisiens dans le froid de décembre, et fait aménager sous la coupole une crypte monumentale. Depuis lors, l'ensemble — avec sa cour d'honneur flanquée de canons, ses musées, ses jardins et son esplanade de 500 mètres — constitue l'un des complexes architecturaux les plus grandioses de la capitale.",
     aVoir: ["Le Dôme des Invalides et la crypte napoléonienne", "La Cour d'Honneur et ses canons historiques", "La perspective depuis l'esplanade et le Pont Alexandre III"],
     conseil: "Traversez la Cour d'Honneur à l'aube — les canons alignés et la façade majestueuse sont saisissants. Le billet donne accès au Dôme et au Musée de l'Armée : prévoyez une demi-journée.",
-    tags: ["Napoléon", "Louis XIV", "Architecture classique", "Patrimoine"]
+    tags: ["Napoléon", "Louis XIV", "Architecture classique", "Patrimoine"],
+    siteWeb: "https://www.invalides.fr"
   },
   {
     id: 24,
@@ -2130,7 +2218,8 @@ const lieux = [
     histoire: "Le jardin des Tuileries tire son nom d'une réalité prosaïque : des tuileries — fabriques de tuiles — s'élevaient sur ces terrains au bord de la Seine avant que Catherine de Médicis ne les acquière en 1563. La reine mère, inconsolable après la mort d'Henri II, y fait construire le palais des Tuileries et aménager le premier jardin public de Paris, ouvert aux promeneurs dès sa création. C'est André Le Nôtre, jardinier de Louis XIV, qui repense entièrement le jardin en 1664 dans le style français qui lui est propre : axes rectilignes, symétrie parfaite, bassins circulaires, terrasses et perspectives infinies. Ce plan est toujours celui que l'on voit aujourd'hui. Le palais des Tuileries, lui, est incendié par les Communards en 1871 et ses ruines rasées en 1882 — il reste les jardins. Confié aux soins du musée du Louvre depuis 1990, le jardin a été enrichi d'une vingtaine de sculptures monumentales, dont des bronzes de Maillol et des œuvres de Giacometti. Il abrite aux deux extrémités deux musées remarquables : l'Orangerie à l'ouest, avec les Nymphéas de Monet, et le Jeu de Paume à l'est, dédié à la photographie contemporaine.",
     aVoir: ["Les sculptures monumentales dans les allées (Maillol, Giacometti)", "Les bassins et la vue sur l'axe historique de Paris", "Le musée de l'Orangerie aux Nymphéas de Monet"],
     conseil: "Idéal le matin de bonne heure ou en fin d'après-midi. En été, des chaises longues sont disponibles au bord des bassins. Le jardin accueille une foire d'estivale en juillet-août.",
-    tags: ["Le Nôtre", "Jardin à la française", "Sculptures", "Promenade"]
+    tags: ["Le Nôtre", "Jardin à la française", "Sculptures", "Promenade"],
+    siteWeb: "https://www.louvre.fr/en/explore/the-palace/the-tuileries-garden"
   },
   {
     id: 25,
@@ -2147,7 +2236,8 @@ const lieux = [
     histoire: "Le jardin du Luxembourg est né d'un deuil royal et d'un désir de rapatrier l'Italie à Paris. En 1610, Henri IV est assassiné par Ravaillac, laissant Marie de Médicis veuve et régente. Nostalgique de sa Florence natale et mal à l'aise au Louvre, elle acquiert en 1612 l'hôtel du duc de Luxembourg et les terres alentour. Elle commande à Salomon de Brosse un palais dans le style du Palazzo Pitti florentin, et un jardin à l'italienne. Mais le palais et le jardin sont à peine achevés que Marie de Médicis est exilée par Richelieu en 1631 — elle n'en profitera que quelques années. Le jardin prend peu à peu les caractéristiques du style français, notamment sous Napoléon qui en ampute une partie pour percer la rue de Médicis et créer l'École de pharmacie. La pépinière du Sénat, le verger conservatoire recensant 350 variétés de pommes et poires anciennes, le rucher de l'École d'apiculture fondé en 1856, les quelque 80 sculptures disposées dans les allées, le kiosque à musique — tout cela compose un jardin d'une richesse exceptionnelle. Avec ses 23 hectares de jardins à la française et à l'anglaise, ses fameuses chaises en métal vert disponibles dès 1923 et son grand bassin où les enfants font naviguer des voiliers miniatures depuis le XIXe siècle, le Luxembourg est encore aujourd'hui le jardin préféré des Parisiens.",
     aVoir: ["Le grand bassin et ses voiliers miniatures en bois", "Le Palais du Luxembourg (façade du Sénat)", "Le verger et le rucher de l'École d'apiculture"],
     conseil: "Le jardin est particulièrement animé le week-end. Louez un voilier miniature pour le bassin — une tradition parisienne. Le verger est ouvert lors des Journées du Patrimoine.",
-    tags: ["Marie de Médicis", "Sénat", "Jardin à la française", "Promenade"]
+    tags: ["Marie de Médicis", "Sénat", "Jardin à la française", "Promenade"],
+    siteWeb: "https://www.senat.fr/visite/jardin"
   },
   {
     id: 26,
@@ -2164,7 +2254,8 @@ const lieux = [
     histoire: "Le Palais-Royal tient son nom d'un destin imposé de force. Construit entre 1628 et 1639 pour le Cardinal de Richelieu, l'homme le plus puissant du royaume après le roi, ce palais est légué à sa mort à Louis XIII — d'où son nom de 'Palais-Royal'. Le jeune Louis XIV y passe une partie de son enfance avec sa mère Anne d'Autriche. En 1781, le duc d'Orléans Louis-Philippe II, criblé de dettes, imagine une solution audacieuse : privatiser les galeries entourant le jardin en y construisant boutiques, cafés, tripots et théâtres qu'il loue à des particuliers. Le Palais-Royal devient rapidement le centre de la vie parisienne — un lieu de plaisirs, de nouvelles fraîches et de débats politiques. C'est au café de Foy, dans ce jardin, que Camille Desmoulins prononce le 12 juillet 1789 le discours enflammé qui lance la Révolution. Sous le Directoire et l'Empire, il reste le haut lieu du plaisir parisien. Saisi par l'État en 1848, il abrite aujourd'hui le Conseil d'État et le ministère de la Culture. Les célèbres colonnes rayées de Daniel Buren — 'Les Deux Plateaux' — installées dans la cour d'honneur en 1986 sur commande de Jack Lang provoquent l'une des plus grandes polémiques artistiques de la Ve République, avant d'être unanimement adoptées comme symbole du lieu.",
     aVoir: ["Les colonnes de Buren (Les Deux Plateaux, 1986)", "Les galeries à arcades du XVIIIe siècle", "Le jardin intérieur et ses allées de tilleuls"],
     conseil: "Un lieu méconnu des touristes, très apprécié des Parisiens. Idéal pour une pause lecture au calme. Les galeries abritent des galeries d'art et antiquaires.",
-    tags: ["Richelieu", "Colonnes de Buren", "Arcades", "Jardin secret"]
+    tags: ["Richelieu", "Colonnes de Buren", "Arcades", "Jardin secret"],
+    siteWeb: "https://www.domaine-palais-royal.fr"
   },
   {
     id: 22,
@@ -2182,7 +2273,8 @@ const lieux = [
     histoire: "Dans la nuit du 18 au 19 juillet 1830, Catherine Labouré, jeune novice chez les Filles de la Charité au 140 rue du Bac, est réveillée par un enfant lumineux qui la conduit à la chapelle. Elle y rencontre la Vierge Marie. Le 27 novembre, lors d'une seconde apparition, la Vierge lui montre une médaille ovale à faire frapper, promettant de grandes grâces à ceux qui la porteraient. Ces apparitions surviennent dans une période de profond trouble politique — la Révolution de Juillet vient de renverser Charles X — et leur message simple et universel touche profondément un pays en crise. La médaille est frappée en 1832 et se répand à une vitesse extraordinaire : en quelques décennies, on en dénombre plusieurs centaines de millions d'exemplaires dans le monde. L'un des miracles les plus célèbres est la conversion de l'Alphonse Ratisbonne, juif alsacien athée, qui voit la Vierge à Rome en 1842 après avoir accepté de porter la médaille par défi. Catherine Labouré, restée anonyme toute sa vie à la demande de la Vierge, n'est révélée comme voyante qu'en 1876, peu avant sa mort. Elle est béatifiée en 1933 et canonisée en 1947 par Pie XII. Son corps, exposé sous l'autel depuis 1933, est en état de conservation exceptionnel. La chapelle reçoit aujourd'hui plus de deux millions de pèlerins par an, de toutes nationalités.",
     aVoir: ["Le corps de sainte Catherine Labouré sous l'autel", "La statue de la Vierge à l'emplacement des apparitions", "Les reliques et la salle de saint Vincent de Paul"],
     conseil: "Un lieu de recueillement et de paix au cœur de Paris. Des messes sont célébrées chaque jour. La boutique du sanctuaire propose des médailles bénites, réputées miraculeuses par des millions de fidèles.",
-    tags: ["Pèlerinage", "Apparitions", "Médaille Miraculeuse", "Catherine Labouré"]
+    tags: ["Pèlerinage", "Apparitions", "Médaille Miraculeuse", "Catherine Labouré"],
+    siteWeb: "https://www.chapellenotredamedelamedaillemiraculeuse.com"
   },
   {
     id: 23,
@@ -2200,7 +2292,8 @@ const lieux = [
     histoire: "La place de la Concorde et ses deux palais symétriques — dont l'Hôtel de la Marine — sont l'une des créations les plus ambitieuses de la monarchie française. En 1748, Louis XV décide de faire construire une grande place à l'entrée des Champs-Élysées à la gloire de son règne. Il charge son Premier Architecte, Ange-Jacques Gabriel, de concevoir deux palais identiques encadrant la rue Royale. Gabriel s'inspire des colonnades de Versailles et du Louvre pour créer une façade monumentale à colonnes corinthiennes, aujourd'hui considérée comme un chef-d'œuvre du néoclassicisme français. Les travaux s'achèvent en 1774, sous Louis XVI. Le bâtiment occidental est d'abord le Garde-Meuble de la Couronne, chargé de conserver les meubles, tapisseries et joyaux royaux — parmi eux le légendaire Régent, l'un des plus grands diamants du monde. En 1792, les révolutionnaires le transforment en magasin général. Dès 1789, il devient le ministère de la Marine — qui y restera plus de deux siècles, jusqu'en 2015. Pendant cette période, les décors du XVIIIe siècle sont progressivement dissimulés sous des cloisons et faux plafonds. La restauration engagée en 2015 a permis de retrouver et restituer à leur splendeur d'origine les appartements de l'Intendant, avec leurs boiseries, tapisseries et mobiliers d'époque. L'Hôtel de la Marine rouvre au public en 2021.",
     aVoir: ["Les appartements de l'Intendant (décors XVIIIe restaurés)", "Les terrasses avec vue sur la place de la Concorde", "La collection Al Thani et ses œuvres d'art islamique"],
     conseil: "La visite avec audioguide est particulièrement enrichissante. Les terrasses offrent un point de vue unique sur la Place de la Concorde et les Champs-Élysées. Le vendredi soir, nocturne jusqu'à 21h30.",
-    tags: ["XVIIIe siècle", "Néoclassicisme", "Louis XV", "Place de la Concorde"]
+    tags: ["XVIIIe siècle", "Néoclassicisme", "Louis XV", "Place de la Concorde"],
+    siteWeb: "https://www.hotel-de-la-marine.fr"
   }
 ];
 
@@ -2211,6 +2304,41 @@ const grille = document.getElementById('grille');
 const aucunElem = document.getElementById('aucun');
 const compteurElem = document.getElementById('compteur');
 
+// ═══════════════════════════════════
+//  FAVORIS
+// ═══════════════════════════════════
+const FAVORIS_KEY = 'splendeurs_favoris';
+const favoris = new Set(JSON.parse(localStorage.getItem(FAVORIS_KEY) || '[]'));
+
+function sauvegarderFavoris() {
+  localStorage.setItem(FAVORIS_KEY, JSON.stringify([...favoris]));
+}
+
+function mettreAJourCompteur() {
+  const el = document.getElementById('favoris-compteur');
+  if (!el) return;
+  el.textContent = favoris.size || '';
+  el.dataset.count = favoris.size;
+}
+
+function toggleFavori(nom, btn) {
+  if (favoris.has(nom)) {
+    favoris.delete(nom);
+    btn.classList.remove('actif');
+    btn.setAttribute('aria-label', 'Ajouter aux favoris');
+  } else {
+    favoris.add(nom);
+    btn.classList.add('actif');
+    btn.setAttribute('aria-label', 'Retirer des favoris');
+  }
+  btn.classList.add('pulse');
+  btn.addEventListener('animationend', () => btn.classList.remove('pulse'), { once: true });
+  sauvegarderFavoris();
+  mettreAJourCompteur();
+  // Si on est sur le filtre favoris, on rafraîchit la vue
+  if (filtreActif === 'favoris') appliquerFiltres();
+}
+
 function creerCarte(lieu) {
   const carte = document.createElement('article');
   carte.className = 'carte';
@@ -2218,11 +2346,16 @@ function creerCarte(lieu) {
   carte.dataset.nom = lieu.nom.toLowerCase();
   carte.dataset.tags = lieu.tags.join(' ').toLowerCase();
 
+  const estFavori = favoris.has(lieu.nom);
   carte.innerHTML = `
     <div class="carte-image ${lieu.bgClass} skeleton">
       <img class="carte-photo" alt="${lieu.nom}">
       <div class="carte-image-overlay"></div>
       <span class="carte-emoji-fb">${lieu.emoji}</span>
+      <button class="btn-favori${estFavori ? ' actif' : ''}" aria-label="Ajouter aux favoris" data-nom="${lieu.nom}">
+        <svg class="coeur-vide" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <svg class="coeur-plein" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
       <span class="carte-badge">${categorieLabel(lieu.categorie)}</span>
       <span class="carte-arrondissement">${lieu.arrondissement}</span>
       <span class="carte-decouvrir">Découvrir</span>
@@ -2243,6 +2376,13 @@ function creerCarte(lieu) {
   const overlayElem = carte.querySelector('.carte-image-overlay');
   const fbElem = carte.querySelector('.carte-emoji-fb');
   chargerImage(lieu, imgElem, overlayElem, fbElem);
+
+  // Bouton favori — stoppe la propagation pour ne pas ouvrir la modale
+  const btnFav = carte.querySelector('.btn-favori');
+  btnFav.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleFavori(lieu.nom, btnFav);
+  });
 
   carte.addEventListener('click', () => ouvrirModale(lieu));
   return carte;
@@ -2339,7 +2479,9 @@ function appliquerFiltres() {
     const nom = carte.dataset.nom;
     const tags = carte.dataset.tags;
 
-    const matchCat = filtreActif === 'tous' || cat === filtreActif;
+    const nomOriginal = carte.querySelector('.btn-favori')?.dataset.nom || '';
+    const matchCat = filtreActif === 'tous' || cat === filtreActif ||
+                     (filtreActif === 'favoris' && favoris.has(nomOriginal));
     const matchRecherche = !recherche || nom.includes(recherche) || tags.includes(recherche);
 
     if (matchCat && matchRecherche) {
@@ -2435,13 +2577,22 @@ function ouvrirModale(lieu) {
     <div class="carte-tags" style="margin-top:20px">
       ${lieu.tags.map(t => `<span class="tag">${t}</span>`).join('')}
     </div>
-    <a
-      class="modale-maps-btn"
-      href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lieu.nom + ' Paris')}"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Ouvrir ${lieu.nom} dans Google Maps"
-    >📍 Y aller</a>
+    <div class="modale-btns">
+      <a
+        class="modale-maps-btn"
+        href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lieu.nom + ' Paris')}"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Ouvrir ${lieu.nom} dans Google Maps"
+      >📍 Y aller</a>
+      ${lieu.siteWeb ? `<a
+        class="modale-site-btn"
+        href="${lieu.siteWeb}"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Site officiel de ${lieu.nom}"
+      >🔗 Site officiel</a>` : ''}
+    </div>
   `;
 
   document.getElementById('btn-fermer').addEventListener('click', fermerModale);
@@ -2624,6 +2775,7 @@ btnRestoView.addEventListener('click', () => {
 });
 
 appliquerFiltres();
+mettreAJourCompteur();
 
 
 // ─── Bottom nav mobile : délégation + sync ───
