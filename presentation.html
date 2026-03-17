@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>À propos — Splendeurs de Paris</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --or: #C9A96E;
+      --or-clair: #C9A96E;
+      --or-pale: #F5F0E8;
+      --marine: #1A1714;
+      --marine-mid: #2d2620;
+      --blanc: #ffffff;
+      --fond: #FDFBF7;
+      --gris: #E8E0D4;
+      --texte: #1A1714;
+      --texte-sec: #6B6259;
+      --transition: 0.3s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--fond);
+      color: var(--texte);
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      background: rgba(15,28,46,0.0);
+      transition: background 0.4s, backdrop-filter 0.4s;
+    }
+
+    nav.scrolled {
+      background: rgba(15,28,46,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212,175,90,0.2);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--or-clair);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-link {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      border: 1px solid rgba(212,175,90,0.4);
+      padding: 9px 20px;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .nav-link:hover {
+      color: var(--or-clair);
+      border-color: var(--or-clair);
+      background: rgba(212,175,90,0.08);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      background: url('https://images.unsplash.com/photo-1541362078-5f7ccc3d4d98?w=1920&q=85') center 30%/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px;
+      color: #fff;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.2) 0%,
+        rgba(10,18,40,0.65) 60%,
+        rgba(10,18,40,0.95) 100%);
+    }
+
+    .hero-inner { position: relative; z-index: 1; max-width: 760px; }
+
+    .hero-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--or-clair);
+      opacity: 0.5;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--or-clair);
+    }
+
+    .hero-separator {
+      width: 50px;
+      height: 1px;
+      background: rgba(255,255,255,0.35);
+      margin: 28px auto;
+    }
+
+    .hero-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-style: italic;
+      color: rgba(255,255,255,0.8);
+      letter-spacing: 0.02em;
+      line-height: 1.5;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      animation: bounce 2.5s infinite;
+    }
+
+    .hero-scroll::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.35), transparent);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(7px); }
+    }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 100px 24px; }
+
+    .container { max-width: 900px; margin: 0 auto; }
+    .container-wide { max-width: 1200px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--or);
+      opacity: 0.25;
+      max-width: 60px;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--marine);
+      margin-bottom: 28px;
+    }
+
+    h2 em {
+      font-style: italic;
+      color: var(--or);
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--texte-sec);
+      line-height: 1.85;
+      max-width: 680px;
+    }
+
+    /* ─── SECTION OBJECTIF ─── */
+    .section-objectif {
+      background: var(--blanc);
+      border-top: 1px solid var(--gris);
+    }
+
+    .objectif-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .objectif-img {
+      position: relative;
+      height: 420px;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .objectif-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .objectif-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(184,150,46,0.3);
+      pointer-events: none;
+    }
+
+    .objectif-img .img-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(15,28,46,0.85), transparent);
+      padding: 32px 24px 20px;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .feature {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--marine);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      border: 1px solid rgba(212,175,90,0.3);
+    }
+
+    .feature-text h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--marine);
+      margin-bottom: 4px;
+    }
+
+    .feature-text p {
+      font-size: 0.88rem;
+      color: var(--texte-sec);
+      line-height: 1.7;
+    }
+
+    /* ─── WEEK-END ─── */
+    .section-weekend {
+      background: var(--marine);
+      color: #fff;
+    }
+
+    .section-weekend .section-label { color: var(--or-clair); }
+    .section-weekend .section-label::after { background: var(--or-clair); }
+    .section-weekend h2 { color: #fff; }
+    .section-weekend h2 em { color: var(--or-clair); }
+    .section-weekend .lead { color: rgba(255,255,255,0.65); }
+
+    .jours {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 60px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .jour {
+      background: rgba(255,255,255,0.04);
+      padding: 40px;
+      border: 1px solid rgba(212,175,90,0.12);
+      transition: background var(--transition);
+    }
+
+    .jour:hover {
+      background: rgba(212,175,90,0.06);
+    }
+
+    .jour-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(212,175,90,0.2);
+    }
+
+    .jour-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 400;
+      color: rgba(212,175,90,0.25);
+      line-height: 1;
+    }
+
+    .jour-titre {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .jour-sous-titre {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      margin-top: 2px;
+    }
+
+    .programme {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .programme li {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .prog-heure {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      width: 52px;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .prog-info h5 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 2px;
+    }
+
+    .prog-info p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.5;
+    }
+
+    /* ─── CATÉGORIES ─── */
+    .section-categories {
+      background: var(--fond);
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      margin-top: 56px;
+      background: var(--gris);
+    }
+
+    .categorie-card {
+      background: var(--blanc);
+      padding: 40px 32px;
+      text-align: center;
+      transition: background var(--transition), transform var(--transition);
+      cursor: default;
+    }
+
+    .categorie-card:hover {
+      background: var(--marine);
+      transform: translateY(-4px);
+    }
+
+    .categorie-card:hover .cat-titre { color: var(--or-clair); }
+    .categorie-card:hover .cat-desc { color: rgba(255,255,255,0.55); }
+    .categorie-card:hover .cat-count { color: rgba(212,175,90,0.6); }
+
+    .cat-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      border: 2px solid rgba(255,255,255,0.8);
+    }
+
+    .cat-titre {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--marine);
+      margin-bottom: 10px;
+      transition: color var(--transition);
+    }
+
+    .cat-desc {
+      font-size: 0.82rem;
+      color: var(--texte-sec);
+      line-height: 1.65;
+      margin-bottom: 20px;
+      transition: color var(--transition);
+    }
+
+    .cat-count {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--or);
+      transition: color var(--transition);
+    }
+
+    /* ─── CTA ─── */
+    .section-cta {
+      background: var(--blanc);
+      text-align: center;
+      padding: 80px 24px;
+      border-top: 1px solid var(--gris);
+    }
+
+    .btn-principal {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--marine);
+      color: var(--or-clair);
+      text-decoration: none;
+      padding: 16px 36px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-family: 'Jost', sans-serif;
+      border: 1px solid rgba(212,175,90,0.35);
+      border-radius: 8px;
+      margin-top: 36px;
+      transition: var(--transition);
+    }
+
+    .btn-principal:hover {
+      background: var(--marine-mid);
+      border-color: var(--or-clair);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15,28,46,0.2);
+    }
+
+    .btn-principal svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+    }
+
+    /* ─── CITATION ─── */
+    .section-citation {
+      background: url('https://images.unsplash.com/photo-1499856871958-5b9357976b82?w=1920&q=85') center 60%/cover no-repeat;
+      position: relative;
+      padding: 140px 24px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .section-citation::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(10,18,40,0.82);
+    }
+
+    .citation-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .guillemet {
+      font-family: 'Playfair Display', serif;
+      font-size: 6rem;
+      line-height: 0.5;
+      color: var(--or);
+      opacity: 0.4;
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.92);
+      letter-spacing: 0.01em;
+      margin-bottom: 36px;
+    }
+
+    .citation-auteur {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--or-clair);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .citation-auteur::before,
+    .citation-auteur::after {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--or-clair);
+      opacity: 0.5;
+    }
+
+    .citation-separateur {
+      width: 1px;
+      height: 40px;
+      background: rgba(212,175,90,0.3);
+      margin: 48px auto;
+    }
+
+    .signature-bloc {
+      margin-top: 0;
+    }
+
+    .signature-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 12px;
+    }
+
+    .signature {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--or-clair);
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--marine);
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.82rem;
+    }
+
+    footer a {
+      color: var(--or-clair);
+      text-decoration: none;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 800px) {
+      .objectif-grid { grid-template-columns: 1fr; gap: 40px; }
+      .objectif-img { height: 280px; }
+      .jours { grid-template-columns: 1fr; }
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+      nav { padding: 16px 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .categories-grid { grid-template-columns: 1fr; }
+      section { padding: 72px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Splendeurs de Paris</a>
+  <a href="index.html" class="nav-link">Découvrir les lieux →</a>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Guide culturel</div>
+    <h1>Splendeurs<br><em>de Paris</em></h1>
+    <div class="hero-separator"></div>
+    <p class="hero-subtitle">Tout ce qu'il faut savoir pour vivre<br>un week-end parisien inoubliable</p>
+  </div>
+  <div class="hero-scroll">Lire</div>
+</section>
+
+<!-- ══════════════ OBJECTIF ══════════════ -->
+<section class="section-objectif">
+  <div class="container">
+    <div class="section-label">Notre mission</div>
+    <h2>Paris en un regard,<br><em>l'essentiel à portée de main</em></h2>
+    <p class="lead">
+      Paris regorge de chefs-d'œuvre, de monuments millénaires et de jardins secrets. Mais face à l'immensité de la capitale, même le voyageur averti peut se sentir dépassé. <strong>Splendeurs de Paris</strong> a été conçu pour répondre à une question simple : que faut-il absolument voir lors d'un séjour à Paris ?
+    </p>
+
+    <div class="objectif-grid">
+      <div class="objectif-img">
+        <img src="https://images.unsplash.com/photo-1431274172761-fca41d930114?w=800&q=80" alt="Vue aérienne de Paris" loading="lazy" />
+        <div class="img-caption">Paris vu du ciel — la plus belle des cartes postales</div>
+      </div>
+
+      <div>
+        <div class="features">
+          <div class="feature">
+            <div class="feature-icon">🗺</div>
+            <div class="feature-text">
+              <h4>Une carte interactive</h4>
+              <p>Visualisez en un coup d'œil où se situent tous les lieux emblématiques sur un plan de Paris. Zoomez, cliquez, explorez.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🏛</div>
+            <div class="feature-text">
+              <h4>22 lieux sélectionnés</h4>
+              <p>Musées, monuments, édifices religieux et jardins : une sélection rigoureuse des sites incontournables de la capitale.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">⏱</div>
+            <div class="feature-text">
+              <h4>Conçu pour un week-end</h4>
+              <p>Chaque fiche indique horaires, tarifs, accès et conseils de visite pour optimiser votre temps sur place.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🔍</div>
+            <div class="feature-text">
+              <h4>Filtres & recherche</h4>
+              <p>Filtrez par catégorie selon vos envies du moment : art, histoire, architecture ou nature.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ WEEK-END ══════════════ -->
+<section class="section-weekend">
+  <div class="container-wide">
+    <div class="container">
+      <div class="section-label">Programme suggéré</div>
+      <h2>Un week-end à Paris,<br><em>deux jours d'exception</em></h2>
+      <p class="lead">
+        Quarante-huit heures pour saisir l'âme de Paris. Voici un itinéraire pensé pour vivre l'essentiel sans se précipiter — entre grands musées, quartiers historiques et monuments mythiques.
+      </p>
+    </div>
+
+    <div class="jours">
+      <div class="jour">
+        <div class="jour-header">
+          <div class="jour-num">01</div>
+          <div>
+            <div class="jour-titre">Cœur historique<br>& Rive gauche</div>
+            <div class="jour-sous-titre">Samedi</div>
+          </div>
+        </div>
+        <ul class="programme">
+          <li>
+            <span class="prog-heure">Matin</span>
+            <div class="prog-info">
+              <h5>Le Louvre</h5>
+              <p>Démarrez tôt pour éviter la foule. La Joconde, la Vénus de Milo et 2–3 heures d'émerveillement.</p>
+            </div>
+          </li>
+          <li>
+            <span class="prog-heure">Déjeuner</span>
+            <div class="prog-info">
+              <h5>Jardins du Palais-Royal</h5>
+              <p>Pause dans ce jardin secret avec ses arcades, ses fontaines et les colonnes de Buren.</p>
+            </div>
+          </li>
+          <li>
+            <span class="prog-heure">Après-midi</span>
+            <div class="prog-info">
+              <h5>Île de la Cité</h5>
+              <p>Notre-Dame de Paris en reconstruction et la Sainte-Chapelle avec ses vitraux saisissants.</p>
+            </div>
+          </li>
+          <li>
+            <span class="prog-heure">Soir</span>
+            <div class="prog-info">
+              <h5>Musée d'Orsay</h5>
+              <p>Nocturne le jeudi jusqu'à 21h45. Les impressionnistes au coucher du soleil, un moment rare.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="jour">
+        <div class="jour-header">
+          <div class="jour-num">02</div>
+          <div>
+            <div class="jour-titre">Monuments<br>& Montmartre</div>
+            <div class="jour-sous-titre">Dimanche</div>
+          </div>
+        </div>
+        <ul class="programme">
+          <li>
+            <span class="prog-heure">Matin</span>
+            <div class="prog-info">
+              <h5>Tour Eiffel & Invalides</h5>
+              <p>Montez au sommet de la Dame de Fer, puis traversez le Champ-de-Mars vers le dôme des Invalides.</p>
+            </div>
+          </li>
+          <li>
+            <span class="prog-heure">Déjeuner</span>
+            <div class="prog-info">
+              <h5>Rue du Bac</h5>
+              <p>Un quartier authentique, loin des foules. La chapelle de la Médaille Miraculeuse, lieu de recueillement.</p>
+            </div>
+          </li>
+          <li>
+            <span class="prog-heure">Après-midi</span>
+            <div class="prog-info">
+              <h5>Opéra & Grands Boulevards</h5>
+              <p>Le Palais Garnier, fastueux opéra du Second Empire. L'Hôtel de la Marine place de la Concorde.</p>
+            </div>
+          </li>
+          <li>
+            <span class="prog-heure">Soir</span>
+            <div class="prog-info">
+              <h5>Sacré-Cœur, Montmartre</h5>
+              <p>Terminez en apothéose sur la Butte Montmartre, face au panorama de Paris illuminé.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CATÉGORIES ══════════════ -->
+<section class="section-categories">
+  <div class="container">
+    <div class="section-label">Explorer par thème</div>
+    <h2>Quatre univers,<br><em>une seule ville</em></h2>
+  </div>
+  <div class="container-wide">
+    <div class="categories-grid">
+      <div class="categorie-card">
+        <div class="cat-dot" style="background:#b8962e;"></div>
+        <div class="cat-titre">Musées</div>
+        <p class="cat-desc">Des collections universelles aux trésors impressionnistes, Paris abrite les plus grands musées du monde.</p>
+        <div class="cat-count">9 musées</div>
+      </div>
+      <div class="categorie-card">
+        <div class="cat-dot" style="background:#1e3356;"></div>
+        <div class="cat-titre">Monuments</div>
+        <p class="cat-desc">Palais, arcs de triomphe, opéra fastueux — les monuments parisiens racontent deux mille ans d'histoire.</p>
+        <div class="cat-count">7 monuments</div>
+      </div>
+      <div class="categorie-card">
+        <div class="cat-dot" style="background:#7b5ea7;"></div>
+        <div class="cat-titre">Édifices religieux</div>
+        <p class="cat-desc">Cathédrales gothiques, basiliques et chapelles : l'architecture sacrée de Paris élève l'âme autant que le regard.</p>
+        <div class="cat-count">3 édifices</div>
+      </div>
+      <div class="categorie-card">
+        <div class="cat-dot" style="background:#4a7c59;"></div>
+        <div class="cat-titre">Jardins</div>
+        <p class="cat-desc">Des havres de paix au cœur de la capitale. Allées ombragées, fontaines et sculptures dans un cadre hors du temps.</p>
+        <div class="cat-count">3 jardins</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CTA ══════════════ -->
+<section class="section-cta">
+  <div class="container">
+    <div class="section-label" style="justify-content:center;">Prêt à explorer ?</div>
+    <h2 style="text-align:center;">Découvrez les<br><em>22 lieux emblématiques</em></h2>
+    <p class="lead" style="margin:0 auto; text-align:center;">
+      Accédez au guide complet avec fiches détaillées, carte interactive et filtres par catégorie. Paris n'attend plus que vous.
+    </p>
+    <div style="text-align:center;">
+      <a href="index.html" class="btn-principal">
+        Accéder au guide
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CITATION ══════════════ -->
+<section class="section-citation">
+  <div class="citation-inner">
+    <span class="guillemet">"</span>
+    <blockquote>
+      Respirer Paris, cela conserve l'âme.
+    </blockquote>
+    <div class="citation-auteur">Victor Hugo</div>
+
+    <div class="citation-separateur"></div>
+
+    <div class="signature-bloc">
+      <div class="signature-label">Un guide conçu avec passion par</div>
+      <div class="signature">Gardere Raphaël</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <p>© 2025 <a href="index.html">Splendeurs de Paris</a> — Guide culturel de la Ville Lumière</p>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+
+</body>
+</html>
