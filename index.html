@@ -172,11 +172,11 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(15,28,46,0.97);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       padding: 0 20px;
-      border-bottom: 1px solid rgba(212,175,90,0.25);
+      border-bottom: 1px solid var(--gris);
     }
 
     .filtres {
@@ -189,10 +189,10 @@
     }
 
     .filtre-btn {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      border: 1px solid rgba(26,23,20,0.15);
       border-radius: 24px;
-      color: rgba(255,255,255,0.6);
+      color: rgba(26,23,20,0.55);
       padding: 7px 16px;
       margin: 10px 4px;
       font-size: 0.72rem;
@@ -206,15 +206,15 @@
     }
 
     .filtre-btn:hover {
-      background: rgba(255,255,255,0.13);
-      color: rgba(255,255,255,0.9);
-      border-color: rgba(255,255,255,0.2);
+      background: rgba(26,23,20,0.06);
+      color: var(--texte);
+      border-color: rgba(26,23,20,0.3);
     }
 
     .filtre-btn.actif {
       background: var(--or);
       border-color: var(--or);
-      color: var(--marine);
+      color: #fff;
     }
 
     /* ─── Recherche ─── */
@@ -281,6 +281,11 @@
     }
 
     /* ─── Carte ─── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
     .carte {
       background: var(--blanc);
       overflow: hidden;
@@ -291,6 +296,8 @@
       border-radius: var(--rayon-lg);
       box-shadow: var(--ombre);
       transition: transform var(--transition), box-shadow var(--transition);
+      opacity: 0;
+      animation: fadeInUp 0.5s ease forwards;
     }
 
     .carte:hover {
@@ -2106,8 +2113,10 @@ function categorieLabel(cat) {
 }
 
 // Insérer les cartes
-lieux.forEach(lieu => {
-  grille.appendChild(creerCarte(lieu));
+lieux.forEach((lieu, index) => {
+  const carte = creerCarte(lieu);
+  carte.style.animationDelay = index * 0.07 + 's';
+  grille.appendChild(carte);
 });
 grille.appendChild(aucunElem);
 
