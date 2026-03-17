@@ -204,18 +204,6 @@
       color: #fff;
     }
 
-    .filtre-indicator {
-      position: absolute;
-      bottom: 0;
-      height: 2px;
-      background: var(--or);
-      border-radius: 2px;
-      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                  width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.2s ease;
-      pointer-events: none;
-      opacity: 0;
-    }
 
     /* ─── Recherche ─── */
     .recherche-wrapper {
@@ -1625,7 +1613,6 @@
     <button class="filtre-btn" data-filtre="monument" aria-expanded="false" aria-label="Filtrer : Monuments">Monuments</button>
     <button class="filtre-btn" data-filtre="eglise" aria-expanded="false" aria-label="Filtrer : Édifices religieux">Édifices religieux</button>
     <button class="filtre-btn" data-filtre="jardin" aria-expanded="false" aria-label="Filtrer : Jardins">Jardins</button>
-    <span class="filtre-indicator" id="filtre-indicator"></span>
   </div>
   <button class="btn-carte-view" id="btn-presentation-view" style="margin-right:6px; order:-1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> À propos</button>
   <button class="btn-carte-view" id="btn-resto-view" style="margin-right:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg> Restaurants</button>
@@ -2368,22 +2355,6 @@ function appliquerFiltres() {
   filtrerMarqueurs();
 }
 
-// Indicateur glissant des filtres
-const filtreIndicator = document.getElementById('filtre-indicator');
-function moveIndicator(btn) {
-  if (!btn || !filtreIndicator) return;
-  const container = btn.closest('.filtres');
-  const btnRect = btn.getBoundingClientRect();
-  const contRect = container.getBoundingClientRect();
-  filtreIndicator.style.left  = (btnRect.left - contRect.left + (container.scrollLeft || 0)) + 'px';
-  filtreIndicator.style.width = btnRect.width + 'px';
-  filtreIndicator.style.top   = (btnRect.bottom - contRect.top - 2) + 'px';
-  filtreIndicator.style.opacity = '1';
-}
-// Positionner au chargement sur le bouton actif
-window.addEventListener('load', () => {
-  moveIndicator(document.querySelector('.filtre-btn.actif'));
-});
 
 // Filtres catégorie
 document.getElementById('filtres').addEventListener('click', e => {
@@ -2395,7 +2366,6 @@ document.getElementById('filtres').addEventListener('click', e => {
   });
   btn.classList.add('actif');
   btn.setAttribute('aria-expanded', 'true');
-  moveIndicator(btn);
   filtreActif = btn.dataset.filtre;
   appliquerFiltres();
 });
