@@ -2270,6 +2270,7 @@
   <p class="footer-copy">© 2025 — Réalisé par <strong>Raphaël Gardere</strong></p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ═══════════════════════════════════
 //  DONNÉES
@@ -3210,21 +3211,15 @@ document.getElementById('filtres').addEventListener('click', e => {
 });
 
 // ═══════════════════════════════════
-//  LIVRE D'OR
+//  LIVRE D'OR — Supabase
 // ═══════════════════════════════════
-const LOR_KEY = 'splendeurs_livre_or';
+const _sb = window.supabase.createClient(
+  'https://yvqvacjxgjijbsmdgxew.supabase.co',
+  'sb_publishable_mb-rGs6J4NL4iaI1GZ6lIg_6m73Pcwx'
+);
 
-function lorCharger() {
-  try { return JSON.parse(localStorage.getItem(LOR_KEY)) || []; }
-  catch { return []; }
-}
-
-function lorSauver(messages) {
-  localStorage.setItem(LOR_KEY, JSON.stringify(messages));
-}
-
-function lorDateFr(ts) {
-  return new Date(ts).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+function lorDateFr(dateStr) {
+  return new Date(dateStr).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 function lorCreerElement(msg) {
@@ -3234,31 +3229,34 @@ function lorCreerElement(msg) {
     <p class="lor-msg-texte">« ${msg.texte} »</p>
     <div class="lor-msg-meta">
       <span class="lor-msg-nom">${msg.nom}</span>
-      <span>${lorDateFr(msg.date)}</span>
+      <span>${lorDateFr(msg.created_at)}</span>
     </div>
   `;
   return div;
 }
 
-function lorAfficherTous() {
+async function lorAfficherTous() {
   const conteneur = document.getElementById('lor-messages');
   if (!conteneur) return;
+  const { data, error } = await _sb
+    .from('livre_or')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) { console.error('Livre d\'Or chargement:', error); return; }
   conteneur.innerHTML = '';
-  const messages = lorCharger();
-  messages.slice().reverse().forEach(msg => {
-    conteneur.appendChild(lorCreerElement(msg));
-  });
+  (data || []).forEach(msg => conteneur.appendChild(lorCreerElement(msg)));
 }
 
 const lorForm = document.getElementById('livre-or-form');
 if (lorForm) {
   lorAfficherTous();
 
-  lorForm.addEventListener('submit', e => {
+  lorForm.addEventListener('submit', async e => {
     e.preventDefault();
     const nomEl  = document.getElementById('lor-nom');
     const msgEl  = document.getElementById('lor-msg');
     const errEl  = document.getElementById('lor-error');
+    const lorBtn = lorForm.querySelector('.lor-btn');
     const nom    = nomEl.value.trim();
     const texte  = msgEl.value.trim();
 
@@ -3266,19 +3264,32 @@ if (lorForm) {
     if (!nom)   { errEl.textContent = "Merci d'indiquer votre prénom."; return; }
     if (!texte) { errEl.textContent = "Le message ne peut pas être vide."; return; }
 
-    const messages = lorCharger();
-    const nouveau = { nom, texte, date: Date.now() };
-    messages.push(nouveau);
-    lorSauver(messages);
+    lorBtn.disabled = true;
+    lorBtn.textContent = 'Envoi…';
+
+    const { data, error } = await _sb
+      .from('livre_or')
+      .insert([{ nom, texte }])
+      .select()
+      .single();
+
+    lorBtn.disabled = false;
+    lorBtn.textContent = "Signer le livre d'or";
+
+    if (error) {
+      errEl.textContent = "Une erreur est survenue. Réessayez.";
+      console.error('Livre d\'Or insertion:', error);
+      return;
+    }
 
     // Affichage instantané en tête de liste
     const conteneur = document.getElementById('lor-messages');
-    const el = lorCreerElement(nouveau);
+    const el = lorCreerElement(data);
+    el.style.animation = 'lorFadeIn 0.4s ease both';
     conteneur.insertBefore(el, conteneur.firstChild);
 
-    nomEl.value  = '';
-    msgEl.value  = '';
-    // Force repli du label flottant
+    nomEl.value = '';
+    msgEl.value = '';
     nomEl.dispatchEvent(new Event('input'));
     msgEl.dispatchEvent(new Event('input'));
   });
