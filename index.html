@@ -933,7 +933,7 @@
         display: flex;
         position: fixed;
         bottom: 0; left: 0; right: 0;
-        z-index: 300;
+        z-index: 1001;
         background: rgba(253,251,247,0.97);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
@@ -1054,6 +1054,13 @@
       display: none;
       height: calc(100vh - 57px);
       width: 100%;
+    }
+
+    /* Sur mobile : la carte s'arrête au-dessus de la bottom nav */
+    @media (max-width: 700px) {
+      #vue-carte {
+        height: calc(100vh - 57px - 64px - env(safe-area-inset-bottom));
+      }
     }
 
     body.mode-carte .recherche-wrapper,
