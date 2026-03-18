@@ -864,6 +864,28 @@
 
     .footer-copy strong { color: var(--or-clair); }
 
+    /* ─── Footer inversé sur la vue À propos ─── */
+    body.mode-presentation footer {
+      background: var(--fond);
+      border-top: 1px solid rgba(201,169,110,0.35);
+      color: rgba(26,23,20,0.4);
+    }
+    body.mode-presentation .footer-logo {
+      color: var(--marine);
+    }
+    body.mode-presentation .footer-nav a {
+      color: rgba(26,23,20,0.5);
+    }
+    body.mode-presentation .footer-nav a:hover {
+      color: var(--or);
+    }
+    body.mode-presentation .footer-copy {
+      color: rgba(26,23,20,0.35);
+    }
+    body.mode-presentation .footer-copy strong {
+      color: var(--or);
+    }
+
     /* ─── Couleurs par catégorie (fallback si pas de photo) ─── */
     .bg-musee    { background: #d6e4f0; }
     .bg-monument { background: #e8ddd0; }
@@ -980,6 +1002,10 @@
       /* Espace pour la bottom nav */
       .grille, #vue-carte, #vue-presentation, #vue-restaurants {
         padding-bottom: calc(80px + env(safe-area-inset-bottom));
+      }
+      /* Zone de respiration généreuse sous la Présentation */
+      #vue-presentation {
+        padding-bottom: calc(120px + env(safe-area-inset-bottom));
       }
 
       /* Filtres : visibles seulement sur l'onglet Lieux */
@@ -1633,11 +1659,12 @@
 
     .pres-signature {
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 600;
+      font-size: 2.2rem;
+      font-weight: 400;
       font-style: italic;
       color: var(--or-clair);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.12em;
+      line-height: 1;
     }
 
     @media (max-width: 800px) {
