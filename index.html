@@ -68,6 +68,15 @@
     body.mode-nuit .modale-meta span { background: #1C1914; }
     body.mode-nuit .modale-sticky-bar { background: #161412; border-color: #252018; }
 
+    /* ── Barre filtres mode nuit : verre fumé ── */
+    body.mode-nuit .filtres-wrapper {
+      background: rgba(10,9,8,0.80);
+      border: 0.5px solid rgba(212,175,55,0.25);
+      box-shadow: 0 4px 28px rgba(0,0,0,0.5), inset 0 0.5px 0 rgba(212,175,55,0.10);
+      backdrop-filter: blur(32px) saturate(1.5) brightness(0.9);
+      -webkit-backdrop-filter: blur(32px) saturate(1.5) brightness(0.9);
+    }
+
     /* ── Nav flottante mode nuit : glassmorphism sombre ── */
     body.mode-nuit .mobile-bottom-nav {
       background: rgba(5,5,5,0.82);
@@ -251,13 +260,18 @@
     /* ─── Navigation catégories ─── */
     .filtres-wrapper {
       position: sticky;
-      top: 0;
+      top: 12px;
       z-index: 100;
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(253,251,247,0.78);
+      backdrop-filter: blur(28px) saturate(1.8);
+      -webkit-backdrop-filter: blur(28px) saturate(1.8);
       padding: 0 20px;
-      border-bottom: 1px solid var(--gris);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.65);
+      box-shadow: 0 4px 24px rgba(26,23,20,0.10), inset 0 1px 0 rgba(255,255,255,0.7);
+      margin: 12px auto;
+      width: calc(100% - 40px);
+      max-width: 1100px;
     }
 
     .filtres {
@@ -1026,6 +1040,10 @@
         padding: 8px 10px 0;
         padding-right: 58px; /* espace pour le bouton mode nuit fixe */
         gap: 0;
+        top: 8px;
+        width: calc(100% - 24px);
+        border-radius: 16px;
+        margin: 8px auto;
       }
 
       /* Boutons d'action sur la ligne du haut — 3 colonnes égales */
