@@ -1797,6 +1797,176 @@
       .pres-cats { grid-template-columns: repeat(2, 1fr); }
     }
 
+    /* ─── Livre d'Or ─── */
+    .livre-or {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 60px 24px 40px;
+    }
+
+    .livre-or-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .livre-or-eyebrow {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: 10px;
+    }
+
+    .livre-or-titre {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--texte);
+      margin-bottom: 8px;
+    }
+
+    .livre-or-sous {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      color: var(--texte-sec);
+    }
+
+    /* ── Formulaire ── */
+    .livre-or-form {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .lor-field {
+      position: relative;
+    }
+
+    .lor-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--or);
+      color: var(--texte);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.95rem;
+      padding: 10px 0 8px;
+      outline: none;
+      transition: border-color 0.25s ease;
+      resize: none;
+    }
+
+    .lor-input::placeholder { color: transparent; }
+
+    .lor-label {
+      position: absolute;
+      left: 0;
+      top: 10px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      color: var(--texte-sec);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      pointer-events: none;
+      transition: top 0.2s ease, font-size 0.2s ease, color 0.2s ease;
+    }
+
+    .lor-input:focus,
+    .lor-input:not(:placeholder-shown) { border-bottom-color: var(--or); }
+
+    .lor-input:focus ~ .lor-label,
+    .lor-input:not(:placeholder-shown) ~ .lor-label {
+      top: -14px;
+      font-size: 0.65rem;
+      color: var(--or);
+    }
+
+    .lor-textarea { line-height: 1.6; }
+
+    .lor-btn {
+      align-self: flex-start;
+      background: transparent;
+      border: 1px solid var(--or);
+      color: var(--or);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .lor-btn:hover {
+      background: var(--or);
+      color: var(--fond);
+    }
+
+    .lor-error {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      color: #c0392b;
+      min-height: 1em;
+    }
+
+    /* ── Messages ── */
+    .lor-messages {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .lor-msg-item {
+      border-top: 1px solid var(--gris);
+      padding-top: 22px;
+      animation: lorFadeIn 0.4s ease forwards;
+    }
+
+    @keyframes lorFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .lor-msg-texte {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--texte);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .lor-msg-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--texte-sec);
+    }
+
+    .lor-msg-nom { color: var(--or); font-weight: 600; }
+
+    .lor-msg-meta::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--or);
+      opacity: 0.5;
+    }
+
+    /* Dark mode */
+    body.mode-nuit .lor-input { color: var(--texte); }
+    body.mode-nuit .lor-btn:hover { color: #0A0908; }
+
     /* ─── Légende carte ─── */
     .carte-legende {
       background: rgba(15,28,46,0.92) !important;
@@ -1974,6 +2144,30 @@
     <div class="pres-sign-label">Un guide conçu avec passion par</div>
     <div class="pres-signature">Gardere Raphaël</div>
   </div>
+
+  <!-- ── Livre d'Or ── -->
+  <section class="livre-or" id="livre-or">
+    <div class="livre-or-header">
+      <div class="livre-or-eyebrow">Vos impressions</div>
+      <h2 class="livre-or-titre">Livre d'Or</h2>
+      <p class="livre-or-sous">Partagez votre expérience de Paris en quelques mots.</p>
+    </div>
+
+    <form class="livre-or-form" id="livre-or-form" novalidate>
+      <div class="lor-field">
+        <input class="lor-input" id="lor-nom" type="text" placeholder="Votre prénom" maxlength="40" autocomplete="given-name">
+        <label class="lor-label" for="lor-nom">Prénom</label>
+      </div>
+      <div class="lor-field">
+        <textarea class="lor-input lor-textarea" id="lor-msg" placeholder="Votre message…" maxlength="280" rows="3"></textarea>
+        <label class="lor-label" for="lor-msg">Message</label>
+      </div>
+      <button class="lor-btn" type="submit">Signer le livre d'or</button>
+      <p class="lor-error" id="lor-error"></p>
+    </form>
+
+    <div class="lor-messages" id="lor-messages"></div>
+  </section>
 
 </div>
 
@@ -3014,6 +3208,81 @@ document.getElementById('filtres').addEventListener('click', e => {
   if (!btn) return;
   btn.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' });
 });
+
+// ═══════════════════════════════════
+//  LIVRE D'OR
+// ═══════════════════════════════════
+const LOR_KEY = 'splendeurs_livre_or';
+
+function lorCharger() {
+  try { return JSON.parse(localStorage.getItem(LOR_KEY)) || []; }
+  catch { return []; }
+}
+
+function lorSauver(messages) {
+  localStorage.setItem(LOR_KEY, JSON.stringify(messages));
+}
+
+function lorDateFr(ts) {
+  return new Date(ts).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function lorCreerElement(msg) {
+  const div = document.createElement('div');
+  div.className = 'lor-msg-item';
+  div.innerHTML = `
+    <p class="lor-msg-texte">« ${msg.texte} »</p>
+    <div class="lor-msg-meta">
+      <span class="lor-msg-nom">${msg.nom}</span>
+      <span>${lorDateFr(msg.date)}</span>
+    </div>
+  `;
+  return div;
+}
+
+function lorAfficherTous() {
+  const conteneur = document.getElementById('lor-messages');
+  if (!conteneur) return;
+  conteneur.innerHTML = '';
+  const messages = lorCharger();
+  messages.slice().reverse().forEach(msg => {
+    conteneur.appendChild(lorCreerElement(msg));
+  });
+}
+
+const lorForm = document.getElementById('livre-or-form');
+if (lorForm) {
+  lorAfficherTous();
+
+  lorForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const nomEl  = document.getElementById('lor-nom');
+    const msgEl  = document.getElementById('lor-msg');
+    const errEl  = document.getElementById('lor-error');
+    const nom    = nomEl.value.trim();
+    const texte  = msgEl.value.trim();
+
+    errEl.textContent = '';
+    if (!nom)   { errEl.textContent = "Merci d'indiquer votre prénom."; return; }
+    if (!texte) { errEl.textContent = "Le message ne peut pas être vide."; return; }
+
+    const messages = lorCharger();
+    const nouveau = { nom, texte, date: Date.now() };
+    messages.push(nouveau);
+    lorSauver(messages);
+
+    // Affichage instantané en tête de liste
+    const conteneur = document.getElementById('lor-messages');
+    const el = lorCreerElement(nouveau);
+    conteneur.insertBefore(el, conteneur.firstChild);
+
+    nomEl.value  = '';
+    msgEl.value  = '';
+    // Force repli du label flottant
+    nomEl.dispatchEvent(new Event('input'));
+    msgEl.dispatchEvent(new Event('input'));
+  });
+}
 </script>
 </body>
 </html>
