@@ -733,17 +733,17 @@
 
     /* ─── Sticky bar modale ─── */
 
-    /* ── Bouton fermer sticky ── */
-    .modale-fermer-wrap {
-      position: sticky;
+    /* ── Bouton fermer : fixé à l'écran, hors du DOM de la modale ── */
+    #btn-fermer {
+      position: fixed;
       top: 20px;
-      z-index: 20;
+      right: 20px;
+      z-index: 1200;
+      display: none; /* caché par défaut */
+    }
+
+    body.modale-ouverte #btn-fermer {
       display: flex;
-      justify-content: flex-end;
-      padding: 0 20px;
-      pointer-events: none;
-      margin-top: -54px;
-      margin-bottom: 10px;
     }
 
     .modale-fermer {
@@ -1024,6 +1024,7 @@
       .filtres-wrapper {
         flex-wrap: wrap;
         padding: 8px 10px 0;
+        padding-right: 58px; /* espace pour le bouton mode nuit fixe */
         gap: 0;
       }
 
@@ -2050,15 +2051,15 @@
   </div>
 </div>
 
+<!-- ══════════════ BOUTON FERMER (hors modale pour éviter le contexte transform) ══════════════ -->
+<button class="modale-fermer" id="btn-fermer" aria-label="Fermer">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+
 <!-- ══════════════ MODALE ══════════════ -->
 <div class="modale-fond" id="modale-fond" role="dialog" aria-modal="true">
   <div class="modale" id="modale">
     <div class="modale-entete" id="modale-emoji"></div>
-    <div class="modale-fermer-wrap">
-      <button class="modale-fermer" id="btn-fermer" aria-label="Fermer">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
     <div class="modale-corps" id="modale-corps"></div>
   </div>
 </div>
