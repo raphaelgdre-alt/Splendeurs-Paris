@@ -870,6 +870,12 @@
       border-top: 1px solid rgba(201,169,110,0.35);
       color: rgba(26,23,20,0.4);
     }
+
+    @media (max-width: 700px) {
+      footer {
+        padding-bottom: calc(36px + 68px + env(safe-area-inset-bottom));
+      }
+    }
     body.mode-presentation .footer-logo {
       color: var(--marine);
     }
@@ -1771,7 +1777,7 @@
 </div>
 
 <p class="section-titre" id="compteur">22 lieux affichés</p>
-<p class="section-gratuit">🎓 Entrée gratuite pour les moins de 25 ans dans la majorité des lieux</p>
+<p class="section-gratuit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Entrée gratuite pour les moins de 25 ans dans la majorité des lieux</p>
 
 <!-- ══════════════ GRILLE ══════════════ -->
 <div class="grille" id="grille">
@@ -1795,7 +1801,7 @@
     <h3>Paris en un regard, <em>l'essentiel à portée de main</em></h3>
     <p>Paris regorge de chefs-d'œuvre, de monuments millénaires et de jardins secrets. Face à l'immensité de la capitale, même le voyageur averti peut se sentir dépassé. <strong>Splendeurs de Paris</strong> a été conçu pour répondre à une question simple : que faut-il absolument voir lors d'un séjour à Paris ?</p>
     <div class="pres-features">
-      <div class="pres-feature"><span>🗺</span><div><strong>Carte interactive</strong><p>Visualisez tous les lieux sur un plan. Zoomez, cliquez, explorez.</p></div></div>
+      <div class="pres-feature"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></span><div><strong>Carte interactive</strong><p>Visualisez tous les lieux sur un plan. Zoomez, cliquez, explorez.</p></div></div>
       <div class="pres-feature"><span>🏛</span><div><strong>22 lieux sélectionnés</strong><p>Musées, monuments, édifices religieux et jardins — le meilleur de la capitale.</p></div></div>
       <div class="pres-feature"><span>⏱</span><div><strong>Conçu pour un week-end</strong><p>Horaires, accès et conseils de visite pour chaque lieu. Gratuit pour les moins de 25 ans.</p></div></div>
     </div>
@@ -1866,10 +1872,10 @@
       </div>
       <div class="resto-corps">
         <h3 class="resto-nom">Bouillon Chartier Montparnasse</h3>
-        <div class="resto-adresse">📍 59 Bd du Montparnasse · 6e arr.</div>
+        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 59 Bd du Montparnasse · 6e arr.</div>
         <p class="resto-desc">Institution parisienne depuis 1903, ce bouillon a conservé son décor Belle Époque authentique — boiseries, miroirs et banquettes en moleskine rouge. Une cuisine française généreuse et sans chichis à prix imbattables : soupe à l'oignon, œufs mayo, jarret de veau braisé…</p>
         <div class="resto-infos">
-          <span>🕐 Lun–ven 12h–0h · Sam–dim 11h30–0h</span>
+          <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Lun–ven 12h–0h · Sam–dim 11h30–0h</span>
         </div>
       </div>
     </div>
@@ -1881,10 +1887,10 @@
       </div>
       <div class="resto-corps">
         <h3 class="resto-nom">Bouillon Chartier Grand Boulevard</h3>
-        <div class="resto-adresse">📍 7 rue du Faubourg Montmartre · 9e arr.</div>
+        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 7 rue du Faubourg Montmartre · 9e arr.</div>
         <p class="resto-desc">Le Chartier original, ouvert en 1896 et classé monument historique. Sous ses hauts plafonds ornementés, les garçons virevoltent entre tables serrées pour servir des milliers de couverts par jour. Ambiance populaire et joyeuse, additions écrites à la main sur la nappe en papier.</p>
         <div class="resto-infos">
-          <span>🕐 Tous les jours 11h30–0h (service continu)</span>
+          <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Tous les jours 11h30–0h (service continu)</span>
         </div>
       </div>
     </div>
@@ -1896,10 +1902,10 @@
       </div>
       <div class="resto-corps">
         <h3 class="resto-nom">Le Petit Bouillon Pharamond</h3>
-        <div class="resto-adresse">📍 24 rue de la Grande Truanderie · 1er arr.</div>
+        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 24 rue de la Grande Truanderie · 1er arr.</div>
         <p class="resto-desc">Fondé en 1879, le Pharamond est l'un des plus anciens restaurants de Paris. Son décor Art Nouveau classé aux monuments historiques — céramiques, vitraux et boiseries sculptées — est à couper le souffle. Spécialité normande : tripes à la mode de Caen et calvados maison.</p>
         <div class="resto-infos">
-          <span>🕐 Mar–sam 12h–14h30 &amp; 19h–23h</span>
+          <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Mar–sam 12h–14h30 &amp; 19h–23h</span>
         </div>
       </div>
     </div>
@@ -1911,10 +1917,10 @@
       </div>
       <div class="resto-corps">
         <h3 class="resto-nom">Comme un Bouillon</h3>
-        <div class="resto-adresse">📍 17 rue de Choiseul · 2e arr.</div>
+        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 17 rue de Choiseul · 2e arr.</div>
         <p class="resto-desc">Le plus contemporain des bouillons parisiens, ancré dans le quartier animé de Montparnasse. Une carte courte et soignée qui revisite les classiques avec des produits de saison. Cadre chaleureux, service attentionné, et tartare de bœuf taillé au couteau à ne pas manquer.</p>
         <div class="resto-infos">
-          <span>🕐 Mar–dim 12h–14h30 &amp; 19h–22h30</span>
+          <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Mar–dim 12h–14h30 &amp; 19h–22h30</span>
         </div>
       </div>
     </div>
@@ -2391,6 +2397,18 @@ function toggleFavori(nom, btn) {
   if (filtreActif === 'favoris') appliquerFiltres();
 }
 
+// ─── Icônes SVG filaires ───
+const ICO = {
+  pin:    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  clock:  `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  ticket: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>`,
+  grad:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`,
+  metro:  `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 2H8l-4 5h16l-4-5z"/><circle cx="8" cy="15" r="1.5" fill="currentColor" stroke="none"/><circle cx="16" cy="15" r="1.5" fill="currentColor" stroke="none"/></svg>`,
+  link:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+  maps:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>`,
+  close:  `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+};
+
 function creerCarte(lieu) {
   const carte = document.createElement('article');
   carte.className = 'carte';
@@ -2415,7 +2433,7 @@ function creerCarte(lieu) {
     <div class="carte-corps">
       <h2 class="carte-nom">${lieu.nom}</h2>
       <div class="carte-infos">
-        <span>🕐 ${lieu.horaires.split(' — ')[0]}</span>
+        <span>${ICO.clock} ${lieu.horaires.split(' — ')[0]}</span>
       </div>
       <p class="carte-desc">${lieu.description}</p>
       <div class="carte-tags">
@@ -2583,7 +2601,7 @@ function ouvrirModale(lieu) {
     <img class="modale-photo" alt="${lieu.nom}">
     <div class="modale-photo-overlay"></div>
     <span class="modale-emoji-fb">${lieu.emoji}</span>
-    <button class="modale-fermer" id="btn-fermer" aria-label="Fermer">✕</button>
+    <button class="modale-fermer" id="btn-fermer" aria-label="Fermer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   `;
 
   const modaleImg = modaleEmoji.querySelector('.modale-photo');
@@ -2605,10 +2623,10 @@ function ouvrirModale(lieu) {
   modaleCorps.innerHTML = `
     <h2>${lieu.nom}</h2>
     <div class="modale-meta">
-      <span>📍 ${lieu.arrondissement}</span>
-      <span>🕐 ${lieu.horaires}</span>
-      <span>${lieu.payant ? '🎫 ' + lieu.tarif : '🎓 Gratuit pour les moins de 25 ans'}</span>
-      <span>🚇 ${lieu.acces}</span>
+      <span>${ICO.pin} ${lieu.arrondissement}</span>
+      <span>${ICO.clock} ${lieu.horaires}</span>
+      <span>${lieu.payant ? ICO.ticket + ' ' + lieu.tarif : ICO.grad + ' Gratuit pour les moins de 25 ans'}</span>
+      <span>${ICO.metro} ${lieu.acces}</span>
     </div>
     <div class="modale-section">
       <h3>Présentation</h3>
@@ -2636,14 +2654,14 @@ function ouvrirModale(lieu) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Ouvrir ${lieu.nom} dans Google Maps"
-      >📍 Y aller</a>
+      >${ICO.maps} Y aller</a>
       ${lieu.siteWeb ? `<a
         class="modale-site-btn"
         href="${lieu.siteWeb}"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Site officiel de ${lieu.nom}"
-      >🔗 Site officiel</a>` : ''}
+      >${ICO.link} Site officiel</a>` : ''}
     </div>
   `;
 
@@ -2733,10 +2751,10 @@ function initCarte() {
         <div class="popup-inner">
           <div class="popup-nom">${lieu.nom}</div>
           <div class="popup-cat">${categorieLabel(lieu.categorie)}</div>
-          <div class="popup-arr">📍 ${lieu.arrondissement}</div>
+          <div class="popup-arr">${ICO.pin} ${lieu.arrondissement}</div>
           <div style="display:flex;gap:6px;align-items:center;margin-top:4px">
             <button class="popup-btn" onclick="ouvrirModaleId(${lieu.id})">Voir le détail</button>
-            <a class="popup-maps-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lieu.nom + ' Paris')}" target="_blank" rel="noopener noreferrer">📍 Y&nbsp;aller</a>
+            <a class="popup-maps-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lieu.nom + ' Paris')}" target="_blank" rel="noopener noreferrer">${ICO.maps} Y&nbsp;aller</a>
           </div>
         </div>
       `, { maxWidth: 230, minWidth: 180 })
@@ -2781,10 +2799,20 @@ let modeCarteActif  = false;
 let modePresActif   = false;
 let modeRestoActif  = false;
 
+const SVG_CARTE  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>`;
+const SVG_LISTE  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`;
+const SVG_PRES   = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`;
+const SVG_RESTO  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>`;
+const SVG_CLOSE  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
+function setBtn(btn, svg, label) {
+  btn.innerHTML = `${svg} ${label}`;
+}
+
 function fermerTousLesOnglets() {
-  if (modeCarteActif)  { modeCarteActif = false;  document.body.classList.remove('mode-carte');         btnCarteView.textContent = '🗺 Carte';        btnCarteView.classList.remove('actif'); }
-  if (modePresActif)   { modePresActif  = false;  document.body.classList.remove('mode-presentation');  btnPresView.textContent  = '✦ À propos';     btnPresView.classList.remove('actif');  }
-  if (modeRestoActif)  { modeRestoActif = false;  document.body.classList.remove('mode-restaurants');   btnRestoView.textContent = '🍽 Restaurants';  btnRestoView.classList.remove('actif'); }
+  if (modeCarteActif)  { modeCarteActif = false;  document.body.classList.remove('mode-carte');        setBtn(btnCarteView, SVG_CARTE, 'Carte');       btnCarteView.classList.remove('actif'); }
+  if (modePresActif)   { modePresActif  = false;  document.body.classList.remove('mode-presentation'); setBtn(btnPresView,  SVG_PRES,  'À propos');    btnPresView.classList.remove('actif');  }
+  if (modeRestoActif)  { modeRestoActif = false;  document.body.classList.remove('mode-restaurants');  setBtn(btnRestoView, SVG_RESTO, 'Restaurants'); btnRestoView.classList.remove('actif'); }
 }
 
 btnCarteView.addEventListener('click', () => {
@@ -2793,7 +2821,7 @@ btnCarteView.addEventListener('click', () => {
   if (!wasActif) {
     modeCarteActif = true;
     document.body.classList.add('mode-carte');
-    btnCarteView.textContent = '☰ Liste';
+    setBtn(btnCarteView, SVG_LISTE, 'Liste');
     btnCarteView.classList.add('actif');
     initCarte();
     filtrerMarqueurs();
@@ -2807,7 +2835,7 @@ btnPresView.addEventListener('click', () => {
   if (!wasActif) {
     modePresActif = true;
     document.body.classList.add('mode-presentation');
-    btnPresView.textContent = '✕ Fermer';
+    setBtn(btnPresView, SVG_CLOSE, 'Fermer');
     btnPresView.classList.add('actif');
     window.scrollTo(0, 0);
   }
@@ -2820,7 +2848,7 @@ btnRestoView.addEventListener('click', () => {
   if (!wasActif) {
     modeRestoActif = true;
     document.body.classList.add('mode-restaurants');
-    btnRestoView.textContent = '✕ Fermer';
+    setBtn(btnRestoView, SVG_CLOSE, 'Fermer');
     btnRestoView.classList.add('actif');
     window.scrollTo(0, 0);
   }
