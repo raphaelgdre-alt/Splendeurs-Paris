@@ -50,7 +50,11 @@
     body.mode-nuit .modale { background: #141210; }
     body.mode-nuit .modale-corps { background: #141210; }
     body.mode-nuit .modale-meta span { background: #1F1C18; }
-    body.mode-nuit .mobile-bottom-nav { background: rgba(13,11,10,0.97); border-color: #2A2520; }
+    body.mode-nuit .mobile-bottom-nav {
+      background: rgba(18,15,12,0.85);
+      border-color: rgba(255,255,255,0.08);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
+    }
     body.mode-nuit footer { background: #0D0B0A; border-color: #2A2520; }
     body.mode-nuit .recherche-input { background: #1A1612; color: var(--texte); border-color: #2A2520; }
     body.mode-nuit .recherche-input::placeholder { color: var(--texte-sec); }
@@ -1049,14 +1053,19 @@
       .mobile-bottom-nav {
         display: flex;
         position: fixed;
-        bottom: 0; left: 0; right: 0;
+        bottom: calc(16px + env(safe-area-inset-bottom));
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
         z-index: 1001;
-        background: rgba(253,251,247,0.97);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-top: 1px solid var(--gris);
-        padding: 6px 12px calc(6px + env(safe-area-inset-bottom));
+        background: rgba(253,251,247,0.82);
+        backdrop-filter: blur(24px) saturate(1.6);
+        -webkit-backdrop-filter: blur(24px) saturate(1.6);
+        border: 1px solid rgba(255,255,255,0.6);
+        border-radius: 30px;
+        padding: 8px 16px;
         gap: 4px;
+        box-shadow: 0 8px 32px rgba(26,23,20,0.14), 0 1px 0 rgba(255,255,255,0.5) inset;
       }
 
       .mob-nav-btn {
@@ -1094,13 +1103,13 @@
         text-transform: uppercase;
       }
 
-      /* Espace pour la bottom nav */
+      /* Espace pour la bottom nav flottante (16px marge + ~68px hauteur + 16px respiration) */
       .grille, #vue-carte, #vue-presentation, #vue-restaurants {
-        padding-bottom: calc(80px + env(safe-area-inset-bottom));
+        padding-bottom: calc(100px + env(safe-area-inset-bottom));
       }
       /* Zone de respiration généreuse sous la Présentation */
       #vue-presentation {
-        padding-bottom: calc(120px + env(safe-area-inset-bottom));
+        padding-bottom: calc(140px + env(safe-area-inset-bottom));
       }
 
       /* Filtres : visibles seulement sur l'onglet Lieux */
