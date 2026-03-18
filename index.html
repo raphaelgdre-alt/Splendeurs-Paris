@@ -347,12 +347,6 @@
       opacity: 1;
     }
 
-    .carte-emoji-fb {
-      position: relative;
-      z-index: 1;
-      transition: opacity 0.4s;
-      color: var(--gris-sombre);
-    }
 
     .carte-image::before {
       content: '';
@@ -641,14 +635,6 @@
 
     .modale-photo-overlay.visible { opacity: 1; }
 
-    .modale-emoji-fb {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      text-align: center;
-      padding-bottom: 24px;
-      color: var(--gris-sombre);
-    }
 
     .modale-fermer {
       position: absolute;
@@ -1963,7 +1949,6 @@ const lieux = [
     nom: "Le Louvre",
     wikiTitle: "Musée_du_Louvre",
     categorie: "musee",
-    emoji: "🏛",
     bgClass: "bg-musee",
     arrondissement: "1er arr.",
     horaires: "9h–18h (mer. & ven. jusqu'à 21h45) — Fermé le mardi",
@@ -1981,7 +1966,6 @@ const lieux = [
     nom: "Musée d'Orsay",
     wikiTitle: "Gare_d'Orsay",
     categorie: "musee",
-    emoji: "🎨",
     bgClass: "bg-musee",
     arrondissement: "7e arr.",
     horaires: "9h30–18h (jeu. jusqu'à 21h45) — Fermé le lundi",
@@ -1999,7 +1983,6 @@ const lieux = [
     nom: "Notre-Dame de Paris",
     wikiTitle: "Cathédrale_Notre-Dame_de_Paris",
     categorie: "eglise",
-    emoji: "⛪",
     bgClass: "bg-eglise",
     arrondissement: "4e arr.",
     horaires: "Réouverture partielle — Vérifier site officiel",
@@ -2017,7 +2000,6 @@ const lieux = [
     nom: "Sainte-Chapelle",
     wikiTitle: "Sainte-Chapelle",
     categorie: "eglise",
-    emoji: "💎",
     bgClass: "bg-eglise",
     arrondissement: "1er arr.",
     horaires: "9h–17h (avr.–sept. jusqu'à 19h)",
@@ -2035,7 +2017,6 @@ const lieux = [
     nom: "Le Panthéon",
     wikiTitle: "Panthéon_(Paris)",
     categorie: "monument",
-    emoji: "🏟",
     bgClass: "bg-monument",
     arrondissement: "5e arr.",
     horaires: "10h–18h30 (avr.–sept. jusqu'à 18h30)",
@@ -2053,7 +2034,6 @@ const lieux = [
     nom: "Musée Rodin",
     wikiTitle: "Musée_Rodin",
     categorie: "musee",
-    emoji: "🗿",
     bgClass: "bg-musee",
     arrondissement: "7e arr.",
     horaires: "10h–18h30 — Fermé le lundi",
@@ -2071,7 +2051,6 @@ const lieux = [
     nom: "Musée de Cluny",
     wikiTitle: "Musée_de_Cluny",
     categorie: "musee",
-    emoji: "🏰",
     bgClass: "bg-musee",
     arrondissement: "5e arr.",
     horaires: "9h30–18h15 — Fermé le mardi",
@@ -2089,7 +2068,6 @@ const lieux = [
     nom: "Opéra Garnier",
     wikiTitle: "Palais_Garnier",
     categorie: "monument",
-    emoji: "🎭",
     bgClass: "bg-monument",
     arrondissement: "9e arr.",
     horaires: "10h–17h (visites) / Soirées selon programme",
@@ -2108,7 +2086,6 @@ const lieux = [
     nom: "Musée Picasso",
     wikiTitle: "Hôtel_Salé",
     categorie: "musee",
-    emoji: "🖼",
     bgClass: "bg-musee",
     arrondissement: "3e arr.",
     horaires: "10h30–18h (sam. & dim. 9h30–18h) — Fermé le lundi",
@@ -2126,7 +2103,6 @@ const lieux = [
     nom: "Musée de l'Orangerie",
     wikiTitle: "Musée_de_l'Orangerie",
     categorie: "musee",
-    emoji: "🌸",
     bgClass: "bg-musee",
     arrondissement: "1er arr.",
     horaires: "9h–18h — Fermé le mardi",
@@ -2144,7 +2120,6 @@ const lieux = [
     nom: "Sacré-Cœur",
     wikiTitle: "Basilique_du_Sacré-Cœur_de_Montmartre",
     categorie: "eglise",
-    emoji: "🕍",
     bgClass: "bg-eglise",
     arrondissement: "18e arr.",
     horaires: "6h–22h30 (basilique) / Dôme : 9h–20h",
@@ -2162,7 +2137,6 @@ const lieux = [
     nom: "Musée Carnavalet",
     wikiTitle: "Musée_Carnavalet",
     categorie: "musee",
-    emoji: "🏙",
     bgClass: "bg-musee",
     arrondissement: "3e arr.",
     horaires: "10h–18h — Fermé le lundi",
@@ -2180,7 +2154,6 @@ const lieux = [
     nom: "Musée des Arts et Métiers",
     wikiTitle: "Musée_des_arts_et_métiers",
     categorie: "musee",
-    emoji: "⚙️",
     bgClass: "bg-musee",
     arrondissement: "3e arr.",
     horaires: "10h–18h (jeu. jusqu'à 21h30) — Fermé le lundi",
@@ -2198,7 +2171,6 @@ const lieux = [
     nom: "Grand Palais",
     wikiTitle: "Grand_Palais",
     categorie: "monument",
-    emoji: "🏺",
     bgClass: "bg-monument",
     arrondissement: "8e arr.",
     horaires: "Selon expositions (en cours de rénovation partielle)",
@@ -2217,7 +2189,6 @@ const lieux = [
     wikiTitle: "Musée_Marmottan_Monet",
     photoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Musee_marmottan_paris_FR_-_panoramio.jpg",
     categorie: "musee",
-    emoji: "🌅",
     bgClass: "bg-musee",
     arrondissement: "16e arr.",
     horaires: "10h–18h (jeu. jusqu'à 21h) — Fermé le lundi",
@@ -2235,7 +2206,6 @@ const lieux = [
     nom: "Musée de l'Armée",
     wikiTitle: "Musée_de_l'Armée_(Paris)",
     categorie: "musee",
-    emoji: "⚔️",
     bgClass: "bg-musee",
     arrondissement: "7e arr.",
     horaires: "10h–18h (avr.–oct. jusqu'à 18h)",
@@ -2253,7 +2223,6 @@ const lieux = [
     nom: "Hôtel des Invalides",
     wikiTitle: "Hôtel_national_des_Invalides",
     categorie: "monument",
-    emoji: "🏛",
     bgClass: "bg-monument",
     arrondissement: "7e arr.",
     horaires: "10h–18h (avr.–oct. jusqu'à 19h) — Ouvert tous les jours",
@@ -2271,7 +2240,6 @@ const lieux = [
     nom: "Jardin des Tuileries",
     wikiTitle: "Jardin_des_Tuileries",
     categorie: "jardin",
-    emoji: "🌿",
     bgClass: "bg-jardin",
     arrondissement: "1er arr.",
     horaires: "7h–21h (été jusqu'à 23h) — Ouvert tous les jours",
@@ -2289,7 +2257,6 @@ const lieux = [
     nom: "Jardin du Luxembourg",
     wikiTitle: "Jardin_du_Luxembourg",
     categorie: "jardin",
-    emoji: "🌳",
     bgClass: "bg-jardin",
     arrondissement: "6e arr.",
     horaires: "7h30–21h30 (selon saison) — Ouvert tous les jours",
@@ -2307,7 +2274,6 @@ const lieux = [
     nom: "Jardin du Palais-Royal",
     wikiTitle: "Jardin_du_Palais-Royal",
     categorie: "jardin",
-    emoji: "🌹",
     bgClass: "bg-jardin",
     arrondissement: "1er arr.",
     horaires: "8h–20h30 (selon saison) — Ouvert tous les jours",
@@ -2326,7 +2292,6 @@ const lieux = [
     wikiTitle: "Chapelle_Notre-Dame_de_la_Médaille_Miraculeuse",
     photoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Paris_-_Chapelle_Notre-Dame_de_la_M%C3%A9daille_Miraculeuse_-_10.jpg",
     categorie: "eglise",
-    emoji: "📿",
     bgClass: "bg-eglise",
     arrondissement: "7e arr.",
     horaires: "7h45–13h & 14h30–19h — Ouvert tous les jours",
@@ -2345,7 +2310,6 @@ const lieux = [
     wikiTitle: "Hôtel_de_la_Marine_(Paris)",
     photoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/H%C3%B4tel_de_la_Marine.jpg",
     categorie: "monument",
-    emoji: "⚓",
     bgClass: "bg-monument",
     arrondissement: "8e arr.",
     horaires: "10h30–19h (ven. jusqu'à 21h30) — Ouvert tous les jours",
@@ -2426,7 +2390,7 @@ function creerCarte(lieu) {
     <div class="carte-image ${lieu.bgClass} skeleton">
       <img class="carte-photo" alt="${lieu.nom}">
       <div class="carte-image-overlay"></div>
-      <span class="carte-emoji-fb">${lieu.emoji}</span>
+
       <button class="btn-favori${estFavori ? ' actif' : ''}" aria-label="Ajouter aux favoris" data-nom="${lieu.nom}">
         <svg class="coeur-vide" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         <svg class="coeur-plein" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -2449,8 +2413,7 @@ function creerCarte(lieu) {
 
   const imgElem = carte.querySelector('.carte-photo');
   const overlayElem = carte.querySelector('.carte-image-overlay');
-  const fbElem = carte.querySelector('.carte-emoji-fb');
-  chargerImage(lieu, imgElem, overlayElem, fbElem);
+  chargerImage(lieu, imgElem, overlayElem);
 
   // Bouton favori — stoppe la propagation pour ne pas ouvrir la modale
   const btnFav = carte.querySelector('.btn-favori');
@@ -2492,12 +2455,11 @@ async function getWikiImageSrc(titre) {
 
 const _FALLBACK_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='280' viewBox='0 0 400 280'%3E%3Crect width='400' height='280' fill='%23E8E0D4'/%3E%3Cg opacity='.35' fill='%231A1714'%3E%3Crect x='170' y='180' width='60' height='60'/%3E%3Crect x='185' y='155' width='30' height='30'/%3E%3Crect x='195' y='135' width='10' height='25'/%3E%3Crect x='130' y='200' width='40' height='40'/%3E%3Crect x='230' y='200' width='40' height='40'/%3E%3Crect x='100' y='235' width='200' height='5'/%3E%3C/g%3E%3Ctext x='200' y='90' text-anchor='middle' font-family='Georgia%2C serif' font-size='13' fill='%231A1714' opacity='.4' letter-spacing='3'%3EPARIS%3C/text%3E%3C/svg%3E`;
 
-function _appliquerSrc(src, imgElem, overlayElem, fbElem) {
+function _appliquerSrc(src, imgElem, overlayElem) {
   imgElem.onload = () => {
     imgElem.classList.add('chargee');
     imgElem.parentElement.classList.remove('skeleton');
     if (overlayElem) overlayElem.classList.add('visible');
-    if (fbElem) fbElem.style.display = 'none';
   };
   imgElem.onerror = () => {
     imgElem.src = _FALLBACK_SVG;
@@ -2507,17 +2469,17 @@ function _appliquerSrc(src, imgElem, overlayElem, fbElem) {
   imgElem.src = src;
 }
 
-async function chargerImage(lieu, imgElem, overlayElem, fbElem) {
+async function chargerImage(lieu, imgElem, overlayElem) {
   // 1. photoUrl hardcodée en priorité
   if (lieu.photoUrl) {
-    _appliquerSrc(lieu.photoUrl, imgElem, overlayElem, fbElem);
+    _appliquerSrc(lieu.photoUrl, imgElem, overlayElem);
     return;
   }
   // 2. Sinon Wikipedia
   if (!lieu.wikiTitle) return;
   try {
     const src = await getWikiImageSrc(lieu.wikiTitle);
-    if (src) _appliquerSrc(src, imgElem, overlayElem, fbElem);
+    if (src) _appliquerSrc(src, imgElem, overlayElem);
   } catch (e) {}
 }
 
@@ -2605,17 +2567,15 @@ function ouvrirModale(lieu) {
   modaleEmoji.innerHTML = `
     <img class="modale-photo" alt="${lieu.nom}">
     <div class="modale-photo-overlay"></div>
-    <span class="modale-emoji-fb">${lieu.emoji}</span>
+
     <button class="modale-fermer" id="btn-fermer" aria-label="Fermer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   `;
 
   const modaleImg = modaleEmoji.querySelector('.modale-photo');
   const modaleOverlay = modaleEmoji.querySelector('.modale-photo-overlay');
-  const modaleFb = modaleEmoji.querySelector('.modale-emoji-fb');
   modaleImg.onload = () => {
     modaleImg.classList.add('chargee');
     modaleOverlay.classList.add('visible');
-    modaleFb.style.display = 'none';
   };
   if (lieu.photoUrl) {
     modaleImg.src = lieu.photoUrl;
