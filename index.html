@@ -1028,8 +1028,13 @@
       }
 
       /* ── Modale ── */
+      .modale {
+        max-height: calc(92vh - 68px - env(safe-area-inset-bottom));
+      }
       .modale-entete { height: 220px; }
-      .modale-corps { padding: 20px 18px 28px; }
+      .modale-corps {
+        padding: 20px 18px calc(32px + 68px + env(safe-area-inset-bottom));
+      }
       .modale-corps h2 { font-size: 1.75rem; }
       .modale-meta { gap: 8px; }
       .modale-meta span { font-size: 0.75rem; }
