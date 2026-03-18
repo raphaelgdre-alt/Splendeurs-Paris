@@ -1257,79 +1257,89 @@
     .marqueur-eglise   { background: #7b5ea7; }
     .marqueur-jardin   { background: #4a7c59; }
 
+    /* ─── Marqueurs custom ─── */
+    .marqueur-pin {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #D4AF37;
+      border: 1.5px solid rgba(255,255,255,0.9);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.22);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.3s ease;
+    }
+    .marqueur-pin:hover { transform: scale(1.25); }
+    body.mode-nuit .marqueur-pin {
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 0 16px rgba(212,175,55,0.7), 0 2px 6px rgba(0,0,0,0.5);
+    }
+
     /* ─── Popup Leaflet ─── */
     .leaflet-popup-content-wrapper {
-      border-radius: 4px !important;
+      border-radius: 16px !important;
       font-family: 'Jost', sans-serif !important;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.18) !important;
-      border: 1px solid rgba(184,150,46,0.3) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14) !important;
+      border: 1px solid rgba(212,175,55,0.2) !important;
       padding: 0 !important;
+      overflow: hidden !important;
     }
 
     .leaflet-popup-content {
       margin: 0 !important;
     }
 
+    .leaflet-popup-tip {
+      background: #fff !important;
+    }
+
     .popup-inner {
-      padding: 14px 16px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .popup-nom {
+      font-family: 'Playfair Display', serif;
       font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 3px;
-      color: #1a1a1a;
-    }
-
-    .popup-cat {
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #b8962e;
-      margin-bottom: 6px;
-    }
-
-    .popup-arr {
-      font-size: 0.78rem;
-      color: #6b6860;
-      margin-bottom: 10px;
+      font-size: 1rem;
+      line-height: 1.3;
+      color: #1a1714;
+      margin: 0;
     }
 
     .popup-btn {
-      display: inline-block;
-      background: var(--marine, #0f1c2e);
-      color: #d4af5a;
-      padding: 6px 12px;
-      border-radius: 2px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
+      display: block;
+      width: 100%;
+      background: #D4AF37;
+      color: #fff;
+      padding: 9px 14px;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
-      border: 1px solid rgba(212,175,90,0.4);
+      border: none;
       font-family: 'Jost', sans-serif;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.15s;
+      text-align: center;
+      box-sizing: border-box;
     }
 
-    .popup-btn:hover { background: #1e3356; }
-
-    .popup-maps-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--or, #C9A96E);
-      color: #fff;
-      padding: 6px 10px;
-      border-radius: 2px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      text-decoration: none;
-      font-family: 'Jost', sans-serif;
-      transition: opacity 0.2s;
+    .popup-btn:hover {
+      background: #b8962e;
+      transform: translateY(-1px);
     }
-    .popup-maps-btn:hover { opacity: 0.85; }
+
+    /* Popup mode nuit */
+    body.mode-nuit .leaflet-popup-content-wrapper {
+      background: #1C1914 !important;
+      border-color: rgba(212,175,55,0.3) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+    }
+    body.mode-nuit .leaflet-popup-tip { background: #1C1914 !important; }
+    body.mode-nuit .popup-nom { color: #EDE8E0; }
 
     /* ─── Vue Présentation ─── */
     #vue-presentation {
@@ -3029,6 +3039,27 @@ const coordonnees = {
 
 let carteLeaflet = null;
 let marqueurs = [];
+let tileLayer = null;
+
+const TILES = {
+  jour: {
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'
+  },
+  nuit: {
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'
+  }
+};
+
+function swapTiles() {
+  if (!carteLeaflet) return;
+  const mode = document.body.classList.contains('mode-nuit') ? 'nuit' : 'jour';
+  if (tileLayer) carteLeaflet.removeLayer(tileLayer);
+  tileLayer = L.tileLayer(TILES[mode].url, { attribution: TILES[mode].attribution, maxZoom: 19 });
+  tileLayer.addTo(carteLeaflet);
+  tileLayer.setZIndex(0);
+}
 
 function ouvrirModaleId(id) {
   const lieu = lieux.find(l => l.id === id);
@@ -3041,39 +3072,28 @@ function ouvrirModaleId(id) {
 function initCarte() {
   if (carteLeaflet) return;
 
-  carteLeaflet = L.map('vue-carte').setView([48.8566, 2.3322], 13);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    maxZoom: 19
-  }).addTo(carteLeaflet);
+  carteLeaflet = L.map('vue-carte', { zoomControl: true }).setView([48.8566, 2.3322], 13);
+  swapTiles();
 
   lieux.forEach(lieu => {
     const coords = coordonnees[lieu.id];
     if (!coords) return;
 
-    const couleurs = { musee: '#b8962e', monument: '#1e3356', eglise: '#7b5ea7', jardin: '#4a7c59' };
-    const c = couleurs[lieu.categorie] || '#888';
     const icone = L.divIcon({
       className: '',
-      html: `<div style="width:16px;height:16px;border-radius:50%;background:${c};border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>`,
-      iconSize: [16, 16],
-      iconAnchor: [8, 8],
-      popupAnchor: [0, -12]
+      html: `<div class="marqueur-pin"></div>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+      popupAnchor: [0, -14]
     });
 
     const marker = L.marker(coords, { icon: icone })
       .bindPopup(`
         <div class="popup-inner">
           <div class="popup-nom">${lieu.nom}</div>
-          <div class="popup-cat">${categorieLabel(lieu.categorie)}</div>
-          <div class="popup-arr">${ICO.pin} ${lieu.arrondissement}</div>
-          <div style="display:flex;gap:6px;align-items:center;margin-top:4px">
-            <button class="popup-btn" onclick="ouvrirModaleId(${lieu.id})">Voir le détail</button>
-            <a class="popup-maps-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lieu.nom + ' Paris')}" target="_blank" rel="noopener noreferrer">${ICO.maps} Y&nbsp;aller</a>
-          </div>
+          <button class="popup-btn" onclick="ouvrirModaleId(${lieu.id})">Voir le détail</button>
         </div>
-      `, { maxWidth: 230, minWidth: 180 })
+      `, { maxWidth: 220, minWidth: 180, className: '' })
       .addTo(carteLeaflet);
 
     marker._lieuCat = lieu.categorie;
@@ -3182,6 +3202,7 @@ const btnTheme = document.getElementById('btn-theme');
 btnTheme.addEventListener('click', () => {
   document.body.classList.toggle('mode-nuit');
   localStorage.setItem('theme', document.body.classList.contains('mode-nuit') ? 'nuit' : 'jour');
+  swapTiles();
 });
 
 
