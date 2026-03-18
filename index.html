@@ -33,31 +33,70 @@
 
     /* ─── Mode nuit ─── */
     body.mode-nuit {
-      --fond: #0D0B0A;
-      --gris: #2A2520;
-      --gris-sombre: #6B5E52;
-      --texte: #EDE8E0;
-      --texte-sec: #9A8C80;
-      --marine: #EDE8E0;
-      --marine-mid: #3A3028;
-      --or-pale: #1A1612;
-      --ombre: 0 2px 8px rgba(0,0,0,0.3);
-      --ombre-survol: 0 6px 24px rgba(0,0,0,0.5);
+      /* ── Fond profond brun-noir, pas un noir plat ── */
+      --fond:        #0A0908;
+      --or:          #D4AF37;
+      --or-clair:    #D4AF37;
+      --gris:        #252018;
+      --gris-sombre: #5E5448;
+      --texte:       #EDE8E0;
+      --texte-sec:   #8A7E74;
+      --marine:      #EDE8E0;
+      --marine-mid:  #2E2820;
+      --or-pale:     #181410;
+      --ombre:       0 2px 12px rgba(0,0,0,0.45);
+      --ombre-survol:0 8px 32px rgba(0,0,0,0.6);
     }
-    body.mode-nuit .carte { background: #1A1612; }
-    body.mode-nuit .filtre-btn { background: #1A1612; color: var(--texte-sec); }
-    body.mode-nuit .filtre-btn.actif { background: var(--or); color: #0D0B0A; }
-    body.mode-nuit .modale { background: #141210; }
-    body.mode-nuit .modale-corps { background: #141210; }
-    body.mode-nuit .modale-meta span { background: #1F1C18; }
+
+    /* ── Cartes : halo doré discret ── */
+    body.mode-nuit .carte {
+      background: #161412;
+      box-shadow: 0 10px 40px rgba(212,175,55,0.05);
+      border-color: rgba(255,255,255,0.04);
+    }
+    body.mode-nuit .carte:hover {
+      box-shadow: 0 14px 48px rgba(212,175,55,0.10);
+    }
+
+    /* ── Filtres ── */
+    body.mode-nuit .filtre-btn { background: #161412; color: var(--texte-sec); border-color: #252018; }
+    body.mode-nuit .filtre-btn.actif { background: var(--or); color: #0A0908; }
+
+    /* ── Modale ── */
+    body.mode-nuit .modale { background: #111009; }
+    body.mode-nuit .modale-corps { background: #111009; }
+    body.mode-nuit .modale-meta span { background: #1C1914; }
+    body.mode-nuit .modale-sticky-bar { background: #161412; border-color: #252018; }
+
+    /* ── Nav flottante : verre fumé ── */
     body.mode-nuit .mobile-bottom-nav {
-      background: rgba(18,15,12,0.85);
-      border-color: rgba(255,255,255,0.08);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
+      background: rgba(20,18,16,0.72);
+      border: 0.5px solid rgba(255,255,255,0.09);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset;
+      backdrop-filter: blur(28px) saturate(1.4);
+      -webkit-backdrop-filter: blur(28px) saturate(1.4);
     }
-    body.mode-nuit footer { background: #0D0B0A; border-color: #2A2520; }
-    body.mode-nuit .recherche-input { background: #1A1612; color: var(--texte); border-color: #2A2520; }
+
+    /* ── Footer ── */
+    body.mode-nuit footer { background: #0A0908; border-color: #252018; }
+
+    /* ── Recherche ── */
+    body.mode-nuit .recherche-input { background: #161412; color: var(--texte); border-color: #252018; }
     body.mode-nuit .recherche-input::placeholder { color: var(--texte-sec); }
+
+    /* ── Skeleton nuit : anthracite → gris acier ── */
+    body.mode-nuit .carte-image.skeleton {
+      background: linear-gradient(90deg, #1C1914 25%, #2A2520 50%, #1C1914 75%);
+      background-size: 600px 100%;
+    }
+
+    /* ── Or cuivré sur titre h1 et éléments dorés ── */
+    body.mode-nuit header h1 span { color: var(--or); }
+    body.mode-nuit .header-eyebrow { color: var(--or); }
+    body.mode-nuit .header-eyebrow::before,
+    body.mode-nuit .header-eyebrow::after { background: var(--or); opacity: 0.4; }
+    body.mode-nuit .header-separator { background: var(--or); opacity: 0.3; }
+    body.mode-nuit .mob-nav-btn.actif { color: var(--or); background: rgba(212,175,55,0.08); }
 
     /* ─── Bouton dark mode ─── */
     .btn-theme {
@@ -691,82 +730,52 @@
 
 
     /* ─── Sticky bar modale ─── */
-    .modale-sticky-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 20px;
-      background: var(--fond);
-      border-bottom: 1px solid var(--gris);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-8px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
+
+    /* ── Bouton fermer sticky ── */
+    .modale-fermer-wrap {
       position: sticky;
-      top: 0;
-      z-index: 10;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0 16px;
+      pointer-events: none;
+      /* remonte dans la superposition pour chevaucher l'image */
+      margin-top: -52px;
+      margin-bottom: 12px;
     }
-    .modale-sticky-bar.visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-    .modale-sticky-nom {
-      font-family: 'Playfair Display', serif;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--texte);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex: 1;
-    }
-    .modale-sticky-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      background: var(--or);
-      color: #fff;
-      border-radius: 99px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: opacity 0.2s;
-      flex-shrink: 0;
-    }
-    .modale-sticky-btn:hover { opacity: 0.85; }
-    body.mode-nuit .modale-sticky-bar { background: #1A1612; border-color: #2A2520; }
 
     .modale-fermer {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: rgba(253,251,247,0.15);
-      backdrop-filter: blur(12px);
+      pointer-events: auto;
+      background: rgba(253,251,247,0.18);
+      backdrop-filter: blur(14px) saturate(1.4);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.28);
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      font-size: 1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: background var(--transition), transform var(--transition);
-      z-index: 10;
+      flex-shrink: 0;
     }
 
     .modale-fermer:hover {
-      background: rgba(253,251,247,0.3);
+      background: rgba(253,251,247,0.35);
       transform: scale(1.08);
     }
+
+    body.mode-nuit .modale-fermer {
+      background: rgba(20,18,16,0.45);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    /* ── Bottom nav cachée quand modale ouverte (focus mode) ── */
+    .modale-fond.visible ~ * .mobile-bottom-nav,
+    body.modale-ouverte .mobile-bottom-nav { display: none !important; }
 
     .modale-corps {
       padding: 32px 36px 44px;
@@ -2040,12 +2049,10 @@
 <div class="modale-fond" id="modale-fond" role="dialog" aria-modal="true">
   <div class="modale" id="modale">
     <div class="modale-entete" id="modale-emoji"></div>
-    <div class="modale-sticky-bar" id="modale-sticky-bar">
-      <span class="modale-sticky-nom" id="modale-sticky-nom"></span>
-      <a class="modale-sticky-btn" id="modale-sticky-btn" target="_blank" rel="noopener noreferrer">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Y aller
-      </a>
+    <div class="modale-fermer-wrap">
+      <button class="modale-fermer" id="btn-fermer" aria-label="Fermer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
     <div class="modale-corps" id="modale-corps"></div>
   </div>
@@ -2685,14 +2692,13 @@ document.getElementById('recherche').addEventListener('input', e => {
 const modaleFond = document.getElementById('modale-fond');
 const modaleEmoji = document.getElementById('modale-emoji');
 const modaleCorps = document.getElementById('modale-corps');
+document.getElementById('btn-fermer').addEventListener('click', fermerModale);
 
 function ouvrirModale(lieu) {
   modaleEmoji.className = `modale-entete ${lieu.bgClass}`;
   modaleEmoji.innerHTML = `
     <img class="modale-photo" alt="${lieu.nom}">
     <div class="modale-photo-overlay"></div>
-
-    <button class="modale-fermer" id="btn-fermer" aria-label="Fermer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   `;
 
   const modaleImg = modaleEmoji.querySelector('.modale-photo');
@@ -2754,17 +2760,15 @@ function ouvrirModale(lieu) {
     </div>
   `;
 
-  document.getElementById('btn-fermer').addEventListener('click', fermerModale);
   modaleFond.classList.add('visible');
+  document.body.classList.add('modale-ouverte');
   document.body.style.overflow = 'hidden';
-  // Sticky bar — décalé d'un tick pour laisser le DOM se mettre à jour
-  requestAnimationFrame(() => activerStickyBar(lieu));
 }
 
 function fermerModale() {
   modaleFond.classList.remove('visible');
+  document.body.classList.remove('modale-ouverte');
   document.body.style.overflow = '';
-  desactiverStickyBar();
 }
 
 modaleFond.addEventListener('click', e => {
@@ -2960,37 +2964,6 @@ btnTheme.addEventListener('click', () => {
   localStorage.setItem('theme', document.body.classList.contains('mode-nuit') ? 'nuit' : 'jour');
 });
 
-// ─── Sticky bar modale ───
-const modaleStickyBar = document.getElementById('modale-sticky-bar');
-const modaleStickyNom = document.getElementById('modale-sticky-nom');
-const modaleStickyBtn = document.getElementById('modale-sticky-btn');
-let stickyObserver = null;
-
-function activerStickyBar(lieu) {
-  modaleStickyNom.textContent = lieu.nom;
-  modaleStickyBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lieu.nom + ' Paris')}`;
-  // Scroll listener sur la modale (conteneur scrollable)
-  const modaleEl = document.getElementById('modale');
-  if (!modaleEl) return;
-  function onScroll() {
-    const titreEl = document.querySelector('#modale-corps h2');
-    if (!titreEl) return;
-    const rect = titreEl.getBoundingClientRect();
-    const modaleRect = modaleEl.getBoundingClientRect();
-    modaleStickyBar.classList.toggle('visible', rect.bottom < modaleRect.top + 60);
-  }
-  modaleEl._stickyHandler = onScroll;
-  modaleEl.addEventListener('scroll', onScroll);
-}
-
-function desactiverStickyBar() {
-  modaleStickyBar.classList.remove('visible');
-  const modaleEl = document.getElementById('modale');
-  if (modaleEl?._stickyHandler) {
-    modaleEl.removeEventListener('scroll', modaleEl._stickyHandler);
-    modaleEl._stickyHandler = null;
-  }
-}
 
 // ─── Bottom nav mobile : Lieux + 3 onglets + sync ───
 const mobileBottomNav = document.getElementById('mobile-bottom-nav');
