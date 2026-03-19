@@ -1221,6 +1221,15 @@
     }
 
     /* ─── Vue Carte ─── */
+    /* Désaturer les tuiles pour réduire la pollution visuelle des POIs (banques, magasins…) */
+    #vue-carte .leaflet-tile-pane {
+      filter: saturate(0.25) brightness(1.04);
+    }
+    body.mode-nuit #vue-carte .leaflet-tile-pane {
+      filter: saturate(0.5) brightness(0.9);
+    }
+    /* Les marqueurs custom restent dans overlay-pane, non affectés par le filtre */
+
     #vue-carte {
       display: none;
       height: calc(100vh - 57px);
@@ -1459,18 +1468,22 @@
       position: absolute;
       bottom: 14px;
       right: 14px;
-      background: var(--marine);
-      color: var(--or-clair);
+      background: rgba(26,23,20,0.82);
+      backdrop-filter: blur(8px);
       font-family: 'Jost', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       padding: 5px 14px;
       border-radius: 20px;
-      letter-spacing: 0.05em;
-      border: 1.5px solid var(--or);
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(212,175,55,0.35);
+      display: flex;
+      gap: 2px;
     }
+    .resto-euro { color: var(--or); transition: opacity 0.2s; }
+    .resto-euro.inactif { opacity: 0.22; }
 
-    .resto-corps { padding: 22px 24px 24px; }
+    .resto-corps { padding: 22px 24px 20px; }
 
     .resto-nom {
       font-family: 'Playfair Display', serif;
@@ -1486,13 +1499,50 @@
       color: var(--texte-sec);
       margin-bottom: 14px;
       font-family: 'Jost', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .resto-arr {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--or);
     }
 
     .resto-desc {
       font-size: 0.88rem;
       color: var(--texte);
-      line-height: 1.75;
+      line-height: 1.85;
+      margin-bottom: 14px;
+    }
+
+    .resto-conseil {
+      display: flex;
+      gap: 8px;
+      background: var(--gris);
+      border-left: 2px solid var(--or);
+      border-radius: 0 6px 6px 0;
+      padding: 10px 14px;
       margin-bottom: 16px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.82rem;
+      color: var(--texte-sec);
+      line-height: 1.6;
+    }
+    .resto-conseil-label {
+      font-family: 'Jost', sans-serif;
+      font-style: normal;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--or);
+      white-space: nowrap;
+      padding-top: 2px;
     }
 
     .resto-infos {
@@ -1501,6 +1551,37 @@
       font-family: 'Jost', sans-serif;
       border-top: 1px solid var(--gris);
       padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .resto-maps-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--or);
+      color: #fff;
+      border: none;
+      border-radius: 99px;
+      padding: 7px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 2px 10px rgba(212,175,55,0.25);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .resto-maps-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 18px rgba(212,175,55,0.40);
     }
 
     .pres-hero {
@@ -1723,16 +1804,15 @@
       border: none;
       font: inherit;
       color: inherit;
-      padding: 0;
+      padding: 1px 0;
       cursor: pointer;
-      text-decoration: underline;
-      text-decoration-color: rgba(212,175,55,0.45);
-      text-underline-offset: 3px;
-      transition: color 0.2s ease, text-decoration-color 0.2s ease;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(212,175,55,0.35);
+      transition: color 0.2s ease, border-color 0.2s ease, border-width 0.15s ease;
     }
     .prog-lien:hover {
       color: var(--or);
-      text-decoration-color: var(--or);
+      border-bottom: 2px solid var(--or);
     }
 
     /* Catégories */
@@ -1757,11 +1837,17 @@
     .pres-cat:hover span { color: rgba(212,175,90,0.5); }
 
     .pres-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: 0 auto 16px;
-      border: 2px solid rgba(255,255,255,0.5);
+      color: var(--or);
+      opacity: 0.85;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .pres-cat:hover .pres-dot {
+      opacity: 1;
+      transform: scale(1.1);
     }
 
     .pres-cat strong {
@@ -2267,10 +2353,10 @@
     <div class="pres-label">Explorer par thème</div>
     <h3>Quatre univers, <em>une seule ville</em></h3>
     <div class="pres-cats">
-      <div class="pres-cat"><div class="pres-dot" style="background:#b8962e"></div><strong>Musées</strong><p>Des collections universelles aux trésors impressionnistes.</p><span>9 lieux</span></div>
-      <div class="pres-cat"><div class="pres-dot" style="background:#1e3356"></div><strong>Monuments</strong><p>Palais, arcs, opéras — deux mille ans d'histoire.</p><span>7 lieux</span></div>
-      <div class="pres-cat"><div class="pres-dot" style="background:#7b5ea7"></div><strong>Édifices religieux</strong><p>Cathédrales et chapelles qui élèvent l'âme.</p><span>3 lieux</span></div>
-      <div class="pres-cat"><div class="pres-dot" style="background:#4a7c59"></div><strong>Jardins</strong><p>Des havres de paix au cœur de la capitale.</p><span>3 lieux</span></div>
+      <div class="pres-cat"><div class="pres-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="12" rx="1"/><path d="M5 9V7a7 7 0 0 1 14 0v2"/><line x1="8" y1="9" x2="8" y2="21"/><line x1="16" y1="9" x2="16" y2="21"/></svg></div><strong>Musées</strong><p>Des collections universelles aux trésors impressionnistes.</p><span>9 lieux</span></div>
+      <div class="pres-cat"><div class="pres-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4a3 3 0 0 1 6 0v4"/></svg></div><strong>Monuments</strong><p>Palais, arcs, opéras — deux mille ans d'histoire.</p><span>7 lieux</span></div>
+      <div class="pres-cat"><div class="pres-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 6c-3.31 0-6 2.24-6 5 0 1.9 1.1 3.57 2.75 4.51L12 22l3.25-6.49C16.9 14.57 18 12.9 18 11c0-2.76-2.69-5-6-5z"/></svg></div><strong>Édifices religieux</strong><p>Cathédrales et chapelles qui élèvent l'âme.</p><span>3 lieux</span></div>
+      <div class="pres-cat"><div class="pres-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12C12 7 8 4 3 5c0 5 3.5 8.5 9 7z"/><path d="M12 12c0-5 4-8 9-7 0 5-3.5 8.5-9 7z"/></svg></div><strong>Jardins</strong><p>Des havres de paix au cœur de la capitale.</p><span>3 lieux</span></div>
     </div>
   </div>
 
@@ -2323,14 +2409,16 @@
     <!-- Bouillon Chartier Montparnasse -->
     <div class="resto-card">
       <div class="resto-photo" style="background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80') center/cover no-repeat;">
-        <div class="resto-fourchette">moins de 20 € / pers.</div>
+        <div class="resto-fourchette"><span class="resto-euro">€</span><span class="resto-euro inactif">€</span><span class="resto-euro inactif">€</span></div>
       </div>
       <div class="resto-corps">
         <h3 class="resto-nom">Bouillon Chartier Montparnasse</h3>
-        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 59 Bd du Montparnasse · 6e arr.</div>
+        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 59 Bd du Montparnasse · <span class="resto-arr">6e arr.</span></div>
         <p class="resto-desc">Institution parisienne depuis 1903, ce bouillon a conservé son décor Belle Époque authentique — boiseries, miroirs et banquettes en moleskine rouge. Une cuisine française généreuse et sans chichis à prix imbattables : soupe à l'oignon, œufs mayo, jarret de veau braisé…</p>
+        <div class="resto-conseil"><span class="resto-conseil-label">Conseil</span>Arrivez à 11h45 pour éviter la queue. Demandez une table sous la grande horloge — c'est la plus belle de la salle.</div>
         <div class="resto-infos">
           <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Lun–ven 12h–0h · Sam–dim 11h30–0h</span>
+          <a class="resto-maps-btn" href="https://www.google.com/maps/search/?api=1&query=59+Bd+du+Montparnasse+Paris" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Y aller</a>
         </div>
       </div>
     </div>
@@ -2338,14 +2426,16 @@
     <!-- Bouillon Chartier Grand Boulevard -->
     <div class="resto-card">
       <div class="resto-photo" style="background:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80') center/cover no-repeat;">
-        <div class="resto-fourchette">10 – 20 € / pers.</div>
+        <div class="resto-fourchette"><span class="resto-euro">€</span><span class="resto-euro inactif">€</span><span class="resto-euro inactif">€</span></div>
       </div>
       <div class="resto-corps">
         <h3 class="resto-nom">Bouillon Chartier Grand Boulevard</h3>
-        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 7 rue du Faubourg Montmartre · 9e arr.</div>
+        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 7 rue du Faubourg Montmartre · <span class="resto-arr">9e arr.</span></div>
         <p class="resto-desc">Le Chartier original, ouvert en 1896 et classé monument historique. Sous ses hauts plafonds ornementés, les garçons virevoltent entre tables serrées pour servir des milliers de couverts par jour. Ambiance populaire et joyeuse, additions écrites à la main sur la nappe en papier.</p>
+        <div class="resto-conseil"><span class="resto-conseil-label">Conseil</span>Préférez l'ouverture à 11h30 ou après 14h. L'addition inscrite à la main sur la nappe en papier est un souvenir à emporter.</div>
         <div class="resto-infos">
           <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Tous les jours 11h30–0h (service continu)</span>
+          <a class="resto-maps-btn" href="https://www.google.com/maps/search/?api=1&query=7+rue+du+Faubourg+Montmartre+Paris" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Y aller</a>
         </div>
       </div>
     </div>
@@ -2353,14 +2443,16 @@
     <!-- Le Petit Bouillon Pharamond -->
     <div class="resto-card">
       <div class="resto-photo" style="background:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80') center/cover no-repeat;">
-        <div class="resto-fourchette">25 – 30 € / pers.</div>
+        <div class="resto-fourchette"><span class="resto-euro">€</span><span class="resto-euro">€</span><span class="resto-euro inactif">€</span></div>
       </div>
       <div class="resto-corps">
         <h3 class="resto-nom">Le Petit Bouillon Pharamond</h3>
-        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 24 rue de la Grande Truanderie · 1er arr.</div>
+        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 24 rue de la Grande Truanderie · <span class="resto-arr">1er arr.</span></div>
         <p class="resto-desc">Fondé en 1879, le Pharamond est l'un des plus anciens restaurants de Paris. Son décor Art Nouveau classé aux monuments historiques — céramiques, vitraux et boiseries sculptées — est à couper le souffle. Spécialité normande : tripes à la mode de Caen et calvados maison.</p>
+        <div class="resto-conseil"><span class="resto-conseil-label">Conseil</span>Le décor Art Nouveau vaut à lui seul le détour. Si vous êtes curieux, osez les tripes à la mode de Caen — la vraie spécialité maison.</div>
         <div class="resto-infos">
           <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Mar–sam 12h–14h30 &amp; 19h–23h</span>
+          <a class="resto-maps-btn" href="https://www.google.com/maps/search/?api=1&query=24+rue+de+la+Grande+Truanderie+Paris" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Y aller</a>
         </div>
       </div>
     </div>
@@ -2368,14 +2460,16 @@
     <!-- Comme un Bouillon -->
     <div class="resto-card">
       <div class="resto-photo" style="background:url('https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80') center/cover no-repeat;">
-        <div class="resto-fourchette">~17 € / pers.</div>
+        <div class="resto-fourchette"><span class="resto-euro">€</span><span class="resto-euro inactif">€</span><span class="resto-euro inactif">€</span></div>
       </div>
       <div class="resto-corps">
         <h3 class="resto-nom">Comme un Bouillon</h3>
-        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 17 rue de Choiseul · 2e arr.</div>
+        <div class="resto-adresse"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 17 rue de Choiseul · <span class="resto-arr">2e arr.</span></div>
         <p class="resto-desc">Le plus contemporain des bouillons parisiens, ancré dans le quartier animé de Montparnasse. Une carte courte et soignée qui revisite les classiques avec des produits de saison. Cadre chaleureux, service attentionné, et tartare de bœuf taillé au couteau à ne pas manquer.</p>
+        <div class="resto-conseil"><span class="resto-conseil-label">Conseil</span>Réservez la table du fond pour plus de calme. Le tartare de bœuf taillé au couteau, incontournable, accompagne parfaitement un verre de beaujolais.</div>
         <div class="resto-infos">
           <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Mar–dim 12h–14h30 &amp; 19h–22h30</span>
+          <a class="resto-maps-btn" href="https://www.google.com/maps/search/?api=1&query=17+rue+de+Choiseul+Paris" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Y aller</a>
         </div>
       </div>
     </div>
