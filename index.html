@@ -1038,12 +1038,12 @@
       .filtres-wrapper {
         flex-wrap: wrap;
         padding: 8px 10px 0;
-        padding-right: 58px; /* espace pour le bouton mode nuit fixe */
         gap: 0;
-        top: 8px;
-        width: calc(100% - 24px);
-        border-radius: 16px;
-        margin: 8px auto;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        border-radius: 0;
       }
 
       /* Boutons d'action sur la ligne du haut — 3 colonnes égales */
@@ -1071,6 +1071,9 @@
         scrollbar-width: none;
         border-top: 1px solid rgba(212,175,90,0.12);
         padding-bottom: 0;
+        /* fondu sur la droite pour signaler le scroll et éviter l'overlap avec le bouton mode nuit */
+        -webkit-mask-image: linear-gradient(to right, black calc(100% - 68px), transparent 100%);
+        mask-image: linear-gradient(to right, black calc(100% - 68px), transparent 100%);
       }
       .filtres::-webkit-scrollbar { display: none; }
 
@@ -1506,13 +1509,19 @@
       text-align: center;
       padding: 100px 24px;
       color: #fff;
+      will-change: background-position;
     }
 
     .pres-hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(10,18,40,0.6), rgba(10,18,40,0.9));
+      background: linear-gradient(to bottom, rgba(10,18,40,0.55), rgba(10,18,40,0.88));
+      transition: background 0.4s ease;
+    }
+
+    body.mode-nuit .pres-hero::before {
+      background: linear-gradient(to bottom, rgba(3,2,1,0.75), rgba(3,2,1,0.97));
     }
 
     .pres-hero > * { position: relative; z-index: 1; }
@@ -1598,6 +1607,9 @@
       font-size: 1.4rem;
       flex-shrink: 0;
       margin-top: 2px;
+      color: var(--or);
+      display: flex;
+      align-items: flex-start;
     }
 
     .pres-feature strong {
@@ -1670,14 +1682,18 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 0;
     }
 
     .pres-prog li {
       display: flex;
       gap: 14px;
       align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 0.5px solid rgba(212,175,55,0.18);
     }
+    .pres-prog li:first-child { padding-top: 0; }
+    .pres-prog li:last-child { border-bottom: none; padding-bottom: 0; }
 
     .pres-prog li > span {
       font-size: 0.6rem;
@@ -1699,7 +1715,25 @@
       margin-bottom: 2px;
     }
 
-    .pres-prog li p { font-size: 0.78rem; color: rgba(255,255,255,0.42); line-height: 1.5; margin: 0; }
+    .pres-prog li p { font-size: 0.78rem; color: rgba(255,255,255,0.42); line-height: 1.9; margin: 0; }
+
+    /* Liens dorés dans le programme */
+    .prog-lien {
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+      padding: 0;
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-color: rgba(212,175,55,0.45);
+      text-underline-offset: 3px;
+      transition: color 0.2s ease, text-decoration-color 0.2s ease;
+    }
+    .prog-lien:hover {
+      color: var(--or);
+      text-decoration-color: var(--or);
+    }
 
     /* Catégories */
     .pres-cats {
@@ -1876,14 +1910,18 @@
       width: 100%;
       background: transparent;
       border: none;
-      border-bottom: 1px solid var(--or);
+      border-bottom: 1px solid rgba(212,175,55,0.3);
       color: var(--texte);
       font-family: 'Jost', sans-serif;
       font-size: 0.95rem;
       padding: 10px 0 8px;
       outline: none;
-      transition: border-color 0.25s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
       resize: none;
+    }
+    .lor-input:focus {
+      border-bottom-color: var(--or);
+      box-shadow: 0 1px 0 var(--or);
     }
 
     .lor-input::placeholder { color: transparent; }
@@ -1915,23 +1953,28 @@
 
     .lor-btn {
       align-self: flex-start;
-      background: transparent;
-      border: 1px solid var(--or);
-      color: var(--or);
+      background: var(--or);
+      border: none;
+      color: #fff;
       font-family: 'Jost', sans-serif;
       font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      padding: 12px 28px;
+      padding: 14px 32px;
       border-radius: 99px;
       cursor: pointer;
-      transition: background 0.25s ease, color 0.25s ease;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+      box-shadow: 0 4px 16px rgba(212,175,55,0.25);
     }
 
     .lor-btn:hover {
-      background: var(--or);
-      color: var(--fond);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(212,175,55,0.40);
+    }
+    .lor-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(212,175,55,0.20);
     }
 
     .lor-error {
@@ -1963,10 +2006,12 @@
     .lor-msg-texte {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: 1.05rem;
+      font-size: 1.15rem;
+      font-weight: 400;
       color: var(--texte);
-      line-height: 1.7;
+      line-height: 1.85;
       margin-bottom: 10px;
+      letter-spacing: 0.01em;
     }
 
     .lor-msg-meta {
@@ -1993,7 +2038,76 @@
 
     /* Dark mode */
     body.mode-nuit .lor-input { color: var(--texte); }
-    body.mode-nuit .lor-btn:hover { color: #0A0908; }
+    body.mode-nuit .lor-btn { color: #0A0908; }
+
+    /* ── Scroll-to-top (À Propos uniquement) ── */
+    .btn-top {
+      position: fixed;
+      bottom: calc(90px + env(safe-area-inset-bottom));
+      right: 20px;
+      z-index: 500;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.5);
+      background: var(--fond);
+      color: var(--or);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 2px 12px rgba(212,175,55,0.15);
+    }
+    body.mode-presentation .btn-top { display: flex; }
+    body.mode-presentation .btn-top.visible {
+      opacity: 1;
+    }
+    .btn-top:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.30);
+    }
+
+    /* ── Pilule Livre d'Or flottante ── */
+    .btn-lor-pill {
+      position: fixed;
+      bottom: calc(90px + env(safe-area-inset-bottom));
+      left: 20px;
+      z-index: 500;
+      display: none;
+      align-items: center;
+      gap: 7px;
+      background: var(--or);
+      color: #fff;
+      border: none;
+      border-radius: 99px;
+      padding: 10px 18px 10px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 18px rgba(212,175,55,0.30);
+    }
+    body.mode-presentation .btn-lor-pill { display: flex; }
+    body.mode-presentation .btn-lor-pill.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .btn-lor-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(212,175,55,0.45);
+    }
+
+    /* ── Livre d'Or : espace pour la nav mobile ── */
+    .livre-or {
+      padding-bottom: calc(90px + env(safe-area-inset-bottom));
+    }
 
     /* ─── Légende carte ─── */
     .carte-legende {
@@ -2123,8 +2237,8 @@
     <p>Paris regorge de chefs-d'œuvre, de monuments millénaires et de jardins secrets. Face à l'immensité de la capitale, même le voyageur averti peut se sentir dépassé. <strong>Splendeurs de Paris</strong> a été conçu pour répondre à une question simple : que faut-il absolument voir lors d'un séjour à Paris ?</p>
     <div class="pres-features">
       <div class="pres-feature"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></span><div><strong>Carte interactive</strong><p>Visualisez tous les lieux sur un plan. Zoomez, cliquez, explorez.</p></div></div>
-      <div class="pres-feature"><span>🏛</span><div><strong>22 lieux sélectionnés</strong><p>Musées, monuments, édifices religieux et jardins — le meilleur de la capitale.</p></div></div>
-      <div class="pres-feature"><span>⏱</span><div><strong>Conçu pour un week-end</strong><p>Horaires, accès et conseils de visite pour chaque lieu. Gratuit pour les moins de 25 ans.</p></div></div>
+      <div class="pres-feature"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="10" width="20" height="11" rx="1"/><path d="M6 10V7a6 6 0 0 1 12 0v3"/><line x1="2" y1="14" x2="22" y2="14"/><line x1="8" y1="10" x2="8" y2="21"/><line x1="16" y1="10" x2="16" y2="21"/></svg></span><div><strong>22 lieux sélectionnés</strong><p>Musées, monuments, édifices religieux et jardins — le meilleur de la capitale.</p></div></div>
+      <div class="pres-feature"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><div><strong>Conçu pour un week-end</strong><p>Horaires, accès et conseils de visite pour chaque lieu. Gratuit pour les moins de 25 ans.</p></div></div>
     </div>
   </div>
 
@@ -2135,19 +2249,19 @@
       <div class="pres-jour">
         <div class="pres-jour-header"><div><div class="pres-jour-titre">Cœur historique & Rive gauche</div><div class="pres-jour-sub">Samedi</div></div></div>
         <ul class="pres-prog">
-          <li><span>Matin</span><div><strong>Le Louvre</strong><p>Démarrez tôt. La Joconde, la Vénus de Milo — 2 à 3 heures d'émerveillement.</p></div></li>
+          <li><span>Matin</span><div><strong><button class="prog-lien" data-id="1">Le Louvre</button></strong><p>Démarrez tôt. La Joconde, la Vénus de Milo — 2 à 3 heures d'émerveillement.</p></div></li>
           <li><span>Déjeuner</span><div><strong>Jardins du Palais-Royal</strong><p>Pause dans ce jardin secret, ses arcades et les colonnes de Buren.</p></div></li>
-          <li><span>Après-midi</span><div><strong>Île de la Cité</strong><p>Notre-Dame de Paris et la Sainte-Chapelle avec ses vitraux saisissants.</p></div></li>
-          <li><span>Soir</span><div><strong>Musée d'Orsay</strong><p>Les impressionnistes au coucher du soleil — un moment rare.</p></div></li>
+          <li><span>Après-midi</span><div><strong><button class="prog-lien" data-id="4">Notre-Dame</button> & <button class="prog-lien" data-id="5">Sainte-Chapelle</button></strong><p>L'île de la Cité et ses vitraux saisissants.</p></div></li>
+          <li><span>Soir</span><div><strong><button class="prog-lien" data-id="2">Musée d'Orsay</button></strong><p>Les impressionnistes au coucher du soleil — un moment rare.</p></div></li>
         </ul>
       </div>
       <div class="pres-jour">
         <div class="pres-jour-header"><div><div class="pres-jour-titre">Monuments & Montmartre</div><div class="pres-jour-sub">Dimanche</div></div></div>
         <ul class="pres-prog">
-          <li><span>Matin</span><div><strong>Les Invalides & Musée de l'Armée</strong><p>Le dôme doré, le tombeau de Napoléon et les collections militaires exceptionnelles.</p></div></li>
+          <li><span>Matin</span><div><strong><button class="prog-lien" data-id="20">Musée de l'Armée</button></strong><p>Le dôme doré, le tombeau de Napoléon et les collections militaires exceptionnelles.</p></div></li>
           <li><span>Déjeuner</span><div><strong>Rue du Bac</strong><p>Quartier authentique et chapelle de la Médaille Miraculeuse.</p></div></li>
-          <li><span>Après-midi</span><div><strong>Opéra & Grands Boulevards</strong><p>Palais Garnier et Hôtel de la Marine, place de la Concorde.</p></div></li>
-          <li><span>Soir</span><div><strong>Sacré-Cœur, Montmartre</strong><p>Terminez en apothéose face au panorama de Paris illuminé.</p></div></li>
+          <li><span>Après-midi</span><div><strong><button class="prog-lien" data-id="9">Opéra Garnier</button></strong><p>Palais Garnier et Hôtel de la Marine, place de la Concorde.</p></div></li>
+          <li><span>Soir</span><div><strong><button class="prog-lien" data-id="14">Sacré-Cœur</button>, Montmartre</strong><p>Terminez en apothéose face au panorama de Paris illuminé.</p></div></li>
         </ul>
       </div>
     </div>
@@ -2272,6 +2386,17 @@
 
   </div>
 </div>
+
+<!-- ══════════════ SCROLL TO TOP (À Propos) ══════════════ -->
+<button class="btn-top" id="btn-top" aria-label="Retour en haut">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- ══════════════ PILULE LIVRE D'OR (À Propos) ══════════════ -->
+<button class="btn-lor-pill" id="btn-lor-pill" aria-label="Aller au Livre d'Or">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+  <span>Livre d'Or</span>
+</button>
 
 <!-- ══════════════ BOUTON FERMER (hors modale pour éviter le contexte transform) ══════════════ -->
 <button class="modale-fermer" id="btn-fermer" aria-label="Fermer">
@@ -3205,6 +3330,46 @@ btnTheme.addEventListener('click', () => {
   swapTiles();
 });
 
+
+// ─── Liens programme → modale ───
+document.querySelectorAll('.prog-lien').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = parseInt(btn.dataset.id);
+    const lieu = lieux.find(l => l.id === id);
+    if (lieu) ouvrirModale(lieu);
+  });
+});
+
+// ─── Parallaxe hero À Propos ───
+(function() {
+  const hero = document.querySelector('.pres-hero');
+  if (!hero) return;
+  window.addEventListener('scroll', () => {
+    if (!document.body.classList.contains('mode-presentation')) return;
+    const offset = window.scrollY * 0.28;
+    hero.style.backgroundPositionY = `calc(40% + ${offset}px)`;
+  }, { passive: true });
+})();
+
+// ─── Scroll-to-top + pilule Livre d'Or (À Propos) ───
+const btnTop    = document.getElementById('btn-top');
+const btnLorPill = document.getElementById('btn-lor-pill');
+window.addEventListener('scroll', () => {
+  if (!document.body.classList.contains('mode-presentation')) return;
+  const visible = window.scrollY > 300;
+  if (btnTop)     btnTop.classList.toggle('visible', visible);
+  if (btnLorPill) btnLorPill.classList.toggle('visible', visible);
+}, { passive: true });
+if (btnTop) {
+  btnTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+if (btnLorPill) {
+  btnLorPill.addEventListener('click', () => {
+    document.getElementById('livre-or')?.scrollIntoView({ behavior: 'smooth' });
+  });
+}
 
 // ─── Bottom nav mobile : Lieux + 3 onglets + sync ───
 const mobileBottomNav = document.getElementById('mobile-bottom-nav');
