@@ -1220,6 +1220,73 @@
       background: rgba(201,169,110,0.1);
     }
 
+    /* ─── Filtres flottants carte — colonne droite ─── */
+    #carte-filtres-map {
+      display: none;
+      position: fixed;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 500;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    body.mode-carte #carte-filtres-map {
+      display: flex;
+    }
+    /* Bloque le scroll de page en mode carte */
+    body.mode-carte {
+      overflow: hidden;
+    }
+    .cfm-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid rgba(26, 23, 20, 0.18);
+      color: rgba(26, 23, 20, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s ease, color 0.2s ease,
+                  border-color 0.2s ease, transform 0.2s ease,
+                  box-shadow 0.2s ease;
+      flex-shrink: 0;
+    }
+    .cfm-btn.actif {
+      background: var(--or);
+      border-color: var(--or);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.40);
+    }
+    .cfm-btn:not(.actif):hover {
+      background: rgba(26, 23, 20, 0.06);
+      border-color: rgba(26, 23, 20, 0.30);
+      color: rgba(26, 23, 20, 0.85);
+      transform: scale(1.08);
+    }
+    /* Dark mode */
+    body.mode-nuit .cfm-btn {
+      border-color: rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.55);
+    }
+    body.mode-nuit .cfm-btn.actif {
+      background: var(--or);
+      border-color: var(--or);
+      color: #0A0908;
+    }
+    body.mode-nuit .cfm-btn:not(.actif):hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: rgba(255, 255, 255, 0.90);
+    }
+
     /* ─── Vue Carte ─── */
     /* Désaturer les tuiles pour réduire la pollution visuelle des POIs (banques, magasins…) */
     #vue-carte .leaflet-tile-pane {
@@ -2299,6 +2366,25 @@
 <!-- ══════════════ GRILLE ══════════════ -->
 <div class="grille" id="grille">
   <p class="aucun" id="aucun">Aucun lieu ne correspond à votre recherche.</p>
+</div>
+
+<!-- ══════════════ FILTRES CARTE ══════════════ -->
+<div id="carte-filtres-map" role="group" aria-label="Filtrer la carte">
+  <button class="cfm-btn actif" data-cat="tous" title="Tous les lieux">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+  </button>
+  <button class="cfm-btn" data-cat="musee" title="Musées">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+  </button>
+  <button class="cfm-btn" data-cat="monument" title="Monuments">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V9H3V4h3V2h2v2h2V2h2v2h2V2h2v2h3v5h-2v12"/><path d="M5 21h14"/><path d="M10 21v-6h4v6"/></svg>
+  </button>
+  <button class="cfm-btn" data-cat="eglise" title="Édifices religieux">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4"/><path d="M10 4h4"/><path d="M6 22V10l6-5 6 5v12"/><path d="M6 10h12"/><rect x="9" y="16" width="6" height="6"/></svg>
+  </button>
+  <button class="cfm-btn" data-cat="jardin" title="Jardins">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="6" rx="2" ry="3"/><ellipse cx="12" cy="18" rx="2" ry="3"/><ellipse cx="6" cy="12" rx="3" ry="2"/><ellipse cx="18" cy="12" rx="3" ry="2"/></svg>
+  </button>
 </div>
 
 <!-- ══════════════ VUE CARTE ══════════════ -->
@@ -3423,6 +3509,16 @@ btnTheme.addEventListener('click', () => {
   swapTiles();
 });
 
+
+// ─── Filtres carte flottants ───
+document.querySelectorAll('.cfm-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cfm-btn').forEach(b => b.classList.remove('actif'));
+    btn.classList.add('actif');
+    filtreActif = btn.dataset.cat;
+    filtrerMarqueurs();
+  });
+});
 
 // ─── Liens programme → modale ───
 document.querySelectorAll('.prog-lien').forEach(btn => {
