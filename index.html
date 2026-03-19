@@ -1232,56 +1232,22 @@
 
     #vue-carte {
       display: none;
-      height: calc(100vh - 56px);
+      height: calc(100vh - 57px);
       width: 100%;
     }
 
     /* Sur mobile : la carte s'arrête au-dessus de la bottom nav */
     @media (max-width: 700px) {
       #vue-carte {
-        height: calc(100vh - 56px - 64px - env(safe-area-inset-bottom));
+        height: calc(100vh - 57px - 64px - env(safe-area-inset-bottom));
       }
     }
 
-    body.mode-carte header,
-    body.mode-carte .filtres-wrapper,
     body.mode-carte .recherche-wrapper,
     body.mode-carte .section-titre,
     body.mode-carte .section-gratuit,
     body.mode-carte .grille {
       display: none;
-    }
-
-    /* ─── Entête compact carte ─── */
-    #carte-entete {
-      display: none;
-      padding: 13px 20px 11px;
-      background: var(--fond);
-      border-bottom: 1px solid rgba(212,175,55,0.13);
-    }
-    body.mode-carte #carte-entete {
-      display: block;
-    }
-    .carte-eyebrow {
-      font-family: 'Jost', sans-serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--or);
-      margin: 0 0 1px;
-    }
-    .carte-titre-h {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin: 0;
-      color: var(--texte);
-      line-height: 1.15;
-    }
-    .carte-titre-h em {
-      color: var(--or);
-      font-style: italic;
-      font-weight: 400;
     }
 
     body.mode-carte #vue-carte {
@@ -2225,9 +2191,12 @@
       padding-bottom: calc(90px + env(safe-area-inset-bottom));
     }
 
-    /* ─── Légende carte (supprimée) ─── */
+    /* ─── Légende carte ─── */
     .carte-legende {
-      display: none !important;
+      background: rgba(15,28,46,0.92) !important;
+      backdrop-filter: blur(8px) !important;
+      border: 1px solid rgba(212,175,90,0.25) !important;
+      border-radius: 4px !important;
       padding: 10px 14px !important;
       color: #fff !important;
       font-family: 'Jost', sans-serif !important;
@@ -2330,12 +2299,6 @@
 <!-- ══════════════ GRILLE ══════════════ -->
 <div class="grille" id="grille">
   <p class="aucun" id="aucun">Aucun lieu ne correspond à votre recherche.</p>
-</div>
-
-<!-- ══════════════ ENTÊTE CARTE ══════════════ -->
-<div id="carte-entete">
-  <p class="carte-eyebrow">Carte</p>
-  <h2 class="carte-titre-h">Paris · <em>22 lieux culturels</em></h2>
 </div>
 
 <!-- ══════════════ VUE CARTE ══════════════ -->
@@ -3351,7 +3314,20 @@ function initCarte() {
     marqueurs.push(marker);
   });
 
-  // Légende catégories supprimée — tous les marqueurs sont dorés
+  // Légende
+  const legende = L.control({ position: 'bottomleft' });
+  legende.onAdd = function() {
+    const div = L.DomUtil.create('div', 'carte-legende');
+    div.innerHTML = `
+      <div class="legende-titre">Catégories</div>
+      <div class="legende-item"><div class="legende-point" style="background:#b8962e"></div>Musées</div>
+      <div class="legende-item"><div class="legende-point" style="background:#1e3356"></div>Monuments</div>
+      <div class="legende-item"><div class="legende-point" style="background:#7b5ea7"></div>Édifices religieux</div>
+      <div class="legende-item"><div class="legende-point" style="background:#4a7c59"></div>Jardins</div>
+    `;
+    return div;
+  };
+  legende.addTo(carteLeaflet);
 }
 
 function filtrerMarqueurs() {
