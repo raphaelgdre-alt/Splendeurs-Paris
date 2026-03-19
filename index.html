@@ -3314,20 +3314,6 @@ function initCarte() {
     marqueurs.push(marker);
   });
 
-  // Légende
-  const legende = L.control({ position: 'bottomleft' });
-  legende.onAdd = function() {
-    const div = L.DomUtil.create('div', 'carte-legende');
-    div.innerHTML = `
-      <div class="legende-titre">Catégories</div>
-      <div class="legende-item"><div class="legende-point" style="background:#b8962e"></div>Musées</div>
-      <div class="legende-item"><div class="legende-point" style="background:#1e3356"></div>Monuments</div>
-      <div class="legende-item"><div class="legende-point" style="background:#7b5ea7"></div>Édifices religieux</div>
-      <div class="legende-item"><div class="legende-point" style="background:#4a7c59"></div>Jardins</div>
-    `;
-    return div;
-  };
-  legende.addTo(carteLeaflet);
 }
 
 function filtrerMarqueurs() {
