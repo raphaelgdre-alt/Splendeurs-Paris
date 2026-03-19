@@ -1239,6 +1239,23 @@
       display: flex;
     }
 
+    /* ─── Titre carte overlay ─── */
+    #carte-titre-overlay {
+      display: none;
+      position: fixed;
+      top: 16px;
+      left: 20px;
+      z-index: 500;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--or);
+      pointer-events: none;
+    }
+    body.mode-carte #carte-titre-overlay { display: block; }
+
     /* Bloque le scroll de page en mode carte */
     body.mode-carte {
       overflow: hidden;
@@ -2379,6 +2396,9 @@
 <div class="grille" id="grille">
   <p class="aucun" id="aucun">Aucun lieu ne correspond à votre recherche.</p>
 </div>
+
+<!-- ══════════════ TITRE CARTE ══════════════ -->
+<div id="carte-titre-overlay">Carte</div>
 
 <!-- ══════════════ FILTRES CARTE ══════════════ -->
 <div id="carte-filtres-map" role="group" aria-label="Filtrer la carte">
