@@ -473,6 +473,35 @@
       100% { background-position:  600px 0; }
     }
 
+    /* ── Cross-fade entre sections ── */
+    @keyframes vueFadeIn {
+      from { opacity: 0; transform: translateY(9px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    body.mode-restaurants #vue-restaurants,
+    body.mode-presentation #vue-presentation {
+      animation: vueFadeIn 0.28s ease forwards;
+    }
+    /* Grille lieux — fondu au retour */
+    .grille { animation: vueFadeIn 0.28s ease both; }
+
+    /* ── Indicateur magnétique nav ── */
+    .nav-pill-indicator {
+      position: absolute;
+      height: 38px;
+      width: 56px;
+      background: rgba(212,175,55,0.13);
+      border-radius: 12px;
+      pointer-events: none;
+      z-index: 0;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%) translateX(0px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  width 0.25s ease;
+    }
+    .mob-nav-btn { position: relative; z-index: 1; }
+
     .carte-image {
       height: 260px;
       display: flex;
@@ -484,14 +513,17 @@
       background: var(--gris);
     }
 
+    /* ── Skeleton champagne doré ── */
     .carte-image.skeleton {
       background: linear-gradient(90deg,
-        #E8E0D4 25%,
-        #F5F0E8 50%,
-        #E8E0D4 75%
+        #EDE3C8 0%,
+        #EDE3C8 25%,
+        #F8F1DC 50%,
+        #EDE3C8 75%,
+        #EDE3C8 100%
       );
       background-size: 600px 100%;
-      animation: shimmer 1.4s infinite linear;
+      animation: shimmer 1.6s infinite linear;
     }
 
     .carte-photo {
@@ -2415,6 +2447,7 @@
 
 <!-- ══════════════ BOTTOM NAV MOBILE ══════════════ -->
 <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Navigation principale">
+  <span class="nav-pill-indicator" id="nav-pill-indicator" aria-hidden="true"></span>
   <button class="mob-nav-btn actif" id="mob-lieux-btn" aria-label="Lieux">
     <svg class="mob-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span class="mob-nav-label">Lieux</span>
@@ -3744,6 +3777,18 @@ if (mobileBottomNav) {
     });
   });
 
+  // ─── Indicateur magnétique ───
+  const navPill = document.getElementById('nav-pill-indicator');
+  function moveNavPill() {
+    if (!navPill) return;
+    const activeBtn = mobileBottomNav.querySelector('.mob-nav-btn.actif');
+    if (!activeBtn) return;
+    const navRect = mobileBottomNav.getBoundingClientRect();
+    const btnRect = activeBtn.getBoundingClientRect();
+    const x = btnRect.left - navRect.left + (btnRect.width - 56) / 2;
+    navPill.style.transform = `translateY(-50%) translateX(${x}px)`;
+  }
+
   function syncMobileNav() {
     const enModeOnglet = modeCarteActif || modePresActif || modeRestoActif;
     // Lieux actif si aucun onglet ouvert
@@ -3753,6 +3798,7 @@ if (mobileBottomNav) {
       const target = document.getElementById(btn.dataset.target);
       btn.classList.toggle('actif', target?.classList.contains('actif') ?? false);
     });
+    requestAnimationFrame(moveNavPill);
   }
 
   [btnCarteView, btnPresView, btnRestoView].forEach(btn => {
