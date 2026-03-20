@@ -162,6 +162,30 @@
       line-height: 1.7;
     }
 
+    /* ── Typographie Haute Couture ── */
+    /* Descriptions des cartes et modales */
+    .carte-desc,
+    .modale-section p,
+    .modale-section li,
+    .modale-desc {
+      line-height: 1.85;
+    }
+    /* Titres Playfair gravés */
+    h1, h2, h3,
+    .carte-titre,
+    .modale-titre,
+    .pres-titre {
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.02em;
+    }
+    /* Textes À propos encore plus aérés */
+    .pres-texte p,
+    .pres-sous-titre,
+    .pres-feature p,
+    .prog-desc {
+      line-height: 1.9;
+    }
+
     /* ─── Header ─── */
     header {
       background: var(--fond);
@@ -1123,6 +1147,16 @@
         background: rgba(20,17,14,0.55);
         border-color: rgba(255,255,255,0.08);
         box-shadow: 0 8px 40px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.05) inset;
+      }
+
+      /* ── Ghost nav : fondu en scroll descendant ── */
+      .mobile-bottom-nav {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+      .mobile-bottom-nav.nav-fantome {
+        opacity: 0;
+        transform: translateX(-50%) translateY(16px);
+        pointer-events: none;
       }
 
       .mob-nav-btn {
@@ -3646,6 +3680,25 @@ document.querySelectorAll('.prog-lien').forEach(btn => {
     if (!document.body.classList.contains('mode-presentation')) return;
     const offset = window.scrollY * 0.28;
     hero.style.backgroundPositionY = `calc(40% + ${offset}px)`;
+  }, { passive: true });
+})();
+
+// ─── Ghost nav : disparaît en descendant, revient en remontant ───
+(function() {
+  const mobileNav = document.querySelector('.mobile-bottom-nav');
+  if (!mobileNav) return;
+  let lastY = window.scrollY;
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const currentY = window.scrollY;
+      const goingDown = currentY > lastY && currentY > 80;
+      mobileNav.classList.toggle('nav-fantome', goingDown);
+      lastY = currentY;
+      ticking = false;
+    });
   }, { passive: true });
 })();
 
