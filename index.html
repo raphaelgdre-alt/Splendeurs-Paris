@@ -109,6 +109,22 @@
     body.mode-nuit .header-separator { background: var(--or); opacity: 0.3; }
     body.mode-nuit .mob-nav-btn.actif { color: var(--or); background: rgba(212,175,55,0.08); }
 
+    /* ═══════════════════════════════════════
+       FOCUS MODE — masque tout à l'ouverture d'une modale
+    ════════════════════════════════════════ */
+    body.modale-ouverte .mobile-bottom-nav,
+    body.modale-ouverte .btn-theme,
+    body.modale-ouverte .btn-top,
+    body.modale-ouverte .btn-lor-pill,
+    body.modale-ouverte .btn-carte-view,
+    body.modale-ouverte #carte-filtres-map,
+    body.modale-ouverte #carte-titre-overlay {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
     /* ─── Bouton dark mode : fixé à l'écran ─── */
     .btn-theme {
       position: fixed;
@@ -1094,14 +1110,21 @@
         transform: translateX(-50%);
         width: 90%;
         z-index: 1001;
-        background: rgba(253,251,247,0.82);
-        backdrop-filter: blur(24px) saturate(1.6);
-        -webkit-backdrop-filter: blur(24px) saturate(1.6);
-        border: 1px solid rgba(255,255,255,0.6);
+        background: rgba(253,251,247,0.55);
+        backdrop-filter: blur(28px) saturate(1.8) brightness(1.05);
+        -webkit-backdrop-filter: blur(28px) saturate(1.8) brightness(1.05);
+        border: 1px solid rgba(255,255,255,0.45);
         border-radius: 30px;
         padding: 8px 16px;
         gap: 4px;
-        box-shadow: 0 8px 32px rgba(26,23,20,0.14), 0 1px 0 rgba(255,255,255,0.5) inset;
+        box-shadow: 0 8px 40px rgba(26,23,20,0.12), 0 1px 0 rgba(255,255,255,0.7) inset;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+      }
+
+      body.mode-nuit .mobile-bottom-nav {
+        background: rgba(20,17,14,0.55);
+        border-color: rgba(255,255,255,0.08);
+        box-shadow: 0 8px 40px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.05) inset;
       }
 
       .mob-nav-btn {
@@ -3035,6 +3058,7 @@ const lieux = [
     id: 28,
     nom: "Le Bon Marché Rive Gauche",
     wikiTitle: "Le_Bon_Marché",
+    photoUrl: "https://upload.wikimedia.org/wikipedia/commons/d/dc/Bon_march%C3%A9.jpg",
     categorie: "monument",
     bgClass: "bg-monument",
     arrondissement: "7e arr.",
@@ -3052,6 +3076,7 @@ const lieux = [
     id: 29,
     nom: "La Grande Épicerie de Paris",
     wikiTitle: "Grande_Épicerie_de_Paris",
+    photoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7c/La_Grande_%C3%89picerie.jpg",
     categorie: "monument",
     bgClass: "bg-monument",
     arrondissement: "7e arr.",
