@@ -171,7 +171,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px 24px 32px;
+      padding: 24px 24px 20px;
     }
 
     .header-inner {
@@ -231,13 +231,13 @@
 
     header p.sous-titre {
       font-family: 'Jost', sans-serif;
-      font-size: clamp(0.82rem, 1.8vw, 0.92rem);
+      font-size: clamp(0.75rem, 1.6vw, 0.82rem);
       font-weight: 400;
       font-style: normal;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       color: var(--texte-sec);
-      line-height: 1.75;
-      max-width: 480px;
+      line-height: 1.65;
+      max-width: 400px;
       margin: 0 auto;
     }
 
@@ -278,26 +278,39 @@
       position: sticky;
       top: 12px;
       z-index: 100;
-      background: rgba(253,251,247,0.78);
-      backdrop-filter: blur(28px) saturate(1.8);
-      -webkit-backdrop-filter: blur(28px) saturate(1.8);
-      padding: 0 20px;
+      background: rgba(253,251,247,0.60);
+      backdrop-filter: blur(28px) saturate(1.8) brightness(1.04);
+      -webkit-backdrop-filter: blur(28px) saturate(1.8) brightness(1.04);
       border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.65);
-      box-shadow: 0 4px 24px rgba(26,23,20,0.10), inset 0 1px 0 rgba(255,255,255,0.7);
-      margin: 12px auto;
+      border: 1px solid rgba(255,255,255,0.55);
+      box-shadow: 0 4px 24px rgba(26,23,20,0.09), inset 0 1px 0 rgba(255,255,255,0.7);
+      margin: 10px auto;
       width: calc(100% - 40px);
       max-width: 1100px;
+      /* Ligne unique scrollable */
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 6px 14px;
+      gap: 2px;
     }
+    .filtres-wrapper::-webkit-scrollbar { display: none; }
 
+    /* Séparateur visuel entre nav-sections et filtres */
     .filtres {
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
       gap: 0;
-      max-width: 1100px;
-      margin: 0 auto;
-      position: relative;
+      align-items: center;
+      border-left: 1px solid rgba(212,175,55,0.22);
+      padding-left: 6px;
+      margin-left: 4px;
     }
 
     .filtre-btn {
@@ -1042,61 +1055,46 @@
     .mobile-bottom-nav { display: none; }
 
     @media (max-width: 700px) {
-      /* ── Header ── */
-      header { padding: 48px 20px 40px; }
+      /* ── Header compact ── */
+      header { min-height: auto; padding: 20px 20px 14px; }
+      .lieux-count { font-size: 0.7rem; }
 
       /* ── Grille ── */
       .grille { grid-template-columns: 1fr; }
-      .lieux-count { font-size: 0.7rem; }
-      header { min-height: auto; padding: 36px 20px 28px; }
 
-      /* ── Barre de filtres : 2 lignes ── */
+      /* ── Barre de filtres : ligne unique scrollable ── */
       .filtres-wrapper {
-        flex-wrap: wrap;
-        padding: 8px 10px 0;
-        gap: 0;
         top: 0;
         width: 100%;
         max-width: 100%;
         margin: 0;
         border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 5px 10px;
       }
 
-      /* Boutons d'action sur la ligne du haut — 3 colonnes égales */
-      .btn-carte-view {
-        flex: 0 0 calc(33.33% - 5px);
-        text-align: center;
-        padding: 8px 2px;
-        font-size: 0.58rem;
-        margin: 0 2px 8px !important;
-        letter-spacing: 0.04em;
-        order: 1 !important;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+      /* Masquer les boutons nav sur mobile (bottom nav les gère) */
+      .btn-carte-view { display: none !important; }
 
-      /* Filtres catégories sur la ligne du bas, scrollables */
+      /* Ligne unique de filtres sans séparateur */
       .filtres {
-        order: 2;
-        width: 100%;
-        flex: none !important;
-        flex-wrap: nowrap;
+        border-left: none;
+        padding-left: 0;
+        margin-left: 0;
         overflow-x: auto;
-        justify-content: flex-start;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        border-top: 1px solid rgba(212,175,90,0.12);
-        padding-bottom: 0;
-        /* fondu sur la droite pour signaler le scroll et éviter l'overlap avec le bouton mode nuit */
-        -webkit-mask-image: linear-gradient(to right, black calc(100% - 68px), transparent 100%);
-        mask-image: linear-gradient(to right, black calc(100% - 68px), transparent 100%);
+        justify-content: flex-start;
+        -webkit-mask-image: none;
+        mask-image: none;
       }
       .filtres::-webkit-scrollbar { display: none; }
 
       .filtre-btn {
         font-size: 0.68rem;
         padding: 0 14px;
-        min-height: 44px;
+        min-height: 40px;
       }
 
       /* ── Bottom nav mobile ── */
@@ -2413,7 +2411,7 @@
 </div>
 
 <p class="section-titre" id="compteur">23 lieux affichés</p>
-<p class="section-gratuit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Entrée gratuite pour les moins de 25 ans dans la majorité des lieux</p>
+<p class="section-gratuit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Entrée gratuite pour les moins de 26 ans dans la majorité des lieux</p>
 
 <!-- ══════════════ GRILLE ══════════════ -->
 <div class="grille" id="grille">
@@ -2461,7 +2459,7 @@
     <div class="pres-features">
       <div class="pres-feature"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></span><div><strong>Carte interactive</strong><p>Visualisez tous les lieux sur un plan. Zoomez, cliquez, explorez.</p></div></div>
       <div class="pres-feature"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="10" width="20" height="11" rx="1"/><path d="M6 10V7a6 6 0 0 1 12 0v3"/><line x1="2" y1="14" x2="22" y2="14"/><line x1="8" y1="10" x2="8" y2="21"/><line x1="16" y1="10" x2="16" y2="21"/></svg></span><div><strong>23 lieux sélectionnés</strong><p>Musées, monuments, édifices religieux et jardins — le meilleur de la capitale.</p></div></div>
-      <div class="pres-feature"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><div><strong>Conçu pour un week-end</strong><p>Horaires, accès et conseils de visite pour chaque lieu. Gratuit pour les moins de 25 ans.</p></div></div>
+      <div class="pres-feature"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><div><strong>Conçu pour un week-end</strong><p>Horaires, accès et conseils de visite pour chaque lieu. Gratuit pour les moins de 26 ans.</p></div></div>
     </div>
   </div>
 
@@ -3374,7 +3372,7 @@ function ouvrirModale(lieu) {
     <div class="modale-meta">
       <span>${ICO.pin} ${lieu.arrondissement}</span>
       <span>${ICO.clock} ${lieu.horaires}</span>
-      <span>${lieu.payant ? ICO.ticket + ' ' + lieu.tarif : ICO.grad + ' Gratuit pour les moins de 25 ans'}</span>
+      <span>${lieu.payant ? ICO.ticket + ' ' + lieu.tarif : ICO.grad + ' Gratuit pour les moins de 26 ans'}</span>
       <span>${ICO.metro} ${lieu.acces}</span>
     </div>
     <div class="modale-section">
